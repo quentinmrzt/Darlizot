@@ -13,6 +13,7 @@ int main(int argc, char* argv[])
   int close;
   s_information player;
   s_surface sprite;
+  SDL_Rect position,rcSrc;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -30,6 +31,15 @@ int main(int argc, char* argv[])
 
   /* initialize variable */
   close = 0;
+  /* position dans le sprite */
+  rcSrc.x = 0;
+  rcSrc.y = 0;
+  rcSrc.w = 95;
+  rcSrc.h = 95;
+  /* position dans l'écran */
+  position.x = 5;
+  position.y = 5;
+
 
   /* loop for game */
   while (!close)
@@ -39,6 +49,9 @@ int main(int argc, char* argv[])
 
       /* croix ou échap */
       close = quit(close);
+      
+      rcSrc.x = rcSrc.x+95;
+      SDL_BlitSurface(sprite.player, &rcSrc, sprite.screen, &position);
  
       /****************************************************************************************************/
       /* OTHER */
@@ -47,7 +60,7 @@ int main(int argc, char* argv[])
       SDL_UpdateRect(sprite.screen,0,0,0,0);
 
       /* fps */
-      SDL_Delay(30);
+      SDL_Delay(300);
     }
 
   /****************************************************************************************************/
