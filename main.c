@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
   int close;
   s_information player;
   s_surface sprite;
-  SDL_Rect position,rcSrc;
+  SDL_Rect position,rcSrc, pos, test;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
   /* set the title bar */
   SDL_WM_SetCaption("S3", NULL);
   /* create window */
-  sprite.screen = SDL_SetVideoMode(500, 500, 0, 0);
+  sprite.screen = SDL_SetVideoMode(800, 400, 0, 0);
   /* load sprite */
   sprite = load_sprite(sprite);
 
@@ -37,8 +37,14 @@ int main(int argc, char* argv[])
   rcSrc.w = 95;
   rcSrc.h = 95;
   /* position dans l'écran */
-  position.x = 5;
-  position.y = 5;
+  position.x = 0;
+  position.y = 400-95;
+  test.x = 0;
+  test.y = 0;
+  test.w = 800;
+  test.h = 400;
+  pos.x = 0;
+  pos.y = 0;
 
 
   /* loop for game */
@@ -51,6 +57,9 @@ int main(int argc, char* argv[])
       close = quit(close);
       
       rcSrc.x = rcSrc.x+95;
+      if (rcSrc.x > 95*6)
+	rcSrc.x = 95;
+      SDL_BlitSurface(sprite.background, &test, sprite.screen, &pos);
       SDL_BlitSurface(sprite.player, &rcSrc, sprite.screen, &position);
  
       /****************************************************************************************************/
@@ -60,7 +69,7 @@ int main(int argc, char* argv[])
       SDL_UpdateRect(sprite.screen,0,0,0,0);
 
       /* fps */
-      SDL_Delay(300);
+      SDL_Delay(90);
     }
 
   /****************************************************************************************************/
