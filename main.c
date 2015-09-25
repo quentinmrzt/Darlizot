@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
   s_information player;
   s_surface sprite;
   SDL_Rect position,rcSrc, pos, test;
+  Uint8 *keystate = SDL_GetKeyState(NULL);
+  int state=2;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -53,12 +55,48 @@ int main(int argc, char* argv[])
       /****************************************************************************************************/
       /* KEYBOARD AND MOUSE */
 
+       if (keystate[SDLK_LEFT]){
+	 if (state!=1)
+	   state=1;
+	 position.x-=20;
+	 if (rcSrc.x<=7*95 || rcSrc.x==14*95)
+	   rcSrc.x=8*95;
+	 else
+	   rcSrc.x+=95;
+       }
+       else
+	 {
+	   if (state==1)
+	     rcSrc.x=7*95;
+	 }
+
+       if (keystate[SDLK_RIGHT]){
+	 if (state!=0)
+	   state=0;
+	 position.x+=20;
+	 if (rcSrc.x==0 || rcSrc.x>=6*95)
+	   rcSrc.x=95;
+	 else
+	   rcSrc.x+=95;
+       }
+       else 
+	 {
+	   if (state==0)
+	     rcSrc.x=state;
+	 }
+	 
+       if (keystate[SDLK_UP]){
+
+       }
+       if (keystate[SDLK_DOWN]){
+
+      }
+
+
       /* croix ou échap */
       close = quit(close);
       
-      rcSrc.x = rcSrc.x+95;
-      if (rcSrc.x > 95*6)
-	rcSrc.x = 95;
+      
       SDL_BlitSurface(sprite.background, &test, sprite.screen, &pos);
       SDL_BlitSurface(sprite.player, &rcSrc, sprite.screen, &position);
  
