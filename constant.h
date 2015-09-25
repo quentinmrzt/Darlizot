@@ -43,6 +43,7 @@ typedef struct s_information s_information;
 struct s_surface
 {
   SDL_Surface *screen;
+  SDL_Surface *background;
   SDL_Surface *grass;
   SDL_Surface *player;
   SDL_Surface *grid;

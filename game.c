@@ -28,6 +28,8 @@ s_surface load_sprite(s_surface sprite)
   /*load sprite starship 1 */
   char name[] = "sprite/sprite_01.bmp";
   sprite.player = load(sprite.player, name, sprite.screen);
+  name[15] = '2';
+  sprite.background = load(sprite.background, name, sprite.screen);
 
   return sprite;
 }
