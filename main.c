@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close,i,previous_plateform_time,current_time=0;
+  int close,i,previous_plateform_time=0,current_time=0;
   int NB_plateform=20;
   s_information player;
   s_surface sprite;
@@ -103,13 +103,14 @@ int main(int argc, char* argv[])
       close = quit(close);
       
       SDL_BlitSurface(sprite.background, &test, sprite.screen, &pos);
-      if(current_time-previous_plateform_time>5000){
-	previous_plateform_time=current_time;
+      if(current_time-previous_plateform_time>500){
+	
 	for(i=0;i<NB_plateform;i++){
 	  plat.x=plat.x+95+rand()%25;
 	  plat.y=320+rand()%40;
 	  SDL_BlitSurface(sprite.plateform, NULL, sprite.screen, &plat);
 	}
+	previous_plateform_time=current_time;
       }
       SDL_BlitSurface(sprite.player, &rcSrc, sprite.screen, &position);
       
@@ -121,7 +122,7 @@ int main(int argc, char* argv[])
       SDL_UpdateRect(sprite.screen,0,0,0,0);
 
       /* fps */
-      SDL_Delay(90);
+      SDL_Delay(80);
     }
 
   /****************************************************************************************************/
