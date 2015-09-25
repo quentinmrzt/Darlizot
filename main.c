@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 	 if (state!=1)
 	   state=1;
 	 position.x-=20;
-	 if (rcSrc.x==7*95 || rcSrc.x==14*95 || rcSrc.x<7*95)
+	 if (rcSrc.x<=7*95 || rcSrc.x==14*95)
 	   rcSrc.x=8*95;
 	 else
 	   rcSrc.x+=95;
@@ -74,7 +74,7 @@ int main(int argc, char* argv[])
 	 if (state!=0)
 	   state=0;
 	 position.x+=20;
-	 if (rcSrc.x==0 || rcSrc.x==6*95 || rcSrc.x>7*95)
+	 if (rcSrc.x==0 || rcSrc.x>=6*95)
 	   rcSrc.x=95;
 	 else
 	   rcSrc.x+=95;
