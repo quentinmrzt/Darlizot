@@ -50,6 +50,7 @@ struct s_surface
   SDL_Surface *rock;
   SDL_Surface *black;
   SDL_Surface *barrier;
+  SDL_Surface *plateform;
 };
 typedef struct s_surface s_surface;
 

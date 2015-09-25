@@ -7,13 +7,15 @@
 
 #include "constant.h"
 #include "game.h"
+#include "time.h"
 
 int main(int argc, char* argv[])
 {
-  int close;
+  int close,i,previous_plateform_time,current_time=0;
+  int NB_plateform=20;
   s_information player;
   s_surface sprite;
-  SDL_Rect position,rcSrc, pos, test;
+  SDL_Rect position,rcSrc, pos, test, plat;
   Uint8 *keystate = SDL_GetKeyState(NULL);
   int state=2;
 
@@ -47,12 +49,16 @@ int main(int argc, char* argv[])
   test.h = 400;
   pos.x = 0;
   pos.y = 0;
-
+  plat.x = 20;
+  plat.y = 320+rand()%40;
 
   /* loop for game */
   while (!close)
     {
       /****************************************************************************************************/
+      /* TIME */
+      current_time=SDL_getTicks();
+      
       /* KEYBOARD AND MOUSE */
 
        if (keystate[SDLK_LEFT]){
@@ -97,8 +103,16 @@ int main(int argc, char* argv[])
       close = quit(close);
       
       
-      SDL_BlitSurface(sprite.background, &test, sprite.screen, &pos);
+      if(current_time-previous_plateform_time>5000){
+	previous_plateform_time=current_time;
+	for(i=0;i<NB_plateform;i++){
+	  plat.x=plat.x+95+rand()%25;
+	  plat.y=320+rand()%40;
+	  SDL_BlitSurface(sprite.plateform, NULL, sprite.screen, &plat);
+	}
+      }
       SDL_BlitSurface(sprite.player, &rcSrc, sprite.screen, &position);
+      
  
       /****************************************************************************************************/
       /* OTHER */

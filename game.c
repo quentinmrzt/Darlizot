@@ -30,7 +30,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.player = load(sprite.player, name, sprite.screen);
   name[15] = '2';
   sprite.background = load(sprite.background, name, sprite.screen);
-
+  name[15] = '3';
+  sprite.plateform = load(sprite.plateform, name, sprite.screen);
   return sprite;
 }
 
