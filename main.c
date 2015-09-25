@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
     {
       /****************************************************************************************************/
       /* TIME */
-      current_time=SDL_getTicks();
+      current_time=SDL_GetTicks();
       
       /* KEYBOARD AND MOUSE */
 
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
       /* croix ou échap */
       close = quit(close);
       
-      
+      SDL_BlitSurface(sprite.background, &test, sprite.screen, &pos);
       if(current_time-previous_plateform_time>5000){
 	previous_plateform_time=current_time;
 	for(i=0;i<NB_plateform;i++){
