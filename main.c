@@ -11,13 +11,15 @@
 
 int main(int argc, char* argv[])
 {
-  int close,i,previous_plateform_time=0,current_time=0;
+  int close,i,previous_plateform_time=0,current_time=0,jumping_time;
   int NB_plateform=20;
   s_information player;
   s_surface sprite;
   SDL_Rect position,rcSrc, pos, test, plat;
-  Uint8 *keystate = SDL_GetKeyState(NULL);
+  int sol=75;
   int state=2;
+  
+  
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -42,7 +44,7 @@ int main(int argc, char* argv[])
   rcSrc.h = 95;
   /* position dans l'écran */
   position.x = 0;
-  position.y = 400-95;
+  position.y = 400-95-sol;
   test.x = 0;
   test.y = 0;
   test.w = 800;
@@ -61,43 +63,7 @@ int main(int argc, char* argv[])
       
       /* KEYBOARD AND MOUSE */
 
-       if (keystate[SDLK_LEFT]){
-	 if (state!=1)
-	   state=1;
-	 position.x-=20;
-	 if (rcSrc.x<=7*95 || rcSrc.x==13*95)
-	   rcSrc.x=8*95;
-	 else
-	   rcSrc.x+=95;
-       }
-       else
-	 {
-	   if (state==1)
-	     rcSrc.x=7*95;
-	 }
-
-       if (keystate[SDLK_RIGHT]){
-	 if (state!=0)
-	   state=0;
-	 position.x+=20;
-	 if (rcSrc.x==0 || rcSrc.x>=6*95)
-	   rcSrc.x=95;
-	 else
-	   rcSrc.x+=95;
-       }
-       else 
-	 {
-	   if (state==0)
-	     rcSrc.x=state;
-	 }
-	 
-       if (keystate[SDLK_UP]){
-
-       }
-       if (keystate[SDLK_DOWN]){
-
-      }
-
+      control(&position,&rcSrc,&state);
 
       /* croix ou échap */
       close = quit(close);

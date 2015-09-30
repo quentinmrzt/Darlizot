@@ -8,6 +8,7 @@
 #include "constant.h"
 #include "game.h"
 
+
 /****************************************************************************************************/
 /* INITIALIZE */
 
@@ -37,6 +38,58 @@ s_surface load_sprite(s_surface sprite)
 
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
+
+
+void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *sol1)
+{
+  SDL_Rect position=*p1;
+  SDL_Rect rcSrc=*r1;
+  int state=*s1;
+  int saut=0;
+  
+  Uint8 *keystate = SDL_GetKeyState(NULL);
+  if (keystate[SDLK_LEFT]){
+  
+    if (state!=1)
+      state=1;
+    position.x-=20;
+    if (rcSrc.x<=7*95 || rcSrc.x==13*95)
+      rcSrc.x=8*95;
+    else
+      rcSrc.x+=95;
+  }
+  else
+    {
+      if (state==1)
+	rcSrc.x=7*95;
+    }
+
+  if (keystate[SDLK_RIGHT]){
+    if (state!=0)
+      state=0;
+    position.x+=20;
+    if (rcSrc.x==0 || rcSrc.x>=6*95)
+      rcSrc.x=95;
+    else
+      rcSrc.x+=95;
+  }
+  else 
+    {
+      if (state==0)
+	rcSrc.x=state;
+    }
+	 
+  if (keystate[SDLK_SPACE]){
+    
+  }
+
+  if (keystate[SDLK_DOWN]){
+
+  }
+  *p1=position;
+  *r1=rcSrc;
+  *s1=state;
+}
 
 int quit(int close) 
 {
