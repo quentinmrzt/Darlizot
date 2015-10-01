@@ -35,13 +35,25 @@ s_surface load_sprite(s_surface sprite)
 }
 
 /****************************************************************************************************/
+/* TAB OF SPRITE */
+s_surface empty_sprite_tab()
+{
+  return sprite_tab[0];
+}
+
+s_surface add_tab_sprite(s_surface *sprite, int position)
+{
+  s_surface sprite_tab[position]=*sprite;
+}
+
+/****************************************************************************************************/
 /* PHYSICS */
 
 void gravity(SDL_Rect *s1, int *s2)
 {
   SDL_Rect sprite=*s1;
   int sol=*s2;
-  if (sprite.y<= (400-95-sol))
+  if (sprite.y<= (305-sol))
     sprite.y+=10;
   *s1=sprite;
   *s2=sol;
