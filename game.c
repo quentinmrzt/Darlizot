@@ -11,7 +11,6 @@
 
 /****************************************************************************************************/
 /* INITIALIZE */
-
 SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen) 
 {
   SDL_Surface *temp;
@@ -20,13 +19,12 @@ SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen)
   surface = SDL_DisplayFormat(temp);
   SDL_FreeSurface(temp);
   SDL_SetColorKey(surface, SDL_SRCCOLORKEY | SDL_RLEACCEL, colorkey);
-
   return surface;
 }
 
 s_surface load_sprite(s_surface sprite) 
 {
-  /*load sprite starship 1 */
+  /*load sprite*/
   char name[] = "sprite/sprite_01.bmp";
   sprite.player = load(sprite.player, name, sprite.screen);
   name[15] = '2';
@@ -37,26 +35,43 @@ s_surface load_sprite(s_surface sprite)
 }
 
 /****************************************************************************************************/
+/* PHYSICS */
+
+void gravity(SDL_Rect *s1, int *s2)
+{
+  SDL_Rect sprite=*s1;
+  int sol=*s2;
+  if (sprite.y<= (400-95-sol))
+    sprite.y+=10;
+  *s1=sprite;
+  *s2=sol;
+}
+
+/****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
-
-void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *sol1)
+void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
 {
   SDL_Rect position=*p1;
   SDL_Rect rcSrc=*r1;
   int state=*s1;
-  int saut=0;
+  int jump=*s2;
+  int sol=*f1;
   
   Uint8 *keystate = SDL_GetKeyState(NULL);
+
   if (keystate[SDLK_LEFT]){
-  
+    position.x-=20;
     if (state!=1)
       state=1;
-    position.x-=20;
-    if (rcSrc.x<=7*95 || rcSrc.x==13*95)
-      rcSrc.x=8*95;
-    else
-      rcSrc.x+=95;
+    if (jump==0)
+      {
+	if (rcSrc.x<=7*95 || rcSrc.x==13*95)
+	  rcSrc.x=8*95;
+	else
+	  rcSrc.x+=95;
+	rcSrc.y=0;
+      }
   }
   else
     {
@@ -68,10 +83,14 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *sol1)
     if (state!=0)
       state=0;
     position.x+=20;
-    if (rcSrc.x==0 || rcSrc.x>=6*95)
-      rcSrc.x=95;
-    else
-      rcSrc.x+=95;
+    if (jump==0)
+      {
+	if (rcSrc.x==0 || rcSrc.x>=6*95)
+	  rcSrc.x=95;
+	else
+	  rcSrc.x+=95;
+	rcSrc.y=0;
+      }
   }
   else 
     {
@@ -82,14 +101,35 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *sol1)
   if (keystate[SDLK_SPACE]){
     
   }
+  if (keystate[SDLK_UP] && position.y<240)
+    {
+     rcSrc.y=95;
+    if (state==0)
+      rcSrc.x=95;
+    else
+      rcSrc.x=0; 
+    } 
 
-  if (keystate[SDLK_DOWN]){
-
+  if (keystate[SDLK_UP] && position.y==240){
+    position.y-=50; 
+    jump=1;
   }
+  else    
+      jump=0;
+
+  if (position.y==240)
+    rcSrc.y=0;
+    
+  
+
+  *s2=jump;
   *p1=position;
   *r1=rcSrc;
   *s1=state;
+  *f1=sol;
 }
+
+
 
 int quit(int close) 
 {

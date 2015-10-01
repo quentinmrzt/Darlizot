@@ -11,14 +11,11 @@
 
 int main(int argc, char* argv[])
 {
-  int close,i,previous_plateform_time=0,current_time=0,jumping_time;
-  int NB_plateform=20;
+  int close,i,previous_plateform_time=0,current_time=0,saut=0,state=2, sol=75;
+  int NB_plateform=0;
   s_information player;
   s_surface sprite;
   SDL_Rect position,rcSrc, pos, test, plat;
-  int sol=75;
-  int state=2;
-  
   
 
   /****************************************************************************************************/
@@ -63,7 +60,7 @@ int main(int argc, char* argv[])
       
       /* KEYBOARD AND MOUSE */
 
-      control(&position,&rcSrc,&state);
+      control(&position,&rcSrc,&state,&saut,&sol);
 
       /* croix ou échap */
       close = quit(close);
@@ -80,7 +77,9 @@ int main(int argc, char* argv[])
       }
       SDL_BlitSurface(sprite.player, &rcSrc, sprite.screen, &position);
       
- 
+      /* GRAVITY */
+      if (saut==0)
+	gravity(&position,&sol);
       /****************************************************************************************************/
       /* OTHER */
       

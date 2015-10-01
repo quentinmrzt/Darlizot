@@ -19,7 +19,9 @@ s_information ini_player(s_information player);
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
-void control(SDL_Rect *p1, SDL_Rect *r1,int *s1);
+void gravity(SDL_Rect *s1, int *s2);
+
+void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *saut, int *f1);
 
 int quit(int close);
 
