@@ -79,12 +79,6 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
       }
     else
       {
-	/*if (rcSrc.x<=11*75 || rcSrc.x>=20*75)
-	  rcSrc.x=12*75;
-	  else
-	  rcSrc.x+=75;
-	  rcSrc.y=0;
-	  rcSrc.x=8*75;*/
 	rcSrc.y=0;
 	rcSrc.x=14*75;
       }
@@ -112,13 +106,7 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
       }
     else
       {
-	/*if (rcSrc.x==0 || rcSrc.x>=10*75)
-	  rcSrc.x=75;
-	  else
-	  rcSrc.x+=75;
-	  rcSrc.y=0;
-	  rcSrc.x=75;
-	*/
+	
 	rcSrc.y=0;
 	rcSrc.x=3*75;
       }
@@ -133,6 +121,7 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
 	 
   if (keystate[SDLK_SPACE]){
   }
+
   if (keystate[SDLK_UP] && position.y==sol2 && jump==0)
     {
       jump=1;
@@ -153,28 +142,15 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
     {
       rcSrc.y=0;
       jump=0;
-      /*
-	rcSrc.y=75;
-	if (state==0)
-	rcSrc.x=75;
-	else
-	rcSrc.x=0;
-      */
     } 
-
-  /*  if (keystate[SDLK_UP] && position.y==240){
-      position.y-=50; 
-      jump=1;
-      }
-      else    
-      jump=0;
-      }*/
-  printf("position.y=%d\nsol=%d\n",position.y,sol);
-  if (jump!=0)
+  if (jump==0 && position.y>170 && position.y<sol2 )
     {
-      printf("jump=%d\n",jump);
+      rcSrc.y=75;
+      if (state==0)
+	rcSrc.x=150;
+      else
+	rcSrc.x=375;
     }
-  
 
   *s2=jump;
   *p1=position;
