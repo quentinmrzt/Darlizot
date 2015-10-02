@@ -37,8 +37,8 @@ int main(int argc, char* argv[])
   /* position dans le sprite */
   rcSrc.x = 0;
   rcSrc.y = 0;
-  rcSrc.w = 95;
-  rcSrc.h = 95;
+  rcSrc.w = 75;
+  rcSrc.h = 75;
   /* position dans l'écran */
   position.x = 0;
   position.y = 400-95-sol;
