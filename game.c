@@ -37,7 +37,6 @@ s_surface load_sprite(s_surface sprite)
 /****************************************************************************************************/
 /* TAB OF SPRITE */
 
-
 /****************************************************************************************************/
 /* PHYSICS */
 
@@ -71,23 +70,31 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
       state=1;
     if (jump==0 && position.y==sol2)
       {
-	if (rcSrc.x<7*95 || rcSrc.x==13*95)
-	  rcSrc.x=8*95;
+	if (rcSrc.x<12*75 || rcSrc.x==20*75)
+	  rcSrc.x=12*75;
 	else{
-	  rcSrc.x+=95;
+	  rcSrc.x+=75;
 	  rcSrc.y=0;
 	}
       }
     else
       {
+	/*if (rcSrc.x<=11*75 || rcSrc.x>=20*75)
+	  rcSrc.x=12*75;
+	  else
+	  rcSrc.x+=75;
+	  rcSrc.y=0;
+	  rcSrc.x=8*75;*/
 	rcSrc.y=0;
-	rcSrc.x=8*95;
+	rcSrc.x=14*75;
       }
   }
   else
     {
-      if (state==1)
-	rcSrc.x=7*95;
+      if (state==1){
+	rcSrc.x=11*75;
+	rcSrc.y=0;
+      }
     }
 
   if (keystate[SDLK_RIGHT]){
@@ -96,43 +103,49 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
       state=0;
     if (jump==0 && position.y==sol2)
       {
-	if (rcSrc.x==0 || rcSrc.x>=6*95)
-	  rcSrc.x=95;
+	if (rcSrc.x==0 || rcSrc.x>=10*75)
+	  rcSrc.x=75;
 	else{
-	  rcSrc.x+=95;
+	  rcSrc.x+=75;
 	  rcSrc.y=0;
 	}
       }
     else
       {
+	/*if (rcSrc.x==0 || rcSrc.x>=10*75)
+	  rcSrc.x=75;
+	  else
+	  rcSrc.x+=75;
+	  rcSrc.y=0;
+	  rcSrc.x=75;
+	*/
 	rcSrc.y=0;
-	rcSrc.x=95;
+	rcSrc.x=3*75;
       }
   }
   else 
     {
       if (state==0){
 	rcSrc.x=0;
-	rcSrc.y=95;
+	rcSrc.y=75;
       }
     }
 	 
   if (keystate[SDLK_SPACE]){
-    
   }
   if (keystate[SDLK_UP] && position.y==sol2 && jump==0)
     {
       jump=1;
-      rcSrc.y=95;
+      rcSrc.y=75;
       position.y-=10; 
     }
   if (position.y>170 && jump==1)
     {
-      rcSrc.y=95;
+      rcSrc.y=75;
       if (state==0)
-	rcSrc.x=95;
+	rcSrc.x=75;
       else
-	rcSrc.x=0; 
+	rcSrc.x=3*75; 
       position.y-=10;
       
     }
@@ -140,7 +153,22 @@ void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
     {
       rcSrc.y=0;
       jump=0;
-    }
+      /*
+	rcSrc.y=75;
+	if (state==0)
+	rcSrc.x=75;
+	else
+	rcSrc.x=0;
+      */
+    } 
+
+  /*  if (keystate[SDLK_UP] && position.y==240){
+      position.y-=50; 
+      jump=1;
+      }
+      else    
+      jump=0;
+      }*/
   printf("position.y=%d\nsol=%d\n",position.y,sol);
   if (jump!=0)
     {
