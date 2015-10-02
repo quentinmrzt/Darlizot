@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
   rcSrc.h = 95;
   /* position dans l'écran */
   position.x = 0;
-  position.y = 400-95-sol;
+  position.y = 305-sol;
   test.x = 0;
   test.y = 0;
   test.w = 800;
