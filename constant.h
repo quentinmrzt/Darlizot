@@ -37,6 +37,11 @@ struct s_information
   int speed;
   /* vie */
   int life;
+
+  SDL_Rect position;
+  SDL_Rect rcSrc;
+  int state;
+  int jump;
 };
 typedef struct s_information s_information;
 
@@ -51,6 +56,7 @@ struct s_surface
   SDL_Surface *black;
   SDL_Surface *barrier;
   SDL_Surface *plateform;
+  SDL_Surface *block;
 };
 typedef struct s_surface s_surface;
 

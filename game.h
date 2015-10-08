@@ -19,9 +19,15 @@ s_information ini_player(s_information player);
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
-void gravity(SDL_Rect *s1, int *s2);
+int on_the_floor(int tab[][800/50],s_information player);
+int case_bottom_floor(int tab[][800/50], s_information player);
+int distance_of_floor(int tab[][800/50],s_information player);
+int distance_wall_left(int tab[][800/50],s_information player);
+int distance_wall_right(int tab[][800/50],s_information player);
 
-void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *saut, int *f1);
+void gravity(s_information *player_ptr, int tab[][800/50]);
+
+void control(int tab[][800/50], s_information *player_ptr);
 
 int quit(int close);
 

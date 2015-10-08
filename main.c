@@ -15,8 +15,9 @@ int main(int argc, char* argv[])
   int NB_plateform=0;
   s_information player;
   s_surface sprite;
-  SDL_Rect position,rcSrc, pos, test, plat;
-  
+  SDL_Rect position,rcSrc, pos, test, plat, pos_sprite,pos_screen;
+  int tab[400/50][800/50] = {0}; // taille de l'écran, carre de 50px
+  int x,y;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -34,22 +35,75 @@ int main(int argc, char* argv[])
 
   /* initialize variable */
   close = 0;
-  /* position dans le sprite */
+
+  /* pos in sprite: player */
   rcSrc.x = 0;
   rcSrc.y = 0;
   rcSrc.w = 75;
   rcSrc.h = 75;
-  /* position dans l'écran */
+  //player.width = 75;
+  //player.height = 75;
+  player.rcSrc.x = 0;
+  player.rcSrc.y = 0;
+  player.rcSrc.w = 75;
+  player.rcSrc.h = 75;
+  /* pos in screen: player */
   position.x = 0;
   position.y = 305-sol;
+  //player.pos_screenX = 0;
+  //player.pos_screenY = 305-sol;
+
+  player.position.x = 0;
+  player.position.y = 0;
+
+  /* pos in sprite: background */
   test.x = 0;
   test.y = 0;
   test.w = 800;
   test.h = 400;
+  /* pos in screen: background */
   pos.x = 0;
   pos.y = 0;
+
+  /* pos in sprite: block */
+  pos_sprite.x = 0;
+  pos_sprite.y = 0;
+  pos_sprite.w = 50;
+  pos_sprite.h = 50;
+
+  /* pos in screen: plateform */
   plat.x = 20;
   plat.y = 320+rand()%40;
+
+
+
+
+  /* remplissage tableau manuel */
+  for (x=0;x<800/50;x++) {
+    tab[7][x] = -1;
+  }
+  tab[6][0] = -1;
+  tab[5][0] = -1;
+  tab[6][1] = -1;
+
+  tab[6][12] = -1;
+  tab[6][13] = -1;
+  tab[6][14] = -1;
+  tab[6][15] = -1;
+
+  /* affichage du tableau */
+  for (y=0;y<400/50;y++) {
+    for (x=0;x<800/50;x++) {
+      //printf("%d ",tab[y][x]);
+    }
+    //printf("\n");
+  }
+
+  player.jump = 0;
+
+
+
+
 
   /* loop for game */
   while (!close)
@@ -59,27 +113,49 @@ int main(int argc, char* argv[])
       current_time=SDL_GetTicks();
       
       /* KEYBOARD AND MOUSE */
-
-      control(&position,&rcSrc,&state,&saut,&sol);
-
       /* croix ou échap */
       close = quit(close);
+      /* clavier */
+      control(tab,&player);
       
+      /* draw bakground */
       SDL_BlitSurface(sprite.background, &test, sprite.screen, &pos);
-      if(current_time-previous_plateform_time>500){
-	
-	for(i=0;i<NB_plateform;i++){
-	  plat.x=plat.x+95+rand()%25;
-	  plat.y=320+rand()%40;
-	  SDL_BlitSurface(sprite.plateform, NULL, sprite.screen, &plat);
+
+      /* tableau */
+      /* draw floor */
+      for (y=0;y<400/50;y++) {
+	for (x=0;x<800/50;x++) {
+	  pos_screen.x = x*50;
+	  pos_screen.y = y*50;
+
+	  if (tab[y][x] == -1) {
+	    SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
+	  }
 	}
-	previous_plateform_time=current_time;
       }
-      SDL_BlitSurface(sprite.player, &rcSrc, sprite.screen, &position);
+
+
+      SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
+
+      //printf("%d ",on_the_floor(tab,player));
+      //printf("%d ",distance_of_floor(tab,player));
+
+      /* nb sprite x et y
+	printf("%d %d\n",player.rcSrc.x/75,player.rcSrc.y/75);*/
+
+      /* distance entre joueur et obstacle gauche 
+	 printf("%d\n",distance_wall_left(tab,player));*/
+
+      /* distance entre joueur et obstacle droite */
+	printf("%d\n",distance_wall_right(tab,player));
+
+      /* pos case x et y
+	 printf("%d %d\n", player.position.x/50,(player.position.y+(75/2))/50);*/
       
       /* GRAVITY */
-      if (saut==0)
-	gravity(&position,&sol);
+      if (player.jump == 0)
+	gravity(&player,tab);
+
       /****************************************************************************************************/
       /* OTHER */
       

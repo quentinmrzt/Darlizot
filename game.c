@@ -31,6 +31,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.background = load(sprite.background, name, sprite.screen);
   name[15] = '3';
   sprite.plateform = load(sprite.plateform, name, sprite.screen);
+  name[15] = '5';
+  sprite.block = load(sprite.block, name, sprite.screen);
   return sprite;
 }
 
@@ -40,123 +42,198 @@ s_surface load_sprite(s_surface sprite)
 /****************************************************************************************************/
 /* PHYSICS */
 
-void gravity(SDL_Rect *s1, int *s2)
+int on_the_floor(int tab[][800/50],s_information player) 
 {
-  SDL_Rect sprite=*s1;
-  int sol=*s2;
-  if (sprite.y< (305-sol))
-    sprite.y+=10;
-  *s1=sprite;
-  *s2=sol;
+  /* si la case en dessous est -1 */
+  if (case_bottom_floor(tab,player)) {
+    
+    /* regarde s'il est juste au dessus de 1px */
+    if ((((((player.position.y+75)/50)+1)*50)-(player.position.y+75)) == 1) {
+      return 1;
+    } else {
+      return 0;
+    }
+  } else {
+    return 0;
+  }
+}
+
+int distance_wall_left(int tab[][800/50],s_information player) 
+{
+  int i;
+
+  for (i=player.position.x/50 ; i>=0 ; i--) {
+    if (tab[(player.position.y+74)/50][i] == -1) {
+      // -50 pour coin de droite
+      return (player.position.x)-(i*50)-50;
+    }
+  }
+  return player.position.x;
+}
+
+int distance_wall_right(int tab[][800/50],s_information player) 
+{
+  int i;
+
+  for (i=(player.position.x+75)/50 ; i<800/50 ; i++) {
+    if (tab[(player.position.y+74)/50][i] == -1) {
+      // -50 pour coin de droite
+      return (i*50)-(player.position.x+75);
+    }
+  }
+  return 800-player.position.x-75;
+}
+
+int distance_of_floor(int tab[][800/50],s_information player) 
+{
+  int i; 
+  for (i=(player.position.y+75)/50 ; i<400/50 ; i++) {
+    if (tab[i][(player.position.x)/50] == -1) {
+      return (i*50)-(player.position.y+75);
+    }
+  }
+}
+
+int case_bottom_floor(int tab[][800/50], s_information player) 
+{
+  /* on regarde le coin inferieur gauche */
+  if (tab[((player.position.y+75)/50)+1][((player.position.x)/50)] != -1) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
+void gravity(s_information *player_ptr, int tab[][800/50])
+{
+  s_information player = *player_ptr;
+  
+  if (distance_of_floor(tab,player) >= 10) {
+    player.position.y += 10;
+  } else {
+    player.position.y += distance_of_floor(tab,player);
+  }
+
+  *player_ptr = player;
 }
 
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
-void control(SDL_Rect *p1, SDL_Rect *r1,int *s1, int *s2, int *f1)
+void control(int tab[][800/50], s_information *player_ptr)
 {
-  SDL_Rect position=*p1;
-  SDL_Rect rcSrc=*r1;
-  int state=*s1;
-  int jump=*s2;
-  int sol=*f1;
-  int sol2=305-sol;
-  
+  s_information player = *player_ptr;  
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
+  /********************************************************************************************/
+
   if (keystate[SDLK_LEFT]){
-    position.x-=20;
-    if (state!=1)
-      state=1;
-    if (jump==0 && position.y==sol2)
-      {
-	if (rcSrc.x<12*75 || rcSrc.x==20*75)
-	  rcSrc.x=12*75;
-	else{
-	  rcSrc.x+=75;
-	  rcSrc.y=0;
-	}
-      }
-    else
-      {
-	rcSrc.y=0;
-	rcSrc.x=14*75;
-      }
-  }
-  else
-    {
-      if (state==1){
-	rcSrc.x=11*75;
-	rcSrc.y=0;
-      }
+
+    if (distance_wall_left(tab,player) >= 20) { 
+      player.position.x-=20;
+    } else {
+      player.position.x-=distance_wall_left(tab,player);
     }
 
-  if (keystate[SDLK_RIGHT]){
-    position.x+=20;
-    if (state!=0)
-      state=0;
-    if (jump==0 && position.y==sol2)
-      {
-	if (rcSrc.x==0 || rcSrc.x>=10*75)
-	  rcSrc.x=75;
-	else{
-	  rcSrc.x+=75;
-	  rcSrc.y=0;
-	}
+    /* sprite à gauche */
+    player.state=1;
+
+    /* AU SOL */
+    if (distance_of_floor(tab,player) == 0) {
+      /* direction droite ou au bout des sprites */
+      player.rcSrc.y=0;
+      if (player.rcSrc.x<12*75 || player.rcSrc.x==20*75) {
+  	player.rcSrc.x=12*75;
+      } else {
+ 	player.rcSrc.x+=75;
       }
-    else
-      {
-	
-	rcSrc.y=0;
-	rcSrc.x=3*75;
-      }
-  }
-  else 
-    {
-      if (state==0){
-	rcSrc.x=0;
-	rcSrc.y=75;
-      }
+    } else {
+      player.rcSrc.y=0;
+      player.rcSrc.x=14*75;
     }
+  } else {
+    /* PAS DE TOUCHE: STATIC */
+    if (player.state==1) {
+      player.rcSrc.x=11*75;
+      player.rcSrc.y=0;
+    }
+  }
+
+  /********************************************************************************************/
+
+  if (keystate[SDLK_RIGHT]) {
+
+    if (distance_wall_right(tab,player) >= 20) { 
+      player.position.x+=20;
+    } else {
+      player.position.x+=distance_wall_right(tab,player);
+    }
+
+    /* sprite a droite */
+    player.state = 0;
+
+    /* AU SOL */
+    if (distance_of_floor(tab,player) == 0) {
+      player.rcSrc.y=0;
+      if (player.rcSrc.x==0 || player.rcSrc.x>=10*75) {
+	player.rcSrc.x=75;
+      } else {
+	player.rcSrc.x+=75;
+      }
+    } else {	
+      player.rcSrc.y=0;
+      player.rcSrc.x=3*75;
+    }
+  } else {
+    /* PAS DE TOUCHE: STATIC */
+    if (player.state==0) {
+      player.rcSrc.x=0;
+      player.rcSrc.y=0;
+    }
+  }
+
+  /********************************************************************************************/
 	 
-  if (keystate[SDLK_SPACE]){
+  if (keystate[SDLK_SPACE]) {
+    
   }
 
-  if (keystate[SDLK_UP] && position.y==sol2 && jump==0)
-    {
-      jump=1;
-      rcSrc.y=75;
-      position.y-=10; 
-    }
-  if (position.y>170 && jump==1)
-    {
-      rcSrc.y=75;
-      if (state==0)
-	rcSrc.x=75;
-      else
-	rcSrc.x=3*75; 
-      position.y-=10;
-      
-    }
-  else
-    {
-      rcSrc.y=0;
-      jump=0;
-    } 
-  if (jump==0 && position.y>170 && position.y<sol2 )
-    {
-      rcSrc.y=75;
-      if (state==0)
-	rcSrc.x=150;
-      else
-	rcSrc.x=375;
-    }
+  /********************************************************************************************/
 
-  *s2=jump;
-  *p1=position;
-  *r1=rcSrc;
-  *s1=state;
-  *f1=sol;
+  /* si EN SAUT  */
+  if (player.jump > 0) {
+    //deuxieme ligne de sprite 
+    player.rcSrc.y=75;
+    if (player.state==0) {
+      // 0: droite
+      player.rcSrc.x=75;
+    } else {
+      // 1: gauche
+      player.rcSrc.x=3*75;
+    }
+     
+    player.position.y-=10;
+    player.jump-=10;   
+  }
+
+  /* si SAUT et AU SOL */
+  if (keystate[SDLK_UP] && distance_of_floor(tab,player) == 0) {
+    player.jump = 70;
+  }
+
+  /* si PAS DE SAUT mais PAS AU SOL */
+  if (player.jump == 0 && distance_of_floor(tab,player) != 0) {
+    player.rcSrc.y = 75;
+    if (player.state==0) {
+      player.rcSrc.x = 75*2;
+    } else {
+      player.rcSrc.x = 75*5;
+    }   
+  }
+  
+  /********************************************************************************************/
+
+  *player_ptr=player;
 }
 
 
