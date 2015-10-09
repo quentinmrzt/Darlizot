@@ -25,12 +25,6 @@ struct s_information
   /* largeur et hauteur du sprite */
   int width;
   int height;
-  /* positon dans la map */
-  int pos_mapX;
-  int pos_mapY;
-  /* position dans l'ecran  */
-  int pos_screenX;
-  int pos_screenY;
   /* le nombre du sprite */
   int rotation;
   /* vitesse */

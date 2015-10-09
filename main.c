@@ -9,6 +9,7 @@
 #include "game.h"
 #include "time.h"
 
+
 int main(int argc, char* argv[])
 {
   int close,i,previous_plateform_time=0,current_time=0,saut=0,state=2, sol=75;
@@ -85,6 +86,18 @@ int main(int argc, char* argv[])
   tab[6][0] = -1;
   tab[5][0] = -1;
   tab[6][1] = -1;
+  /*
+  tab[4][21] = -1;
+  tab[4][20] = -1;
+  tab[3][20] = -1;
+  tab[3][21] = -1;
+
+
+  tab[4][22] = -1;
+  tab[4][23] = -1;
+  tab[3][22] = -1;
+  tab[3][23] = -1;*/
+
 
   tab[6][12] = -1;
   tab[6][13] = -1;

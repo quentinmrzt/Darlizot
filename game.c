@@ -42,21 +42,7 @@ s_surface load_sprite(s_surface sprite)
 /****************************************************************************************************/
 /* PHYSICS */
 
-int on_the_floor(int tab[][800/50],s_information player) 
-{
-  /* si la case en dessous est -1 */
-  if (case_bottom_floor(tab,player)) {
-    
-    /* regarde s'il est juste au dessus de 1px */
-    if ((((((player.position.y+75)/50)+1)*50)-(player.position.y+75)) == 1) {
-      return 1;
-    } else {
-      return 0;
-    }
-  } else {
-    return 0;
-  }
-}
+
 
 int distance_wall_left(int tab[][800/50],s_information player) 
 {
@@ -81,29 +67,18 @@ int distance_wall_right(int tab[][800/50],s_information player)
       return (i*50)-(player.position.x+75);
     }
   }
-  return 800-player.position.x-75;
+  return 800-(player.position.x+75);
 }
 
 int distance_of_floor(int tab[][800/50],s_information player) 
 {
   int i; 
   for (i=(player.position.y+75)/50 ; i<400/50 ; i++) {
-    if (tab[i][(player.position.x)/50] == -1) {
+    if (tab[i][(player.position.x+37)/50] == -1) {
       return (i*50)-(player.position.y+75);
     }
   }
 }
-
-int case_bottom_floor(int tab[][800/50], s_information player) 
-{
-  /* on regarde le coin inferieur gauche */
-  if (tab[((player.position.y+75)/50)+1][((player.position.x)/50)] != -1) {
-    return 0;
-  } else {
-    return 1;
-  }
-}
-
 void gravity(s_information *player_ptr, int tab[][800/50])
 {
   s_information player = *player_ptr;
@@ -127,12 +102,12 @@ void control(int tab[][800/50], s_information *player_ptr)
 
   /********************************************************************************************/
 
-  if (keystate[SDLK_LEFT]){
+  if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]){
 
     if (distance_wall_left(tab,player) >= 20) { 
       player.position.x-=20;
     } else {
-      player.position.x-=distance_wall_left(tab,player);
+      player.position.x-=distance_wall_left(tab,player)+10;
     }
 
     /* sprite à gauche */
@@ -161,12 +136,12 @@ void control(int tab[][800/50], s_information *player_ptr)
 
   /********************************************************************************************/
 
-  if (keystate[SDLK_RIGHT]) {
+  if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
 
     if (distance_wall_right(tab,player) >= 20) { 
       player.position.x+=20;
     } else {
-      player.position.x+=distance_wall_right(tab,player);
+      player.position.x+=distance_wall_right(tab,player)+15;
     }
 
     /* sprite a droite */
