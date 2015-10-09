@@ -160,7 +160,7 @@ int main(int argc, char* argv[])
 	 printf("%d\n",distance_wall_left(tab,player));*/
 
       /* distance entre joueur et obstacle droite */
-	printf("%d\n",distance_wall_right(tab,player));
+      //printf("%d\n",distance_wall_right(tab,player));
 
       /* pos case x et y
 	 printf("%d %d\n", player.position.x/50,(player.position.y+(75/2))/50);*/

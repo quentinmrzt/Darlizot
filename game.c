@@ -48,9 +48,9 @@ int distance_wall_left(int tab[][800/50],s_information player)
 {
   int i;
 
-  for (i=player.position.x/50 ; i>=0 ; i--) {
+  for (i=player.position.x/50 ; i>(player.position.x-2*75)/50 ; i--) {
     if (tab[(player.position.y+74)/50][i] == -1) {
-      // -50 pour coin de droite
+      // -50 pour coin de gauche
       return (player.position.x)-(i*50)-50;
     }
   }
@@ -61,7 +61,7 @@ int distance_wall_right(int tab[][800/50],s_information player)
 {
   int i;
 
-  for (i=(player.position.x+75)/50 ; i<800/50 ; i++) {
+  for (i=(player.position.x+75)/50 ; i<(player.position.x+2*75)/50 ; i++) {
     if (tab[(player.position.y+74)/50][i] == -1) {
       // -50 pour coin de droite
       return (i*50)-(player.position.x+75);
@@ -73,7 +73,7 @@ int distance_wall_right(int tab[][800/50],s_information player)
 int distance_of_floor(int tab[][800/50],s_information player) 
 {
   int i; 
-  for (i=(player.position.y+75)/50 ; i<400/50 ; i++) {
+  for (i=(player.position.y+75)/50 ; i<(player.position.y+75*5)/50 ; i++) {
     if (tab[i][(player.position.x+37)/50] == -1) {
       return (i*50)-(player.position.y+75);
     }
@@ -84,9 +84,9 @@ void gravity(s_information *player_ptr, int tab[][800/50])
   s_information player = *player_ptr;
   
   if (distance_of_floor(tab,player) >= 10) {
-    player.position.y += 10;
+    player.position.y += 15;
   } else {
-    player.position.y += distance_of_floor(tab,player);
+    player.position.y += distance_of_floor(tab,player); 
   }
 
   *player_ptr = player;
@@ -100,21 +100,32 @@ void control(int tab[][800/50], s_information *player_ptr)
   s_information player = *player_ptr;  
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
-  /********************************************************************************************/
+  /* ANIMATIONS */
 
-  if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]){
-
-    if (distance_wall_left(tab,player) >= 20) { 
-      player.position.x-=20;
-    } else {
-      player.position.x-=distance_wall_left(tab,player)+10;
-    }
-
-    /* sprite à gauche */
-    player.state=1;
-
+   if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
     /* AU SOL */
-    if (distance_of_floor(tab,player) == 0) {
+    if (distance_of_floor(tab,player) == 0) {   /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+      player.rcSrc.y=0;
+      if (player.rcSrc.x==0 || player.rcSrc.x>=10*75) {
+	player.rcSrc.x=75;
+      } else {
+	player.rcSrc.x+=75;
+      }
+    } else {	
+      player.rcSrc.y=0;
+      player.rcSrc.x=3*75;
+    }
+  } else {
+    /* PAS DE TOUCHE: STATIC */
+    if (player.state==0) {
+      player.rcSrc.x=0;
+      player.rcSrc.y=0;
+    }
+  }
+
+ if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]){
+    /* AU SOL */
+    if (distance_of_floor(tab,player) == 0) {   
       /* direction droite ou au bout des sprites */
       player.rcSrc.y=0;
       if (player.rcSrc.x<12*75 || player.rcSrc.x==20*75) {
@@ -134,47 +145,10 @@ void control(int tab[][800/50], s_information *player_ptr)
     }
   }
 
-  /********************************************************************************************/
+    /********************************************************************************************/
 
-  if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
-
-    if (distance_wall_right(tab,player) >= 20) { 
-      player.position.x+=20;
-    } else {
-      player.position.x+=distance_wall_right(tab,player)+15;
-    }
-
-    /* sprite a droite */
-    player.state = 0;
-
-    /* AU SOL */
-    if (distance_of_floor(tab,player) == 0) {
-      player.rcSrc.y=0;
-      if (player.rcSrc.x==0 || player.rcSrc.x>=10*75) {
-	player.rcSrc.x=75;
-      } else {
-	player.rcSrc.x+=75;
-      }
-    } else {	
-      player.rcSrc.y=0;
-      player.rcSrc.x=3*75;
-    }
-  } else {
-    /* PAS DE TOUCHE: STATIC */
-    if (player.state==0) {
-      player.rcSrc.x=0;
-      player.rcSrc.y=0;
-    }
-  }
-
-  /********************************************************************************************/
-	 
-  if (keystate[SDLK_SPACE]) {
-    
-  }
-
-  /********************************************************************************************/
-
+ /* JUMP */
+ 
   /* si EN SAUT  */
   if (player.jump > 0) {
     //deuxieme ligne de sprite 
@@ -192,12 +166,12 @@ void control(int tab[][800/50], s_information *player_ptr)
   }
 
   /* si SAUT et AU SOL */
-  if (keystate[SDLK_UP] && distance_of_floor(tab,player) == 0) {
+  if (keystate[SDLK_UP] && distance_of_floor(tab,player) == 0) { /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
     player.jump = 70;
   }
 
   /* si PAS DE SAUT mais PAS AU SOL */
-  if (player.jump == 0 && distance_of_floor(tab,player) != 0) {
+  if (player.jump == 0 && distance_of_floor(tab,player) != 0) { /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
     player.rcSrc.y = 75;
     if (player.state==0) {
       player.rcSrc.x = 75*2;
@@ -205,6 +179,43 @@ void control(int tab[][800/50], s_information *player_ptr)
       player.rcSrc.x = 75*5;
     }   
   }
+
+  /********************************************************************************************/
+
+  if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]){
+
+    if (distance_wall_left(tab,player) >= 20) { 
+      player.position.x-=20;
+    } else {
+      player.position.x-=distance_wall_left(tab,player)+13; 
+    }
+
+    /* sprite à gauche */
+    player.state=1;
+  }
+
+  /********************************************************************************************/
+
+  if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
+
+    if (distance_wall_right(tab,player) >= 20) {     /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+      player.position.x+=20;
+    } else {
+      player.position.x+=distance_wall_right(tab,player)+13;
+    }
+
+    /* sprite a droite */
+    player.state = 0;
+  }
+ 
+
+  /********************************************************************************************/
+	 
+  if (keystate[SDLK_SPACE]) {
+    
+  }
+
+
   
   /********************************************************************************************/
 
