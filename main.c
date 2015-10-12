@@ -19,6 +19,8 @@ int main(int argc, char* argv[])
   SDL_Rect position,rcSrc, pos, test, plat, pos_sprite,pos_screen;
   int tab[400/50][800/50] = {0}; // taille de l'écran, carre de 50px
   int x,y;
+  list_info enemies=NULL;
+  list_info shots=NULL;
 
   /****************************************************************************************************/
   /* INITIALIZE */

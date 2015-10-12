@@ -39,6 +39,13 @@ struct s_information
 };
 typedef struct s_information s_information;
 
+typedef struct list_s_information
+{
+  s_information val;
+  struct list_s_information* next;
+}* list_info;
+
+
 struct s_surface
 {
   SDL_Surface *screen;
