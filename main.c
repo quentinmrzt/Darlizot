@@ -12,12 +12,18 @@
 
 int main(int argc, char* argv[])
 {
-  int close,i,previous_plateform_time=0,current_time=0,saut=0,state=2, sol=75;
-  int NB_plateform=0, x_max, y_max;;
+  int close,i,current_time=0;
+  int x_max, y_max;
   s_information player;
   s_surface sprite;
-  SDL_Rect position,rcSrc, pos, test, plat, pos_sprite,pos_screen;
+
+
+
+  SDL_Rect pos, test, plat, pos_sprite,pos_screen;
   int x,y;
+
+
+
   list_info enemies=NULL;
   list_info shots=NULL;
 
@@ -38,22 +44,10 @@ int main(int argc, char* argv[])
   /* initialize variable */
   close = 0;
 
-  /* pos in sprite: player */
-  rcSrc.x = 0;
-  rcSrc.y = 0;
-  rcSrc.w = 75;
-  rcSrc.h = 75;
-  //player.width = 75;
-  //player.height = 75;
   player.rcSrc.x = 0;
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
   player.rcSrc.h = 75;
-  /* pos in screen: player */
-  position.x = 0;
-  position.y = 305-sol;
-  //player.pos_screenX = 0;
-  //player.pos_screenY = 305-sol;
 
   player.position.x = 0;
   player.position.y = 0;
@@ -81,38 +75,12 @@ int main(int argc, char* argv[])
   int tab[y_max][x_max]; // taille de l'écran, carre de 50px
   recup_map(tab);
 
-
-  /* remplissage tableau manuel *  for (x=0;x<800/50;x++) {
-    tab[7][x] = -1;
-  }
-  tab[6][0] = -1;
-  tab[5][0] = -1;
-  tab[6][1] = -1;*/
-
-  /*
-  tab[4][21] = -1;
-  tab[4][20] = -1;
-  tab[3][20] = -1;
-  tab[3][21] = -1;
-
-
-  tab[4][22] = -1;
-  tab[4][23] = -1;
-  tab[3][22] = -1;
-  tab[3][23] = -1;*/
-
-
-  /*tab[6][12] = -1;
-  tab[6][13] = -1;
-  tab[6][14] = -1;
-  tab[6][15] = -1;*/
-
   /* affichage du tableau */
   for (y=0;y<400/50;y++) {
     for (x=0;x<800/50;x++) {
-      printf("%d ",tab[y][x]);
+      //printf("%d ",tab[y][x]);
     }
-    printf("\n");
+    //printf("\n");
   }
 
   player.jump = 0;
@@ -121,7 +89,7 @@ int main(int argc, char* argv[])
   size_tab(&a,&b);
   printf("x: %d y: %d\n ",a,b);
 
-
+  player.state = 0;
 
   /* loop for game */
   while (!close)
@@ -135,9 +103,6 @@ int main(int argc, char* argv[])
       close = quit(close);
       /* clavier */
       control(tab,&player);
-      
-      /* draw bakground */
-      SDL_BlitSurface(sprite.background, &test, sprite.screen, &pos);
 
       /* tableau */
       /* draw floor */
@@ -145,6 +110,10 @@ int main(int argc, char* argv[])
 	for (x=0;x<800/50;x++) {
 	  pos_screen.x = x*50;
 	  pos_screen.y = y*50;
+
+	  if (tab[y][x] == 0) {
+	    SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
+	  }
 
 	  if (tab[y][x] == -1) {
 	    SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
@@ -155,20 +124,9 @@ int main(int argc, char* argv[])
 
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
 
-      //printf("%d ",on_the_floor(tab,player));
-      //printf("%d ",distance_of_floor(tab,player));
 
       /* nb sprite x et y*/
-	printf("%d %d\n",player.rcSrc.x/75,player.rcSrc.y/75);
-
-      /* distance entre joueur et obstacle gauche 
-	 printf("%d\n",distance_wall_left(tab,player));*/
-
-      /* distance entre joueur et obstacle droite */
-      //printf("%d\n",distance_wall_right(tab,player));
-
-      /* pos case x et y
-	 printf("%d %d\n", player.position.x/50,(player.position.y+(75/2))/50);*/
+      printf("%d %d\n",player.rcSrc.x/75,player.rcSrc.y/75);
       
       /* GRAVITY */
       if (player.jump == 0)
