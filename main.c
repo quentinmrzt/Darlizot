@@ -1,8 +1,8 @@
 /******************************************************************/
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
-/* Date creation: 20/09/15                                        */
-/* Derniere modification: 20/09/15                                */
+/* Creation date: 20/09/15                                        */
+/* Last modification: 14/10/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -12,16 +12,9 @@
 
 int main(int argc, char* argv[])
 {
-  int close,i;
-  int x_max, y_max;
+  int close,i, x_max, y_max, x, y;
   s_information player;
   s_surface sprite;
-
-
-
-  SDL_Rect pos_sprite,pos_screen;
-  int x,y;
-
 
   list_info enemies=NULL;
   list_info shots=NULL;
@@ -37,62 +30,41 @@ int main(int argc, char* argv[])
   SDL_WM_SetCaption("S3", NULL);
   /* create window */
   sprite.screen = SDL_SetVideoMode(800, 400, 0, 0);
+
+  /****************************************************************************************************/
+  /* initialize variable */
+
   /* load sprite */
   sprite = load_sprite(sprite);
 
-  /* initialize variable */
+  player = ini_player(player);
   close = 0;
-
-  player = ini_player(player); 
-
-
-
-  /* pos in sprite: block / sky */
-  pos_sprite.x = 0;
-  pos_sprite.y = 0;
-  pos_sprite.w = 50;
-  pos_sprite.h = 50;
-
-
-  /* tableau */
+ 
+  /* table */
   size_tab(&x_max,&y_max);
   int tab[y_max][x_max];
   recup_map(tab);
 
-
-  /* loop for game */
   while (!close)
     { 
+      /****************************************************************************************************/
       /* KEYBOARD AND MOUSE */
-      /* croix ou échap */
       close = quit(close);
-      /* clavier */
+
       control(tab,&player);
 
-      /* tableau */
-      /* draw floor */
-      for (y=0;y<400/50;y++) {
-	for (x=0;x<800/50;x++) {
-	  pos_screen.x = x*50;
-	  pos_screen.y = y*50;
-
-	  if (tab[y][x] == 0) {
-	    SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
-	  }
-
-	  if (tab[y][x] == -1) {
-	    SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
-	  }
-	}
+      if (player.jump == 0) {
+	player = gravity(player,tab);
       }
 
+      /****************************************************************************************************/
+      /* DRAW */
 
+      /* decor */
+      draw(tab,sprite);
+
+      /* player */
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
-
-      
-      /* GRAVITY */
-      if (player.jump == 0)
-	gravity(&player,tab);
 
       /****************************************************************************************************/
       /* OTHER */

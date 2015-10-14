@@ -37,6 +37,32 @@ s_surface load_sprite(s_surface sprite)
 /****************************************************************************************************/
 /* TAB OF SPRITE */
 
+void draw(int tab[][800/50], s_surface sprite) 
+{
+  int x,y;
+  SDL_Rect pos_sprite,pos_screen;
+
+  pos_sprite.x = 0;
+  pos_sprite.y = 0;
+  pos_sprite.w = 50;
+  pos_sprite.h = 50;
+
+  for (y=0;y<400/50;y++) {
+    for (x=0;x<800/50;x++) {
+      pos_screen.x = x*50;
+      pos_screen.y = y*50;
+
+      if (tab[y][x] == 0) {
+	SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
+      }
+
+      if (tab[y][x] == -1) {
+	SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
+      }
+    }
+  }
+}
+
 /****************************************************************************************************/
 /* PHYSICS */
 
@@ -94,10 +120,9 @@ int distance_of_floor(int tab[][800/50], s_information player)
     }
   }
 }
-void gravity(s_information *player_ptr, int tab[][800/50])
+s_information gravity(s_information player, int tab[][800/50])
 {
-  s_information player = *player_ptr;
-  int n = 800/50;
+  //int n = 800/50;
 
   // if (distance_of_floor(n,tab,player) >= 15) {
   if (distance_of_floor(tab,player) >= 15) {
@@ -107,7 +132,7 @@ void gravity(s_information *player_ptr, int tab[][800/50])
     player.position.y += distance_of_floor(tab,player); 
   }
 
-  *player_ptr = player;
+  return player;
 }
 
 /****************************************************************************************************/
@@ -117,9 +142,10 @@ void control(int tab[][800/50], s_information *player_ptr)
 {
   s_information player = *player_ptr;  
   Uint8 *keystate = SDL_GetKeyState(NULL);
-  int n = 800/50;
-  /* ANIMATIONS */
+  //int n = 800/50;
 
+
+  /* ANIMATIONS */
   
    if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
     /* AU SOL */
@@ -164,7 +190,7 @@ void control(int tab[][800/50], s_information *player_ptr)
     }
   }
 
-    /********************************************************************************************/
+ /********************************************************************************************/
 
  /* JUMP */
  
@@ -179,7 +205,6 @@ void control(int tab[][800/50], s_information *player_ptr)
       // 1: gauche
       player.rcSrc.x=3*75;
     }
-    
 
     if (player.jump > 2) {
       player.position.y-=15;
@@ -193,7 +218,7 @@ void control(int tab[][800/50], s_information *player_ptr)
   } 
 
   /* pour couper en vol */
-  if (!keystate[SDLK_UP]) {
+  if (!keystate[SDLK_UP] && distance_of_floor(tab,player) >= 30) {
     player.jump = 0;
   }
 
