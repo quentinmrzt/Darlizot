@@ -15,6 +15,19 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
+#define NB_GRID        19
+#define NB_TAB         NB_GRID+1
+#define TAB            40
+
+#define SCREEN_WIDTH   NB_GRID*32
+#define SCREEN_HEIGHT  NB_GRID*32
+#define SPRITE_SIZE    32
+#define SPEED          250
+#define FPS            30
+#define GRID           0
+#define POSITION       0
+#define END            147
+
 
 /* constant */
 
@@ -44,7 +57,6 @@ typedef struct list_s_information
   s_information val;
   struct list_s_information* next;
 }* list_info;
-
 
 struct s_surface
 {
