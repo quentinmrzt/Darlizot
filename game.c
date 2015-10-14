@@ -123,7 +123,6 @@ void control(int tab[][800/50], s_information *player_ptr)
   
    if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
     /* AU SOL */
-     //if (distance_of_floor(n,tab,player) == 0) {   /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
      if (distance_of_floor(tab,player) == 0) {
       player.rcSrc.y=0;
       if (player.rcSrc.x==0 || player.rcSrc.x>=10*75) {
@@ -145,11 +144,10 @@ void control(int tab[][800/50], s_information *player_ptr)
 
  if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]){
     /* AU SOL */
-   //if (distance_of_floor(n,tab,player) == 0) {
    if (distance_of_floor(tab,player) == 0) {
       /* direction droite ou au bout des sprites */
       player.rcSrc.y=0;
-      if (player.rcSrc.x<12*75 || player.rcSrc.x==20*75) {
+      if (player.rcSrc.x<12*75 || player.rcSrc.x==21*75) {
   	player.rcSrc.x=12*75;
       } else {
  	player.rcSrc.x+=75;
@@ -190,7 +188,6 @@ void control(int tab[][800/50], s_information *player_ptr)
   }
 
   /* si SAUT et AU SOL */
-  //if (keystate[SDLK_UP] && distance_of_floor(n,tab,player) == 0) { /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
   if (keystate[SDLK_UP] && distance_of_floor(tab,player) == 0) { 
     player.jump = 7;
   } 
@@ -201,7 +198,6 @@ void control(int tab[][800/50], s_information *player_ptr)
   }
 
   /* si PAS DE SAUT mais PAS AU SOL */
-  //if (player.jump == 0 && distance_of_floor(n,tab,player) != 0) { /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
   if (player.jump == 0 && distance_of_floor(tab,player) != 0) {
     player.rcSrc.y = 75;
     if (player.state==0) {
@@ -233,7 +229,7 @@ void control(int tab[][800/50], s_information *player_ptr)
   if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
 
     if (player.state == 0) {
-      if (distance_wall_right(tab,player) >= 20) {     /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+      if (distance_wall_right(tab,player) >= 20) {   
 	player.position.x+=20;
       } else {
 	player.position.x+=distance_wall_right(tab,player)+13;
@@ -246,9 +242,21 @@ void control(int tab[][800/50], s_information *player_ptr)
 
   /********************************************************************************************/
 	 
-  if (keystate[SDLK_SPACE]) {
-    
-  }
+    if (keystate[SDLK_SPACE]){
+      player.rcSrc.y=75*2;
+      if (player.jump==1)
+	{
+	
+	  if (player.state==0)
+	    {
+	      player.rcSrc.x=23*75;
+	    }
+	  else 
+	    {
+	      player.rcSrc.x=22*75;
+	    }
+	}
+    }
 
 
   
