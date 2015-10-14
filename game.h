@@ -23,6 +23,8 @@ s_information ini_player(s_information player);
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
+s_information ini_player(s_information player) ;
+
 int on_the_floor(int tab[][800/50],s_information player);
 int case_bottom_floor(int tab[][800/50], s_information player);
 int distance_of_floor(int tab[][800/50],s_information player);

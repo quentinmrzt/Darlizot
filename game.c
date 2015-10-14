@@ -30,8 +30,6 @@ s_surface load_sprite(s_surface sprite)
   name[15] = '2';
   sprite.background = load(sprite.background, name, sprite.screen);
   name[15] = '3';
-  sprite.plateform = load(sprite.plateform, name, sprite.screen);
-  name[15] = '5';
   sprite.block = load(sprite.block, name, sprite.screen);
   return sprite;
 }
@@ -42,7 +40,23 @@ s_surface load_sprite(s_surface sprite)
 /****************************************************************************************************/
 /* PHYSICS */
 
+s_information ini_player(s_information player) 
+{
+  player.rcSrc.x = 0;
+  player.rcSrc.y = 0;
+  player.rcSrc.w = 75;
+  player.rcSrc.h = 75;
+  
+  player.position.x = 0;
+  player.position.y = 0;
+  
+  player.jump = 0;
 
+  player.state = 0;
+
+  return player;
+
+}
 
 int distance_wall_left(int tab[][800/50],s_information player) 
 {
@@ -167,15 +181,18 @@ void control(int tab[][800/50], s_information *player_ptr)
       // 1: gauche
       player.rcSrc.x=3*75;
     }
-     
-    player.position.y-=15;
-    player.jump-=1;   
+    
+
+    if (player.jump > 2) {
+      player.position.y-=15;
+    }
+    player.jump-=1;
   }
 
   /* si SAUT et AU SOL */
   //if (keystate[SDLK_UP] && distance_of_floor(n,tab,player) == 0) { /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
   if (keystate[SDLK_UP] && distance_of_floor(tab,player) == 0) { 
-    player.jump = 5;
+    player.jump = 7;
   } 
 
   /* pour couper en vol */
@@ -312,7 +329,10 @@ void size_tab(int *x_ptr, int *y_ptr)
 
 void free_all_sprite(s_surface sprite) 
 {
+  SDL_FreeSurface(sprite.screen);
+  SDL_FreeSurface(sprite.background);
   SDL_FreeSurface(sprite.player);
+  SDL_FreeSurface(sprite.block);
 }
 
 
