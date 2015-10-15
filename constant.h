@@ -1,8 +1,8 @@
 /******************************************************************/
 /* constant.h                                                     */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
-/* Date creation: 20/09/15                                        */
-/* Derniere modification: 20/09/15                                */
+/* Creation: 20/09/15                                             */
+/* Last modification: 15/10/15                                    */
 /******************************************************************/
 
 #ifndef CONSTANT_H
@@ -15,19 +15,10 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
 
-/* structure */
 struct s_information
 {
-  /* largeur et hauteur du sprite */
-  int width;
-  int height;
-  /* le nombre du sprite */
-  int rotation;
-  /* vitesse */
   int speed;
-  /* vie */
   int life;
-
   SDL_Rect position;
   SDL_Rect rcSrc;
   int state;

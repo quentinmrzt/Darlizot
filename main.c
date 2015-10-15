@@ -1,8 +1,8 @@
 /******************************************************************/
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
-/* Creation date: 20/09/15                                        */
-/* Last modification: 14/10/15                                    */
+/* Creation: 20/09/15                                             */
+/* Last modification: 15/10/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -12,7 +12,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close,i, x_max, y_max, x, y;
+  int close, x_max, y_max;
   s_information player;
   s_surface sprite;
 
@@ -34,16 +34,13 @@ int main(int argc, char* argv[])
   /****************************************************************************************************/
   /* initialize variable */
 
-  /* load sprite */
   sprite = load_sprite(sprite);
-
   player = ini_player(player);
   close = 0;
- 
   /* table */
   size_tab(&x_max,&y_max);
   int tab[y_max][x_max];
-  recup_map(tab);
+  recup_map(x_max,y_max,tab);
 
   while (!close)
     { 
@@ -51,17 +48,17 @@ int main(int argc, char* argv[])
       /* KEYBOARD AND MOUSE */
       close = quit(close);
 
-      control(tab,&player);
+      control(x_max,y_max,tab,&player);
 
       if (player.jump == 0) {
-	player = gravity(player,tab);
+	player = gravity(x_max,y_max,tab,player);
       }
 
       /****************************************************************************************************/
       /* DRAW */
 
       /* decor */
-      draw(tab,sprite);
+      draw(x_max,y_max,tab,sprite);
 
       /* player */
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
