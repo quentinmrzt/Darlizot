@@ -9,6 +9,10 @@
 #define GAME_H
 
 /****************************************************************************************************/
+/* LIST */
+list_ptr list_cons(list_ptr list);
+
+/****************************************************************************************************/
 /* INITIALISATION */
 
 SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen);

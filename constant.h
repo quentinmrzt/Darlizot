@@ -26,11 +26,12 @@ struct s_information
 };
 typedef struct s_information s_information;
 
-typedef struct list_s_information
+struct s_node
 {
-  s_information val;
-  struct list_s_information* next;
-}* list_info;
+  struct s_node * next;
+  s_information info;
+};
+typedef struct s_node * list_ptr;
 
 struct s_surface
 {

@@ -16,8 +16,7 @@ int main(int argc, char* argv[])
   s_information player;
   s_surface sprite;
 
-  list_info enemies=NULL;
-  list_info shots=NULL;
+  list_ptr enemies=NULL;
 
   /****************************************************************************************************/
   /* INITIALIZE */

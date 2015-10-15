@@ -8,6 +8,21 @@
 #include "constant.h"
 #include "game.h"
 
+/****************************************************************************************************/
+/* LIST */
+list_ptr list_cons(list_ptr list) 
+{
+  list_ptr new = NULL;
+  /* dynamic allocation */
+  new = (list_ptr) malloc(sizeof(struct s_node));
+
+  new->info.life = 100;
+
+  new->next = list;
+
+  return new;
+}
+
 
 /****************************************************************************************************/
 /* INITIALIZE */
