@@ -20,7 +20,10 @@ s_information ini_player(s_information player);
 /* KEYBOARD AND MOUSE */
 
 int quit(int close);
-void control(int x_max, int y_max, int tab[y_max][x_max], s_information *player_ptr);
+s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 
 /****************************************************************************************************/
 /* PHYSICS */
@@ -34,6 +37,10 @@ s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information
 /* DRAW */
 
 void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite);
+s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+s_information anim_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+s_information anim_shoot(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 
 /****************************************************************************************************/
 /* TAB */

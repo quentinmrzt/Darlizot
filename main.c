@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
       /* KEYBOARD AND MOUSE */
       close = quit(close);
 
-      control(x_max,y_max,tab,&player);
+      player = control(x_max,y_max,tab,player);
 
       if (player.jump == 0) {
 	player = gravity(x_max,y_max,tab,player);
