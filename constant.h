@@ -41,7 +41,8 @@ struct s_surface
   SDL_Surface *screen;
   SDL_Surface *background;
   SDL_Surface *player;
-  SDL_Surface *block;
+  SDL_Surface *block;  
+  SDL_Surface *bullet;
 };
 typedef struct s_surface s_surface;
 

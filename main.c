@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
   int close, x_max, y_max;
   s_information player;
   s_surface sprite;
-  list_ptr enemies = NULL;
+  list_ptr shots = NULL;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -61,17 +61,15 @@ int main(int argc, char* argv[])
       close = quit(close);
       player = control(x_max,y_max,tab,player);
       player = gravity(x_max,y_max,tab,player);
-
-      /****************************************************************************************************/
-      /*  */
-
-      //printf("%d\n",player.map_x);
+      shots=shooting(player,shots);
 
       /****************************************************************************************************/
       /* DRAW */
 
       draw(x_max,y_max,tab,sprite);
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
+      if (shots!=NULL)
+	printf("1\n");
 
       /****************************************************************************************************/
       /* OTHER */

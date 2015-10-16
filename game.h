@@ -10,7 +10,7 @@
 
 /****************************************************************************************************/
 /* LIST */
-list_ptr list_cons(list_ptr list);
+list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st) ;
 
 /****************************************************************************************************/
 /* INITIALISATION */
@@ -29,6 +29,7 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information move_map(s_information player, int movement);
+list_ptr shooting(s_information player,list_ptr shots);
 
 /****************************************************************************************************/
 /* PHYSICS */

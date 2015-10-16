@@ -11,13 +11,16 @@
 /****************************************************************************************************/
 /* LIST */
 
-list_ptr list_cons(list_ptr list) 
+list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
 {
   list_ptr new = NULL;
   /* dynamic allocation */
   new = (list_ptr) malloc(sizeof(struct s_node));
-
-  new->info.life = 100;
+  
+  new->info.life = lf;
+  new->info.position=pos;
+  new->info.rcSrc=Src;
+  new->info.state=st;
 
   new->next = list;
 
@@ -48,6 +51,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.background = load(sprite.background, name, sprite.screen);
   name[15] = '3';
   sprite.block = load(sprite.block, name, sprite.screen);
+  name[15] = '4';
+  sprite.bullet = load(sprite.bullet, name, sprite.screen);
   return sprite;
 }
 
@@ -110,8 +115,6 @@ s_information move_map(s_information player, int movement)
     player.movement += 50;
     player.map_x -= 1;
   }
-
-  //printf("%d ", player.movement);
 
   return player;
 }
@@ -183,6 +186,24 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
   }
 
   return player;
+}
+
+list_ptr shooting(s_information player,list_ptr shots)
+{
+  Uint8 *keystate = SDL_GetKeyState(NULL);
+  if (keystate[SDLK_SPACE])
+    {
+      SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
+      if (player.state==0)
+	bullet_ini_rcSrc.x=0;  
+      else
+	bullet_ini_rcSrc.x=8;
+      bullet_ini_rcSrc.y=0;
+      bullet_ini_pos.x=player.position.x+40;
+      bullet_ini_pos.y=player.position.y+30;
+      shots=list_cons(shots,0,bullet_ini_pos,bullet_ini_rcSrc,0);
+    }
+  return shots;
 }
 
 s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player)
