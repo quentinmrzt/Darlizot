@@ -51,8 +51,10 @@ s_surface load_sprite(s_surface sprite)
   sprite.background = load(sprite.background, name, sprite.screen);
   name[15] = '3';
   sprite.block = load(sprite.block, name, sprite.screen);
-  name[15] = '4';
-  sprite.bullet = load(sprite.bullet, name, sprite.screen);
+  /*name[15] = '4';
+    sprite.bullet = load(sprite.bullet, name, sprite.screen);*/
+  name[15] = '6';
+  sprite.ennemi = load(sprite.ennemi, name, sprite.screen);
   return sprite;
 }
 
@@ -181,11 +183,33 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
   } 
 
   /* pour couper en vol */
-  if (!keystate[SDLK_UP] && distance_of_floor(x_max,y_max,tab,player) >= 30) {
+  if (!keystate[SDLK_UP] && distance_of_floor(x_max,y_max,tab,player) >= 65) {
     player.jump = 0;
   }
 
   return player;
+}
+
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
+{
+  if(nb_ennemi<10){
+    s_information ennemi_info;
+    SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
+    ennemi_info=ini_player(ennemi_info);
+    do {
+      ennemi_ini_pos.x=rand()%800;
+      ennemi_ini_pos.y=rand()%400-distance_of_floor(x_max,y_max,tab,ennemi_info); 
+    }
+    while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
+    if (ennemi_ini_pos.x>player.position.x){
+      ennemi_ini_rcSrc.x=12*75;
+    }else{
+      ennemi_ini_rcSrc.x=0;
+    }
+    ennemi_ini_rcSrc.y=0;
+    ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);	
+  }
+  return ennemi;
 }
 
 list_ptr shooting(s_information player,list_ptr shots)
@@ -223,8 +247,8 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
 }
 
 
-/****************************************************************************************************/
-/* PHYSICS */
+  /****************************************************************************************************/
+  /* PHYSICS */
 
 int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
@@ -275,8 +299,8 @@ s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information
   return player;
 }
 
-/****************************************************************************************************/
-/* DRAW */
+  /****************************************************************************************************/
+  /* DRAW */
 
 void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite) 
 {
@@ -406,8 +430,8 @@ s_information anim_shoot(int x_max, int y_max, int tab[y_max][x_max], s_informat
   return player;
 }
 
-/****************************************************************************************************/
-/* TAB */
+  /****************************************************************************************************/
+  /* TAB */
 
 void size_tab(int *x_ptr, int *y_ptr) 
 {
@@ -491,8 +515,8 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
   }
 }
 
-/****************************************************************************************************/
-/* CLEAN */
+  /****************************************************************************************************/
+  /* CLEAN */
 
 void free_all_sprite(s_surface sprite) 
 {

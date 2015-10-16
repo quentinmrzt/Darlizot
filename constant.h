@@ -43,6 +43,7 @@ struct s_surface
   SDL_Surface *player;
   SDL_Surface *block;  
   SDL_Surface *bullet;
+  SDL_Surface *ennemi;
 };
 typedef struct s_surface s_surface;
 

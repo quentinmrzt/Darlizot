@@ -12,6 +12,7 @@
 /* LIST */
 list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st) ;
 
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
 /****************************************************************************************************/
 /* INITIALISATION */
 
