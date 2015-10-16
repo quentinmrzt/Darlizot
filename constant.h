@@ -19,10 +19,13 @@ struct s_information
 {
   int speed;
   int life;
+  int map_x;
+  int map_y;
   SDL_Rect position;
   SDL_Rect rcSrc;
   int state;
   int jump;
+  int movement;
 };
 typedef struct s_information s_information;
 

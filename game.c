@@ -10,6 +10,7 @@
 
 /****************************************************************************************************/
 /* LIST */
+
 list_ptr list_cons(list_ptr list) 
 {
   list_ptr new = NULL;
@@ -64,6 +65,9 @@ s_information ini_player(s_information player)
 
   player.state = 0;
 
+  player.map_x = 0;
+  player.movement = 0;
+
   return player;
 }
 
@@ -94,6 +98,24 @@ int quit(int close)
   return close;
 }
 
+s_information move_map(s_information player, int movement) 
+{
+  player.movement += movement;
+
+  if (player.movement >= 50) {
+    player.movement -= 50;
+    player.map_x += 1;
+  }
+  if (player.movement <= -50) {
+    player.movement += 50;
+    player.map_x -= 1;
+  }
+
+  //printf("%d ", player.movement);
+
+  return player;
+}
+
 s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -102,8 +124,10 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
     if (player.state == 0) {
       if (distance_wall_right(x_max,y_max,tab,player) >= 20) {   
 	player.position.x+=20;
+	player = move_map(player,20);
       } else {
 	player.position.x+=distance_wall_right(x_max,y_max,tab,player)+13;
+	player = move_map(player,distance_wall_right(x_max,y_max,tab,player)+13);
       }
     } else {
       player.state = 0;
@@ -122,9 +146,11 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
     if (player.state == 1) {
       if (distance_wall_left(x_max,y_max,tab,player) >= 20) { 
 	player.position.x-=20;
+	player = move_map(player,-20);
       } else {
-	player.position.x-=distance_wall_left(x_max,y_max,tab,player)+13; 
-      }
+	player.position.x-=distance_wall_left(x_max,y_max,tab,player)+13;
+	player = move_map(player,-(distance_wall_left(x_max,y_max,tab,player)+13));
+      }      
     } else {
       /* sprite à gauche */
       player.state=1;
@@ -217,10 +243,12 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
 
 s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
-  if (distance_of_floor(x_max,y_max,tab,player) >= 15) {
-    player.position.y += 15;
-  } else {
-    player.position.y += distance_of_floor(x_max,y_max,tab,player); 
+  if (player.jump == 0) {
+    if (distance_of_floor(x_max,y_max,tab,player) >= 15) {
+      player.position.y += 15;
+    } else {
+      player.position.y += distance_of_floor(x_max,y_max,tab,player); 
+    }
   }
 
   return player;
@@ -239,7 +267,7 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite)
   pos_sprite.w = 50;
   pos_sprite.h = 50;
 
-  for (y=0;y<y_max;y++) {
+  for (y=0 ; y<y_max ; y++) {
     for (x=0;x<x_max;x++) {
       pos_screen.x = x*50;
       pos_screen.y = y*50;
@@ -418,6 +446,7 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
     while (y < y_max && number != 148) {
       x = 0;
       number = 0;
+
       /* x < taille du tableau ET pas retour */
       while (x < x_max && number != 147) {
 	fscanf(recuperation, "%d", &number);
@@ -425,6 +454,10 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
 	  tab[y][x] = number;
 	}
 	x++;
+      }
+
+      if (x < x_max) {
+	printf("on rentre\n");
       }
 
       /* tab < map: on va jusqu'à la fin de la ligne */

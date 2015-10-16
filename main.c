@@ -9,14 +9,12 @@
 #include "game.h"
 #include "time.h"
 
-
 int main(int argc, char* argv[])
 {
   int close, x_max, y_max;
   s_information player;
   s_surface sprite;
-
-  list_ptr enemies=NULL;
+  list_ptr enemies = NULL;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -41,25 +39,38 @@ int main(int argc, char* argv[])
   int tab[y_max][x_max];
   recup_map(x_max,y_max,tab);
 
+  int x,y;
+  for (y=0;y<y_max;y++) {
+    for (x=0;x<x_max;x++) {
+      if (tab[y][x] == 0) {
+	printf(" %d ",tab[y][x]);
+      } else {
+	printf("%d ",tab[y][x]);
+      }
+    }
+    printf("\n");
+  }
+
+  printf("%d %d\n",x_max,y_max);
+
   while (!close)
     { 
       /****************************************************************************************************/
       /* KEYBOARD AND MOUSE */
+
       close = quit(close);
-
       player = control(x_max,y_max,tab,player);
+      player = gravity(x_max,y_max,tab,player);
 
-      if (player.jump == 0) {
-	player = gravity(x_max,y_max,tab,player);
-      }
+      /****************************************************************************************************/
+      /*  */
+
+      //printf("%d\n",player.map_x);
 
       /****************************************************************************************************/
       /* DRAW */
 
-      /* decor */
       draw(x_max,y_max,tab,sprite);
-
-      /* player */
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
 
       /****************************************************************************************************/
@@ -67,7 +78,6 @@ int main(int argc, char* argv[])
       
       /* update the screen */
       SDL_UpdateRect(sprite.screen,0,0,0,0);
-
       /* fps */
       SDL_Delay(80);
     }
