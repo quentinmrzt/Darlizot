@@ -21,6 +21,7 @@ list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
   new->info.position=pos;
   new->info.rcSrc=Src;
   new->info.state=st;
+  new->info.jump=0;
   new->next = list;
 
   return new;
@@ -50,8 +51,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.background = load(sprite.background, name, sprite.screen);
   name[15] = '3';
   sprite.block = load(sprite.block, name, sprite.screen);
-  /*name[15] = '4';
-    sprite.bullet = load(sprite.bullet, name, sprite.screen);*/
+  name[15] = '4';
+  sprite.bullet = load(sprite.bullet, name, sprite.screen);
   name[15] = '6';
   sprite.ennemi = load(sprite.ennemi, name, sprite.screen);
   return sprite;
@@ -191,7 +192,7 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
 
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
 {
-  if(nb_ennemi<10){
+  if(nb_ennemi>0){
     s_information ennemi_info;
     SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
     ennemi_info=ini_player(ennemi_info);
@@ -208,14 +209,42 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
     ennemi_ini_rcSrc.y=0;
     ennemi_ini_rcSrc.h=75;
     ennemi_ini_rcSrc.w=75;
-    ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);	
+    ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
   }
   return ennemi;
 }
 
-void print_ennemi(list_ptr ennemi, int nb_ennemi)
+int update_ennemi(int nb_ennemi,list_ptr ennemi)
 {
+  int res=0;
+  list_ptr ennemi_list=ennemi;
+  while(ennemi_list!=NULL)
+    {
+      if(ennemi_list->info.life<=0)
+	{
+	  //supprimer l'element de la liste
+	}
+      ennemi_list=ennemi_list->next;
+    }
+  if (nb_ennemi>0){
+  res=nb_ennemi-1;
+  }
+  return res;
 }
+
+list_ptr ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi)
+{
+  list_ptr ennemi_list=ennemi;
+  while(ennemi_list!=NULL)
+    {
+      ennemi_list->info=gravity(x_max,y_max,tab,ennemi_list->info);
+      ennemi_list=ennemi->next;
+    }
+  return ennemi_list;
+}
+
+
+
 list_ptr shooting(s_information player,list_ptr shots)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -223,13 +252,22 @@ list_ptr shooting(s_information player,list_ptr shots)
     {
       SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
       if (player.state==0)
-	bullet_ini_rcSrc.x=0;  
+	{
+	  bullet_ini_pos.x=player.position.x+60;
+	  bullet_ini_rcSrc.x=0;  
+	}
       else
-	bullet_ini_rcSrc.x=8;
+	{
+	  bullet_ini_rcSrc.x=8;
+	  bullet_ini_pos.x=player.position.x+20;
+	}
       bullet_ini_rcSrc.y=0;
-      bullet_ini_pos.x=player.position.x+40;
-      bullet_ini_pos.y=player.position.y+30;
+      bullet_ini_rcSrc.w=8;
+      bullet_ini_rcSrc.h=6;
+      bullet_ini_pos.y=player.position.y+50;
       shots=list_cons(shots,0,bullet_ini_pos,bullet_ini_rcSrc,0);
+      if (player.state==1)
+	shots->info.state=1;
     }
   return shots;
 }
@@ -330,6 +368,30 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite)
       }
     }
   }
+}
+
+void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite)
+{
+  list_ptr ennemi_list=ennemi_ptr;
+  while (ennemi_list!=NULL)
+    {
+      SDL_BlitSurface(sprite.ennemi,&ennemi_list->info.rcSrc,sprite.screen,&ennemi_list->info.position);
+      ennemi_list=ennemi_list->next;
+    }
+}
+
+void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
+{
+  list_ptr shots_copy=shots;
+  while (shots_copy!=NULL)
+    {
+      if (shots_copy->info.state==0)
+	shots_copy->info.position.x+=40;
+      else 
+	shots_copy->info.position.x-=40;
+      SDL_BlitSurface(sprite.bullet,&shots_copy->info.rcSrc,sprite.screen,&shots_copy->info.position);
+      shots_copy=shots_copy->next;
+    }
 }
 
 s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
