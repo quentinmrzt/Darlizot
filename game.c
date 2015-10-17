@@ -21,7 +21,6 @@ list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
   new->info.position=pos;
   new->info.rcSrc=Src;
   new->info.state=st;
-
   new->next = list;
 
   return new;
@@ -198,20 +197,25 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
     ennemi_info=ini_player(ennemi_info);
     do {
       ennemi_ini_pos.x=rand()%800;
-      ennemi_ini_pos.y=rand()%400-distance_of_floor(x_max,y_max,tab,ennemi_info); 
+      ennemi_ini_pos.y=0; 
     }
     while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
     if (ennemi_ini_pos.x>player.position.x){
-      ennemi_ini_rcSrc.x=12*75;
+      ennemi_ini_rcSrc.x=11*75;
     }else{
       ennemi_ini_rcSrc.x=0;
     }
     ennemi_ini_rcSrc.y=0;
+    ennemi_ini_rcSrc.h=75;
+    ennemi_ini_rcSrc.w=75;
     ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);	
   }
   return ennemi;
 }
 
+void print_ennemi(list_ptr ennemi, int nb_ennemi)
+{
+}
 list_ptr shooting(s_information player,list_ptr shots)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);

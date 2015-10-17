@@ -11,11 +11,11 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max;
+  int close, x_max, y_max,i;
   s_information player;
   s_surface sprite;
   list_ptr shots = NULL;
-
+  list_ptr ennemi= NULL;
   /****************************************************************************************************/
   /* INITIALIZE */
 
@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
   /****************************************************************************************************/
   /* initialize variable */
-
+  
   sprite = load_sprite(sprite);
   player = ini_player(player);
   close = 0;
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
   }
 
   printf("%d %d\n",x_max,y_max);
-
+  ennemi=ennemi_spawn(player,ennemi,0,x_max,y_max,tab);
   while (!close)
     { 
       /****************************************************************************************************/
@@ -62,12 +62,19 @@ int main(int argc, char* argv[])
       player = control(x_max,y_max,tab,player);
       player = gravity(x_max,y_max,tab,player);
       shots=shooting(player,shots);
+      //ennemi->info=gravity(x_max,y_max,tab,ennemi);
 
       /****************************************************************************************************/
       /* DRAW */
-
+      
+      
+       
+      //ennemi=ennemi->next;
+      printf("%d,%d\n",ennemi->info.position.x,ennemi->info.position.y);
+	 
       draw(x_max,y_max,tab,sprite);
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
+      SDL_BlitSurface(sprite.ennemi,&ennemi->info.rcSrc,sprite.screen,&ennemi->info.position);
       if (shots!=NULL)
 	printf("1\n");
 
