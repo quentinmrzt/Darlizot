@@ -51,8 +51,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.background = load(sprite.background, name, sprite.screen);
   name[15] = '3';
   sprite.block = load(sprite.block, name, sprite.screen);
-  /*name[15] = '4';
-    sprite.bullet = load(sprite.bullet, name, sprite.screen);*/
+  name[15] = '4';
+  sprite.bullet = load(sprite.bullet, name, sprite.screen);
   name[15] = '6';
   sprite.ennemi = load(sprite.ennemi, name, sprite.screen);
   return sprite;
@@ -219,13 +219,22 @@ list_ptr shooting(s_information player,list_ptr shots)
     {
       SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
       if (player.state==0)
-	bullet_ini_rcSrc.x=0;  
+	{
+	  bullet_ini_pos.x=player.position.x+60;
+	  bullet_ini_rcSrc.x=0;  
+	}
       else
-	bullet_ini_rcSrc.x=8;
+	{
+	  bullet_ini_rcSrc.x=8;
+	  bullet_ini_pos.x=player.position.x+20;
+	}
       bullet_ini_rcSrc.y=0;
-      bullet_ini_pos.x=player.position.x+40;
-      bullet_ini_pos.y=player.position.y+30;
+      bullet_ini_rcSrc.w=8;
+      bullet_ini_rcSrc.h=6;
+      bullet_ini_pos.y=player.position.y+50;
       shots=list_cons(shots,0,bullet_ini_pos,bullet_ini_rcSrc,0);
+      if (player.state==1)
+	shots->info.state=1;
     }
   return shots;
 }
@@ -326,6 +335,20 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite)
       }
     }
   }
+}
+
+void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
+{
+  list_ptr shots_copy=shots;
+  while (shots_copy!=NULL)
+    {
+      if (shots_copy->info.state==0)
+	shots_copy->info.position.x+=40;
+      else 
+	shots_copy->info.position.x-=40;
+      SDL_BlitSurface(sprite.bullet,&shots_copy->info.rcSrc,sprite.screen,&shots_copy->info.position);
+      shots_copy=shots_copy->next;
+    }
 }
 
 s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 

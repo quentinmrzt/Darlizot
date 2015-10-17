@@ -61,15 +61,15 @@ int main(int argc, char* argv[])
       close = quit(close);
       player = control(x_max,y_max,tab,player);
       player = gravity(x_max,y_max,tab,player);
-      shots=shooting(player,shots);
+      
 
       /****************************************************************************************************/
       /* DRAW */
 
       draw(x_max,y_max,tab,sprite);
+      draw_shooting(player,shots,sprite);
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
-      if (shots!=NULL)
-	printf("1\n");
+      shots=shooting(player,shots);
 
       /****************************************************************************************************/
       /* OTHER */
