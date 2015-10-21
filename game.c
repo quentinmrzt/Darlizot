@@ -78,6 +78,49 @@ s_information ini_player(s_information player)
   return player;
 }
 
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
+{
+  if(nb_ennemi>0){
+    s_information ennemi_info;
+    SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
+    ennemi_info=ini_player(ennemi_info);
+    do {
+      ennemi_ini_pos.x=rand()%800;
+      ennemi_ini_pos.y=0; 
+    }
+    while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
+    if (ennemi_ini_pos.x>player.position.x){
+      ennemi_ini_rcSrc.x=11*75;
+    }else{
+      ennemi_ini_rcSrc.x=0;
+    }
+    ennemi_ini_rcSrc.y=0;
+    ennemi_ini_rcSrc.h=75;
+    ennemi_ini_rcSrc.w=75;
+    ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
+  }
+  return ennemi;
+}
+
+int update_ennemi(int nb_ennemi,list_ptr ennemi)
+{
+  int res=0;
+  list_ptr ennemi_list=ennemi;
+  while(ennemi_list!=NULL)
+    {
+      if(ennemi_list->info.life<=0)
+	{
+	  //supprimer l'element de la liste
+	}
+      ennemi_list=ennemi_list->next;
+    }
+  if (nb_ennemi>0){
+  res=nb_ennemi-1;
+  }
+  return res;
+}
+
+
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
@@ -105,21 +148,50 @@ int quit(int close)
   return close;
 }
 
-s_information move_map(s_information player, int movement) 
+s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
-  player.movement += movement;
+  /* animation */
+  player = anim_right(x_max,y_max,tab,player);  
+  player = anim_left(x_max,y_max,tab,player);
+  player = anim_jump(x_max,y_max,tab,player);
+  player = anim_shoot(x_max,y_max,tab,player);
 
-  if (player.movement >= 50) {
-    player.movement -= 50;
-    player.map_x += 1;
-  }
-  if (player.movement <= -50) {
-    player.movement += 50;
-    player.map_x -= 1;
-  }
+  /* move */
+  player = move_right(x_max,y_max,tab,player);
+  player = move_left(x_max,y_max,tab,player);
+  player = move_jump(x_max,y_max,tab,player);
 
   return player;
 }
+
+list_ptr shooting(s_information player,list_ptr shots)
+{
+  Uint8 *keystate = SDL_GetKeyState(NULL);
+  if (keystate[SDLK_SPACE])
+    {
+      SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
+      if (player.state==0)
+	{
+	  bullet_ini_pos.x=player.position.x+60;
+	  bullet_ini_rcSrc.x=0;  
+	}
+      else
+	{
+	  bullet_ini_rcSrc.x=8;
+	  bullet_ini_pos.x=player.position.x+20;
+	}
+      bullet_ini_rcSrc.y=0;
+      bullet_ini_rcSrc.w=8;
+      bullet_ini_rcSrc.h=6;
+      bullet_ini_pos.y=player.position.y+50;
+      shots=list_cons(shots,0,bullet_ini_pos,bullet_ini_rcSrc,0);
+      if (player.state==1)
+	shots->info.state=1;
+    }
+  return shots;
+}
+
+/**********************************************************/
 
 s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
@@ -190,107 +262,25 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
   return player;
 }
 
-list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
+s_information move_map(s_information player, int movement) 
 {
-  if(nb_ennemi>0){
-    s_information ennemi_info;
-    SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
-    ennemi_info=ini_player(ennemi_info);
-    do {
-      ennemi_ini_pos.x=rand()%800;
-      ennemi_ini_pos.y=0; 
-    }
-    while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
-    if (ennemi_ini_pos.x>player.position.x){
-      ennemi_ini_rcSrc.x=11*75;
-    }else{
-      ennemi_ini_rcSrc.x=0;
-    }
-    ennemi_ini_rcSrc.y=0;
-    ennemi_ini_rcSrc.h=75;
-    ennemi_ini_rcSrc.w=75;
-    ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
+  player.movement += movement;
+
+  if (player.movement >= 50) {
+    player.movement -= 50;
+    player.map_x += 1;
   }
-  return ennemi;
-}
-
-int update_ennemi(int nb_ennemi,list_ptr ennemi)
-{
-  int res=0;
-  list_ptr ennemi_list=ennemi;
-  while(ennemi_list!=NULL)
-    {
-      if(ennemi_list->info.life<=0)
-	{
-	  //supprimer l'element de la liste
-	}
-      ennemi_list=ennemi_list->next;
-    }
-  if (nb_ennemi>0){
-  res=nb_ennemi-1;
+  if (player.movement <= -50) {
+    player.movement += 50;
+    player.map_x -= 1;
   }
-  return res;
-}
-
-list_ptr ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi)
-{
-  list_ptr ennemi_list=ennemi;
-  while(ennemi_list!=NULL)
-    {
-      ennemi_list->info=gravity(x_max,y_max,tab,ennemi_list->info);
-      ennemi_list=ennemi->next;
-    }
-  return ennemi_list;
-}
-
-
-
-list_ptr shooting(s_information player,list_ptr shots)
-{
-  Uint8 *keystate = SDL_GetKeyState(NULL);
-  if (keystate[SDLK_SPACE])
-    {
-      SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
-      if (player.state==0)
-	{
-	  bullet_ini_pos.x=player.position.x+60;
-	  bullet_ini_rcSrc.x=0;  
-	}
-      else
-	{
-	  bullet_ini_rcSrc.x=8;
-	  bullet_ini_pos.x=player.position.x+20;
-	}
-      bullet_ini_rcSrc.y=0;
-      bullet_ini_rcSrc.w=8;
-      bullet_ini_rcSrc.h=6;
-      bullet_ini_pos.y=player.position.y+50;
-      shots=list_cons(shots,0,bullet_ini_pos,bullet_ini_rcSrc,0);
-      if (player.state==1)
-	shots->info.state=1;
-    }
-  return shots;
-}
-
-s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player)
-{
-  /* animation */
-  player = anim_right(x_max,y_max,tab,player);  
-  player = anim_left(x_max,y_max,tab,player);
-  player = anim_jump(x_max,y_max,tab,player);
-  player = anim_shoot(x_max,y_max,tab,player);
-
-  /* move */
-  player = move_right(x_max,y_max,tab,player);
-  player = move_left(x_max,y_max,tab,player);
-  player = move_jump(x_max,y_max,tab,player);
 
   return player;
 }
 
 
-  /****************************************************************************************************/
-  /* PHYSICS */
+/****************************************************************************************************/
+/* PHYSICS */
 
 int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
@@ -322,7 +312,8 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
 {
   int i; 
   for (i=(player.position.y+75)/50 ; i<(player.position.y+75*5)/50 ; i++) {
-    if (tab[i][(player.position.x+37)/50] == -1) {
+    //if (tab[i][(player.position.x+37)/50] == -1) {
+    if (tab[i][(player.position.x)/50] == -1 || tab[i][(player.position.x+75)/50]) {
       return (i*50)-(player.position.y+75);
     }
   }
@@ -341,8 +332,19 @@ s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information
   return player;
 }
 
-  /****************************************************************************************************/
-  /* DRAW */
+list_ptr ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi)
+{
+  list_ptr ennemi_list=ennemi;
+  while(ennemi_list!=NULL)
+    {
+      ennemi_list->info=gravity(x_max,y_max,tab,ennemi_list->info);
+      ennemi_list=ennemi->next;
+    }
+  return ennemi_list;
+}
+
+/****************************************************************************************************/
+/* DRAW */
 
 void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite) 
 {
@@ -393,6 +395,8 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
       shots_copy=shots_copy->next;
     }
 }
+
+/****************************************************/
 
 s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
@@ -496,8 +500,26 @@ s_information anim_shoot(int x_max, int y_max, int tab[y_max][x_max], s_informat
   return player;
 }
 
-  /****************************************************************************************************/
-  /* TAB */
+void draw_tab(int x_max, int y_max, int tab[y_max][x_max]) 
+{
+  int x,y;
+
+  for (y=0;y<y_max;y++) {
+    for (x=0;x<x_max;x++) {
+      if (tab[y][x] == 0) {
+	printf(" %d ",tab[y][x]);
+      } else {
+	printf("%d ",tab[y][x]);
+      }
+    }
+    printf("\n");
+  }
+
+  printf("%d %d\n",x_max,y_max);
+}
+
+/****************************************************************************************************/
+/* TAB */
 
 void size_tab(int *x_ptr, int *y_ptr) 
 {
@@ -581,8 +603,8 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
   }
 }
 
-  /****************************************************************************************************/
-  /* CLEAN */
+/****************************************************************************************************/
+/* CLEAN */
 
 void free_all_sprite(s_surface sprite) 
 {
@@ -590,4 +612,89 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.background);
   SDL_FreeSurface(sprite.player);
   SDL_FreeSurface(sprite.block);
+}
+
+
+
+
+
+/*********************************************/
+
+
+
+int boundingbox(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
+{
+  int x1 = player.position.x/50;
+  int x2 = (player.position.x+75)/50;
+  int y1 = player.position.y/50;
+  int y2 = (player.position.y+75)/50;
+
+  if (tab[y1][x1] != 0 || tab[y2][x2] != 0 || tab[y1][x2] != 0 || tab[y2][x1] != 0) {
+    return 1;
+  }
+  return 0;
+}
+
+
+/* https://openclassrooms.com/courses/modifier-une-image-pixel-par-pixel */
+Uint32 get_pixel(SDL_Surface *surface, int x, int y)
+{
+    int nbOctetsParPixel = surface->format->BytesPerPixel;
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * nbOctetsParPixel;
+
+    switch(nbOctetsParPixel) {
+        case 1:
+            return *p;
+        case 2:
+            return *(Uint16 *)p;
+        case 3:
+            if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                return p[0] << 16 | p[1] << 8 | p[2];
+            else
+                return p[0] | p[1] << 8 | p[2] << 16;
+        case 4:
+            return *(Uint32 *)p;
+        default:
+            return 0; 
+    }
+}
+
+
+
+void foot_pos(int x_max, int y_max, int tab[y_max][x_max], s_information player, SDL_Surface *surface, int *pos_min, int *pos_max) 
+{
+  Uint8 r,g,b,a;
+  int x, y, min, max;
+  Uint32 pixel;
+  SDL_LockSurface(surface);
+
+  *pos_min = 0;
+  *pos_max = 0;
+
+  if (boundingbox(x_max,y_max,tab,player)) {
+    min = surface->w;
+    max = 0;
+    y = player.rcSrc.y+75-1;
+    
+    for (x=player.rcSrc.x ; x<player.rcSrc.x+75 ; x++) {
+      pixel = get_pixel(surface,x,y);
+      SDL_GetRGBA(pixel, surface->format,&r,&g,&b,&a);
+	         
+      if (r != 255 || g != 0 || b != 255) {
+	if (min > x) {
+	  min = x;
+	}
+	if (max < x) {
+	  max = x; 
+	}
+      }
+    }
+    *pos_min = min%75 + player.position.x;
+    *pos_max = max%75 + player.position.x;
+  } else {
+    *pos_min = player.position.x;
+    *pos_max = player.position.x+75;
+  }
+
+  SDL_UnlockSurface(surface);
 }

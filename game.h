@@ -8,30 +8,33 @@
 #ifndef GAME_H
 #define GAME_H
 
-/****************************************************************************************************/
-/* LIST */
-list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st) ;
 
 /****************************************************************************************************/
-/* INITIALISATION */
+/* INITIALIZE */
 
 SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen);
 s_surface load_sprite(s_surface sprite);
 s_information ini_player(s_information player);
-
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
+int update_ennemi(int nb_ennemi,list_ptr ennemi);
 
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
 int quit(int close);
 s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+list_ptr shooting(s_information player,list_ptr shots);
+
 s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information move_map(s_information player, int movement);
-list_ptr shooting(s_information player,list_ptr shots);
-list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
-int update_ennemi(int nb_ennemi,list_ptr ennemi);
+
+/****************************************************************************************************/
+/* LIST */
+
+list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st) ;
+
 /****************************************************************************************************/
 /* PHYSICS */
 
@@ -46,11 +49,14 @@ list_ptr ennemi_gravity(int x_max, int y_max, int tab[y_max][x_max], list_ptr en
 
 void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite);
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite);
+void draw_ennemis(list_ptr ennemi_ptr,s_surface sprite);
+
 s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information anim_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information anim_shoot(int x_max, int y_max, int tab[y_max][x_max], s_information player);
-void draw_ennemis(list_ptr ennemi_ptr,s_surface sprite);
+
+void draw_tab(int x_max, int y_max, int tab[y_max][x_max]);
 
 /****************************************************************************************************/
 /* TAB */
@@ -62,6 +68,10 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max]);
 /* CLEAN */
 
 void free_all_sprite(s_surface sprite);
+
+int boundingbox(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+void foot_pos(int x_max, int y_max, int tab[y_max][x_max], s_information player, SDL_Surface *surface, int *pos_min, int *pos_max);
+Uint32 get_pixel(SDL_Surface *surface, int x, int y);
 
 
 #endif
