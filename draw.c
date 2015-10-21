@@ -145,28 +145,32 @@ s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 
 s_information anim_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
+  Uint8 *keystate= SDL_GetKeyState(NULL);
   /* JUMP */ 
   /* si EN SAUT  */
   if (player.jump > 0) {
     //deuxieme ligne de sprite 
-    player.rcSrc.y=75;
-    if (player.state==0) {
-      player.rcSrc.x=75;
-    } else {
-      player.rcSrc.x=3*75;
+    
+    if (!keystate[SDLK_SPACE]){
+      player.rcSrc.y=75;
+      if (player.state==0) {
+	player.rcSrc.x=75;
+      } else {
+	player.rcSrc.x=3*75;
+      }
     }
   }
-
   /* si PAS DE SAUT mais PAS AU SOL */
   if (player.jump == 0 && distance_of_floor(x_max,y_max,tab,player) != 0) {
-    player.rcSrc.y = 75;
-    if (player.state == 0) {
-      player.rcSrc.x = 75*2;
-    } else {
-      player.rcSrc.x = 75*5;
-    }   
+    if (!keystate[SDLK_SPACE]){
+      player.rcSrc.y = 75;
+      if (player.state == 0) {
+	player.rcSrc.x = 75*2;
+      } else {
+	player.rcSrc.x = 75*5;
+      }   
+    }
   }
-
   return player;
 }
 
@@ -176,11 +180,11 @@ s_information anim_shoot(int x_max, int y_max, int tab[y_max][x_max], s_informat
   
   if (keystate[SDLK_SPACE]) {
     player.rcSrc.y=75*2;
-    if (player.jump==1) {
+    if (distance_of_floor(x_max,y_max,tab,player) !=0) {
       if (player.state==0) {
-	player.rcSrc.x=23*75;
-      } else {
 	player.rcSrc.x=22*75;
+      } else {
+	player.rcSrc.x=23*75;
       }
     }
   }
