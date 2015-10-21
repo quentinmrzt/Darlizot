@@ -7,6 +7,8 @@
 
 #include "constant.h"
 #include "game.h"
+#include "draw.h"
+#include "control.h"
 #include "time.h"
 
 int main(int argc, char* argv[])
@@ -33,26 +35,18 @@ int main(int argc, char* argv[])
   nb_ennemi=10;
   sprite = load_sprite(sprite);
   player = ini_player(player);
-  close = 0;
   /* table */
   size_tab(&x_max,&y_max);
   int tab[y_max][x_max];
   recup_map(x_max,y_max,tab);
 
-  int x,y;
-  for (y=0;y<y_max;y++) {
-    for (x=0;x<x_max;x++) {
-      if (tab[y][x] == 0) {
-	printf(" %d ",tab[y][x]);
-      } else {
-	printf("%d ",tab[y][x]);
-      }
-    }
-    printf("\n");
-  }
+  //draw_tab(x_max,y_max,tab);
 
-  printf("%d %d\n",x_max,y_max);
-  ennemi=ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
+  close = 0;
+  nb_ennemi = 5;
+  ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
+  
+
   while (!close)
     { 
       /****************************************************************************************************/
@@ -60,20 +54,16 @@ int main(int argc, char* argv[])
 
       close = quit(close);
       player = control(x_max,y_max,tab,player);
+      shots = shooting(player,shots);
       player = gravity(x_max,y_max,tab,player);
-      shots=shooting(player,shots);
-
 
       /****************************************************************************************************/
       /* DRAW */
       
-       
-	 
       draw(x_max,y_max,tab,sprite);
       draw_shooting(player,shots,sprite);
       draw_ennemis(ennemi,sprite);
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
-      
       
       //nb_ennemi=update_ennemi(nb_ennemi,ennemi);
       //printf("%d\n",ennemi->info.position.y);
@@ -81,7 +71,11 @@ int main(int argc, char* argv[])
 
       shots=shooting(player,shots);
       
-      
+      //ennemi=ennemi_gravity(x_max,y_max,tab,ennemi);
+      draw_ennemis(ennemi,sprite);
+      //printf("%d\n",ennemi->info.position.y);
+
+
       /****************************************************************************************************/
       /* OTHER */
       
