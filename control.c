@@ -92,8 +92,8 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 	player.position.x+=20;
 	player = move_map(player,20);
       } else {
-	player.position.x+=distance_wall_right(x_max,y_max,tab,player)+13;
-	player = move_map(player,distance_wall_right(x_max,y_max,tab,player)+13);
+	player.position.x+=distance_wall_right(x_max,y_max,tab,player);
+	player = move_map(player,distance_wall_right(x_max,y_max,tab,player));
       }
     } else {
       player.state = 0;
@@ -114,8 +114,8 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 	player.position.x-=20;
 	player = move_map(player,-20);
       } else {
-	player.position.x-=distance_wall_left(x_max,y_max,tab,player)+13;
-	player = move_map(player,-(distance_wall_left(x_max,y_max,tab,player)+13));
+	player.position.x-=distance_wall_left(x_max,y_max,tab,player);
+	player = move_map(player,-(distance_wall_left(x_max,y_max,tab,player)));
       }      
     } else {
       /* sprite à gauche */
