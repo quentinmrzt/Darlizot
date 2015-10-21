@@ -82,6 +82,7 @@ s_information ini_player(s_information player)
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
 {
   s_information ennemi_info;
+  int i;
   SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
   if(nb_ennemi>0){
     ennemi_info=ini_player(ennemi_info);
@@ -94,14 +95,12 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
     }else{
       ennemi_ini_rcSrc.x=0;
     }
-    do {
+    for(i=0;i<nb_ennemi;i++){
       ennemi_ini_pos.x=(rand()%600)+100;
       ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
+      printf("%d\n",i);
     }
-    while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
-    
-    
-   
+    return ennemi;
   }
   return ennemi;
 }
@@ -184,7 +183,7 @@ void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_
   while(ennemi_list!=NULL)
     {
       ennemi_list->info=gravity(x_max,y_max,tab,ennemi_list->info);
-      ennemi_list=ennemi->next;
+      ennemi_list=ennemi_list->next;
     }
 }
 
