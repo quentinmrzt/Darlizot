@@ -61,13 +61,13 @@ list_ptr shooting(s_information player,list_ptr shots)
       SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
       if (player.state==0)
 	{
-	  bullet_ini_pos.x=player.position.x+60;
+	  bullet_ini_pos.x=player.position.x+60+rand()%2;
 	  bullet_ini_rcSrc.x=0;  
 	}
       else
 	{
 	  bullet_ini_rcSrc.x=8;
-	  bullet_ini_pos.x=player.position.x+20;
+	  bullet_ini_pos.x=player.position.x+20+rand()%2;
 	}
       bullet_ini_rcSrc.y=0;
       bullet_ini_rcSrc.w=8;

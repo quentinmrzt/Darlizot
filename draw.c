@@ -57,9 +57,9 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
   while (shots_copy!=NULL)
     {
       if (shots_copy->info.state==0)
-	shots_copy->info.position.x+=40;
+	shots_copy->info.position.x+=30;
       else 
-	shots_copy->info.position.x-=40;
+	shots_copy->info.position.x-=30;
       SDL_BlitSurface(sprite.bullet,&shots_copy->info.rcSrc,sprite.screen,&shots_copy->info.position);
       shots_copy=shots_copy->next;
     }
@@ -123,7 +123,7 @@ s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
     if (distance_of_floor(x_max,y_max,tab,player) == 0) {
       /* direction droite ou au bout des sprites */
       player.rcSrc.y=0;
-      if (player.rcSrc.x<12*75 || player.rcSrc.x==21*75) {
+      if (player.rcSrc.x<12*75 || player.rcSrc.x>=21*75) {
 	player.rcSrc.x=12*75;
       } else {
 	player.rcSrc.x+=75;

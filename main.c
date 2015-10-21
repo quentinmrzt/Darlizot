@@ -69,10 +69,8 @@ int main(int argc, char* argv[])
       //printf("%d\n",ennemi->info.position.y);
       ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
-      shots=shooting(player,shots);
-      
+      printf("%d\n",player.rcSrc.x/75);
       //ennemi=ennemi_gravity(x_max,y_max,tab,ennemi);
-      draw_ennemis(ennemi,sprite);
       //printf("%d\n",ennemi->info.position.y);
 
 
