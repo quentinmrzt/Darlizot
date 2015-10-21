@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
   /****************************************************************************************************/
   /* initialize variable */
-  nb_ennemi=5;
+  nb_ennemi=10;
   sprite = load_sprite(sprite);
   player = ini_player(player);
   close = 0;
@@ -71,23 +71,17 @@ int main(int argc, char* argv[])
 	 
       draw(x_max,y_max,tab,sprite);
       draw_shooting(player,shots,sprite);
+      draw_ennemis(ennemi,sprite);
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
-
       
       
       //nb_ennemi=update_ennemi(nb_ennemi,ennemi);
       //printf("%d\n",ennemi->info.position.y);
-      //ennemi=ennemi_gravity(x_max,y_max,tab,ennemi);
-      draw_ennemis(ennemi,sprite);
-      //printf("%d\n",ennemi->info.position.y);
-
-      
-      if (shots!=NULL)
-	printf("1\n");
+      ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
       shots=shooting(player,shots);
-
-
+      
+      
       /****************************************************************************************************/
       /* OTHER */
       

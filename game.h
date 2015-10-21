@@ -39,7 +39,7 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information player);
-list_ptr ennemi_gravity(int x_max, int y_max, int tab[y_max][x_max], list_ptr ennemi);
+void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi, s_surface sprite);
 
 /****************************************************************************************************/
 /* DRAW */

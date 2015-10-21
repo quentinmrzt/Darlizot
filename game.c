@@ -192,24 +192,27 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
 
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
 {
+  s_information ennemi_info;
+  SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
   if(nb_ennemi>0){
-    s_information ennemi_info;
-    SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
     ennemi_info=ini_player(ennemi_info);
-    do {
-      ennemi_ini_pos.x=rand()%800;
-      ennemi_ini_pos.y=0; 
-    }
-    while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
+    ennemi_ini_pos.y=0; 
+    ennemi_ini_rcSrc.y=0;
+    ennemi_ini_rcSrc.h=75;
+    ennemi_ini_rcSrc.w=75;
     if (ennemi_ini_pos.x>player.position.x){
       ennemi_ini_rcSrc.x=11*75;
     }else{
       ennemi_ini_rcSrc.x=0;
     }
-    ennemi_ini_rcSrc.y=0;
-    ennemi_ini_rcSrc.h=75;
-    ennemi_ini_rcSrc.w=75;
-    ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
+    do {
+      ennemi_ini_pos.x=(rand()%600)+100;
+      ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
+    }
+    while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
+    
+    
+   
   }
   return ennemi;
 }
@@ -232,15 +235,14 @@ int update_ennemi(int nb_ennemi,list_ptr ennemi)
   return res;
 }
 
-list_ptr ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi)
+void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi, s_surface sprite)
 {
   list_ptr ennemi_list=ennemi;
   while(ennemi_list!=NULL)
     {
       ennemi_list->info=gravity(x_max,y_max,tab,ennemi_list->info);
-      ennemi_list=ennemi->next;
+      ennemi_list=ennemi_list->next;
     }
-  return ennemi_list;
 }
 
 
@@ -590,4 +592,6 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.background);
   SDL_FreeSurface(sprite.player);
   SDL_FreeSurface(sprite.block);
+  SDL_FreeSurface(sprite.bullet);
+  SDL_FreeSurface(sprite.ennemi);
 }
