@@ -7,6 +7,8 @@
 
 #include "constant.h"
 #include "game.h"
+#include "draw.h"
+#include "control.h"
 #include "time.h"
 
 int main(int argc, char* argv[])

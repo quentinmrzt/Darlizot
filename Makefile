@@ -35,6 +35,8 @@ LIBS = -lSDL_ttf -lm
 # TODO: update and complete the following line with your .c files names
 SRCS1 = main.c
 SRCS2 = game.c
+SRCS3 = draw.c
+SRCS4 = control.c
 
 # define the C object files 
 #
@@ -46,6 +48,8 @@ SRCS2 = game.c
 #
 OBJS1 = $(SRCS1:.c=.o)
 OBJS2 = $(SRCS2:.c=.o)
+OBJS3 = $(SRCS3:.c=.o)
+OBJS4 = $(SRCS4:.c=.o)
 
 # define the executable file 
 MAIN = s3
@@ -61,8 +65,8 @@ MAIN = s3
 all:  $(MAIN)
 	@echo  "Everything has been compiled, w00t!"
 
-$(MAIN): $(OBJS1) $(OBJS2)
-	$(CC) $(OBJS1) $(OBJS2) $(CFLAGS) $(WARNINGS) $(INCLUDES) -o $(MAIN) $(LFLAGS) $(LIBS)
+$(MAIN): $(OBJS1) $(OBJS2) $(OBJS3) $(OBJS3) $(OBJS4)
+	$(CC) $(OBJS1) $(OBJS2) $(OBJS3) $(OBJS4) $(CFLAGS) $(WARNINGS) $(INCLUDES) -o $(MAIN) $(LFLAGS) $(LIBS)
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
