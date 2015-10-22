@@ -28,6 +28,17 @@ list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
   return new;
 }
 
+list_ptr list_element_delete(list_ptr list)
+{
+  if(list==NULL){
+    return list;
+  }
+  list_ptr list_temp;
+  list_temp=list;
+  list=list->next;
+  free(list_temp);
+  return list;
+}
 
 /****************************************************************************************************/
 /* INITIALIZE */
@@ -113,7 +124,7 @@ int update_ennemi(int nb_ennemi,list_ptr ennemi)
     {
       if(ennemi_list->info.life<=0)
 	{
-	  //supprimer l'element de la liste
+	  //Supprimer de la liste
 	}
       ennemi_list=ennemi_list->next;
     }

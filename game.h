@@ -24,7 +24,7 @@ int update_ennemi(int nb_ennemi,list_ptr ennemi);
 /* LIST */
 
 list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st) ;
-
+list_ptr list_element_delete(list_ptr list);
 /****************************************************************************************************/
 /* PHYSICS */
 
