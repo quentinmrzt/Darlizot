@@ -2,7 +2,7 @@
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/10/15                                    */
+/* Last modification: 26/10/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -28,6 +28,17 @@ list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
   return new;
 }
 
+list_ptr list_element_delete(list_ptr list)
+{
+  if(list==NULL){
+    return list;
+  }
+  list_ptr list_temp;
+  list_temp=list;
+  list=list->next;
+  free(list_temp);
+  return list;
+}
 
 /****************************************************************************************************/
 /* INITIALIZE */
@@ -74,7 +85,7 @@ s_information ini_player(s_information player)
   player.state = 0;
 
   player.map_x = 0;
-  player.movement = 0;
+  player.movement = 13;
 
   return player;
 }
@@ -82,6 +93,7 @@ s_information ini_player(s_information player)
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
 {
   s_information ennemi_info;
+  int i;
   SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
   if(nb_ennemi>0){
     ennemi_info=ini_player(ennemi_info);
@@ -94,14 +106,12 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
     }else{
       ennemi_ini_rcSrc.x=0;
     }
-    do {
+    for(i=0;i<nb_ennemi;i++){
       ennemi_ini_pos.x=(rand()%600)+100;
       ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
+      //printf("%d\n",i);
     }
-    while (ennemi_ini_pos.x == player.position.x && ennemi_ini_pos.y == player.position.y);
-    
-    
-   
+    return ennemi;
   }
   return ennemi;
 }
@@ -114,7 +124,7 @@ int update_ennemi(int nb_ennemi,list_ptr ennemi)
     {
       if(ennemi_list->info.life<=0)
 	{
-	  //supprimer l'element de la liste
+	  //Supprimer de la liste
 	}
       ennemi_list=ennemi_list->next;
     }
@@ -132,34 +142,38 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 {
   int i;
 
-  for (i=player.position.x/50 ; i>(player.position.x-2*75)/50 ; i--) {
-    if (tab[(player.position.y+74)/50][i] == -1) {
-      // -50 pour coin de gauche
-      return (player.position.x)-(i*50)-50;
+  //printf("map_x:%d  mov:%d\n",player.map_x,player.movement);
+  for (i=player.map_x ; i>(player.movement-2*75)/50; i--) {
+    if (i >= 0) {
+      if (tab[(player.position.y+74)/50][i] == -1) {
+	// -50 pour coin de gauche
+	return (player.movement)-(i*50)-50;
+      }
     }
   }
-  return player.position.x;
+  return player.movement;
 }
 
 int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   int i;
 
-  for (i=(player.position.x+75)/50 ; i<(player.position.x+2*75)/50 ; i++) {
+  for (i=(player.movement+(75-13*2))/50 ; i<(player.movement+(75-13*2)+2*75)/50 ; i++) {
     if (tab[(player.position.y+74)/50][i] == -1) {
-      // -50 pour coin de droite
-      return (i*50)-(player.position.x+75);
+      // -13 car pos du pied droit *2 pour pos pied gauche
+      return (i*50)-(player.movement+75-13*2);
     }
   }
-  return 800-(player.position.x+75);
+  // 
+  return player.movement+75-13*2;
 }
 
 int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   int i; 
   for (i=(player.position.y+75)/50 ; i<(player.position.y+75*5)/50 ; i++) {
-    //if (tab[i][(player.position.x+37)/50] == -1) {
-    if (tab[i][(player.position.x)/50] == -1 || tab[i][(player.position.x+75)/50]) {
+    /* [1/3;2/3] */
+    if (tab[i][(player.movement-13+75/3)/50] == -1 || tab[i][(player.movement-13+75/3*2)/50] == -1) {
       return (i*50)-(player.position.y+75);
     }
   }
@@ -184,7 +198,7 @@ void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_
   while(ennemi_list!=NULL)
     {
       ennemi_list->info=gravity(x_max,y_max,tab,ennemi_list->info);
-      ennemi_list=ennemi->next;
+      ennemi_list=ennemi_list->next;
     }
 }
 

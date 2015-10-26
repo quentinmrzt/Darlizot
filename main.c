@@ -2,7 +2,7 @@
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/10/15                                    */
+/* Last modification: 26/10/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -13,11 +13,13 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max,i,nb_ennemi;
+  int close, x_max, y_max,nb_ennemi;
   s_information player;
   s_surface sprite;
+  SDL_Rect position;
   list_ptr shots = NULL;
   list_ptr ennemi= NULL;
+
   /****************************************************************************************************/
   /* INITIALIZE */
 
@@ -32,7 +34,6 @@ int main(int argc, char* argv[])
 
   /****************************************************************************************************/
   /* initialize variable */
-  nb_ennemi=10;
   sprite = load_sprite(sprite);
   player = ini_player(player);
   /* table */
@@ -40,7 +41,8 @@ int main(int argc, char* argv[])
   int tab[y_max][x_max];
   recup_map(x_max,y_max,tab);
 
-  //draw_tab(x_max,y_max,tab);
+  draw_tab(x_max,y_max,tab);
+  printf("tab x:%d  tab y:%d\n",x_max,y_max);
 
   close = 0;
   nb_ennemi = 5;
@@ -56,23 +58,23 @@ int main(int argc, char* argv[])
       player = control(x_max,y_max,tab,player);
       shots = shooting(player,shots);
       player = gravity(x_max,y_max,tab,player);
+      ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
       /****************************************************************************************************/
       /* DRAW */
       
-      draw(x_max,y_max,tab,sprite);
+      draw(x_max,y_max,tab,sprite,player);
       draw_shooting(player,shots,sprite);
       draw_ennemis(ennemi,sprite);
-      SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &player.position);
+      // tampon car BlitSurface remet a 0 si nega
+      position = player.position;
+      SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);  
       
       //nb_ennemi=update_ennemi(nb_ennemi,ennemi);
       //printf("%d\n",ennemi->info.position.y);
-      ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
-      shots=shooting(player,shots);
-      
+   
       //ennemi=ennemi_gravity(x_max,y_max,tab,ennemi);
-      draw_ennemis(ennemi,sprite);
       //printf("%d\n",ennemi->info.position.y);
 
 

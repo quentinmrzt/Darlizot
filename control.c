@@ -2,7 +2,7 @@
 /* control.c                                                      */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 21/10/15                                             */
-/* Last modification: 21/10/15                                    */
+/* Last modification: 26/10/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -61,13 +61,13 @@ list_ptr shooting(s_information player,list_ptr shots)
       SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
       if (player.state==0)
 	{
-	  bullet_ini_pos.x=player.position.x+60;
+	  bullet_ini_pos.x=player.position.x+60+rand()%2;
 	  bullet_ini_rcSrc.x=0;  
 	}
       else
 	{
 	  bullet_ini_rcSrc.x=8;
-	  bullet_ini_pos.x=player.position.x+20;
+	  bullet_ini_pos.x=player.position.x+20+rand()%2;
 	}
       bullet_ini_rcSrc.y=0;
       bullet_ini_rcSrc.w=8;
@@ -85,20 +85,40 @@ list_ptr shooting(s_information player,list_ptr shots)
 s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
+  int distance, modulo;
 
   if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
     if (player.state == 0) {
-      if (distance_wall_right(x_max,y_max,tab,player) >= 20) {   
-	player.position.x+=20;
-	player = move_map(player,20);
+
+      modulo = 20-player.movement%20;
+      distance = distance_wall_right(x_max,y_max,tab,player);
+      if (player.movement >= 800/2 && player.movement < (x_max*50)-(800/2)) {
+	// on avance dans la map
+	if (distance >= 20 && modulo == 0) {   
+	  player.movement += 20;
+	} else if (distance > modulo && modulo != 0) {
+	  player.movement += modulo;
+	} else {
+	  player.movement += distance;
+	}
       } else {
-	player.position.x+=distance_wall_right(x_max,y_max,tab,player);
-	player = move_map(player,distance_wall_right(x_max,y_max,tab,player));
+	// on avance dans la map + l'écran
+	if (distance >= 20 && modulo == 0) {   
+	  player.position.x += 20;
+	  player.movement += 20;
+	} else if (distance > modulo && modulo != 0) {
+	  player.position.x += modulo;
+	  player.movement += modulo;
+	} else {
+	  player.position.x += distance;
+	  player.movement += distance;
+	}
       }
     } else {
       player.state = 0;
     }
   }
+  player.map_x = player.movement/50;
 
   return player;
 }
@@ -106,22 +126,41 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
+  int distance, modulo;
 
   if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]) {
 
     if (player.state == 1) {
-      if (distance_wall_left(x_max,y_max,tab,player) >= 20) { 
-	player.position.x-=20;
-	player = move_map(player,-20);
+
+      modulo = player.movement%20;
+      distance = distance_wall_left(x_max,y_max,tab,player);
+      if (player.movement > 800/2 && player.movement <= (x_max*50)-(800/2)) {
+	// on avance dans la map + l'écran
+	if (distance >= 20 && modulo == 0) {   
+	  player.movement -= 20;
+	} else if (distance > modulo && modulo != 0) {
+	  player.movement -= modulo;
+	} else {
+	  player.movement -= distance;
+	}
       } else {
-	player.position.x-=distance_wall_left(x_max,y_max,tab,player);
-	player = move_map(player,-(distance_wall_left(x_max,y_max,tab,player)));
-      }      
+	// on avance dans la map + l'écran
+	if (distance >= 20 && modulo == 0) {   
+	  player.position.x -= 20;
+	  player.movement -= 20;
+	} else if (distance > modulo && modulo != 0) {
+	  player.position.x -= modulo;
+	  player.movement -= modulo;
+	} else {
+	  player.position.x -= distance;
+	  player.movement -= distance;
+	}
+      }
     } else {
-      /* sprite à gauche */
       player.state=1;
     }
   }
+  player.map_x = player.movement/50;
 
   return player;
 }
@@ -146,22 +185,6 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
   /* pour couper en vol */
   if (!keystate[SDLK_UP] && distance_of_floor(x_max,y_max,tab,player) >= 65) {
     player.jump = 0;
-  }
-
-  return player;
-}
-
-s_information move_map(s_information player, int movement) 
-{
-  player.movement += movement;
-
-  if (player.movement >= 50) {
-    player.movement -= 50;
-    player.map_x += 1;
-  }
-  if (player.movement <= -50) {
-    player.movement += 50;
-    player.map_x -= 1;
   }
 
   return player;
