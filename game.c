@@ -23,6 +23,7 @@ list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
   new->info.rcSrc=Src;
   new->info.state=st;
   new->info.jump=0;
+  new->info.movement=0;
   new->next = list;
 
   return new;
@@ -96,7 +97,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
   int i;
   SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
   if(nb_ennemi>0){
-    ennemi_info=ini_player(ennemi_info);
+    ennemi_info = ini_player(ennemi_info);
     ennemi_ini_pos.y=0; 
     ennemi_ini_rcSrc.y=0;
     ennemi_ini_rcSrc.h=75;
@@ -106,9 +107,9 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
     }else{
       ennemi_ini_rcSrc.x=0;
     }
-    for(i=0;i<nb_ennemi;i++){
+    for(i=0;i<nb_ennemi;i++) {
       ennemi_ini_pos.x=(rand()%600)+100;
-      ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
+      ennemi = list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
       //printf("%d\n",i);
     }
     return ennemi;
@@ -120,16 +121,14 @@ int update_ennemi(int nb_ennemi,list_ptr ennemi)
 {
   int res=0;
   list_ptr ennemi_list=ennemi;
-  while(ennemi_list!=NULL)
-    {
-      if(ennemi_list->info.life<=0)
-	{
+  while(ennemi_list!=NULL) {
+      if(ennemi_list->info.life<=0) {
 	  //Supprimer de la liste
-	}
+      }
       ennemi_list=ennemi_list->next;
     }
-  if (nb_ennemi>0){
-  res=nb_ennemi-1;
+  if (nb_ennemi>0) { 
+    res=nb_ennemi-1;
   }
   return res;
 }
@@ -142,7 +141,6 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 {
   int i;
 
-  //printf("map_x:%d  mov:%d\n",player.map_x,player.movement);
   for (i=player.map_x ; i>(player.movement-2*75)/50; i--) {
     if (i >= 0) {
       if (tab[(player.position.y+74)/50][i] == -1) {
@@ -183,11 +181,13 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
 
 s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
+  int distance = distance_of_floor(x_max,y_max,tab,player);
+
   if (player.jump == 0) {
-    if (distance_of_floor(x_max,y_max,tab,player) >= 15) {
+    if (distance >= 15) {
       player.position.y += 15;
     } else {
-      player.position.y += distance_of_floor(x_max,y_max,tab,player); 
+      player.position.y += distance; 
     }
   }
 
@@ -197,11 +197,11 @@ s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information
 void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_surface sprite)
 {
   list_ptr ennemi_list=ennemi;
-  while(ennemi_list!=NULL)
-    {
-      ennemi_list->info=gravity(x_max,y_max,tab,ennemi_list->info);
-      ennemi_list=ennemi_list->next;
-    }
+  
+  while(ennemi_list != NULL) {
+      ennemi_list->info = gravity(x_max,y_max,tab,ennemi_list->info);
+      ennemi_list = ennemi_list->next;
+  }
 }
 
 

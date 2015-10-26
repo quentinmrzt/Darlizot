@@ -42,8 +42,7 @@ int main(int argc, char* argv[])
   recup_map(x_max,y_max,tab);
 
   draw_tab(x_max,y_max,tab);
-  printf("tab x:%d  tab y:%d\n",x_max,y_max);
-
+  
   close = 0;
   nb_ennemi = 5;
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
@@ -53,7 +52,7 @@ int main(int argc, char* argv[])
     { 
       /****************************************************************************************************/
       /* KEYBOARD AND MOUSE */
-
+  
       close = quit(close);
       player = control(x_max,y_max,tab,player);
       shots = shooting(player,shots);
@@ -66,17 +65,10 @@ int main(int argc, char* argv[])
       draw(x_max,y_max,tab,sprite,player);
       draw_shooting(player,shots,sprite);
       draw_ennemis(ennemi,sprite);
+
       // tampon car BlitSurface remet a 0 si nega
       position = player.position;
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);  
-      
-      //nb_ennemi=update_ennemi(nb_ennemi,ennemi);
-      //printf("%d\n",ennemi->info.position.y);
-
-   
-      //ennemi=ennemi_gravity(x_max,y_max,tab,ennemi);
-      //printf("%d\n",ennemi->info.position.y);
-
 
       /****************************************************************************************************/
       /* OTHER */
