@@ -109,8 +109,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
     for(i=0;i<nb_ennemi;i++){
       ennemi_ini_pos.x=(rand()%600)+100;
       ennemi=list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
-
-      printf("%d\n",i);
+      //printf("%d\n",i);
     }
     return ennemi;
   }
