@@ -151,6 +151,7 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
       }
     }
   }
+
   return player.movement;
 }
 
@@ -164,6 +165,7 @@ int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_informati
       return (i*50)-(player.movement+75-13*2);
     }
   }
+
   // 
   return player.movement+75-13*2;
 }
