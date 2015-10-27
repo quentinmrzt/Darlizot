@@ -25,6 +25,7 @@ int update_ennemi(int nb_ennemi,list_ptr ennemi);
 
 list_ptr list_cons(list_ptr list, s_information information);
 list_ptr list_element_delete(list_ptr list);
+int list_size(list_ptr list);
 /****************************************************************************************************/
 /* PHYSICS */
 

@@ -38,6 +38,18 @@ list_ptr list_element_delete(list_ptr list)
   return list;
 }
 
+int list_size(list_ptr list)
+{
+  int i=0;
+  while (list!=NULL)
+    {
+      i+=1;
+      list=list->next;
+      
+    }
+  return i;
+}
+
 /****************************************************************************************************/
 /* INITIALIZE */
 

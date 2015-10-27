@@ -56,7 +56,7 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
 list_ptr shooting(s_information player,list_ptr shots)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
-  if (keystate[SDLK_SPACE]) {
+  if (keystate[SDLK_SPACE] && list_size(shots)<10) {
     s_information bullet;
 
     if (player.state == 0) {
