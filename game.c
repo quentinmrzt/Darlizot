@@ -2,7 +2,7 @@
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 26/10/15                                    */
+/* Last modification: 27/10/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -12,18 +12,14 @@
 /****************************************************************************************************/
 /* LIST */
 
-list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
+list_ptr list_cons(list_ptr list, s_information information) 
 {
   list_ptr new = NULL;
   /* dynamic allocation */
   new = (list_ptr) malloc(sizeof(struct s_node));
-  
-  new->info.life = lf;
-  new->info.position=pos;
-  new->info.rcSrc=Src;
-  new->info.state=st;
-  new->info.jump=0;
-  new->info.movement=0;
+
+  new->info = information;
+
   new->next = list;
 
   return new;
@@ -31,13 +27,14 @@ list_ptr list_cons(list_ptr list,int lf,SDL_Rect pos,SDL_Rect Src,int st)
 
 list_ptr list_element_delete(list_ptr list)
 {
-  if(list==NULL){
+  if (list==NULL) {
     return list;
   }
   list_ptr list_temp;
   list_temp=list;
   list=list->next;
   free(list_temp);
+
   return list;
 }
 
@@ -57,7 +54,7 @@ SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen)
 
 s_surface load_sprite(s_surface sprite) 
 {
-  /*load sprite*/
+  /* load sprite */
   char name[] = "sprite/sprite_01.bmp";
   sprite.player = load(sprite.player, name, sprite.screen);
   name[15] = '2';
@@ -77,14 +74,10 @@ s_information ini_player(s_information player)
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
   player.rcSrc.h = 75;
-  
   player.position.x = 0;
   player.position.y = 0;
-  
   player.jump = 0;
-
   player.state = 0;
-
   player.map_x = 0;
   player.movement = 13;
 
@@ -95,22 +88,16 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
 {
   s_information ennemi_info;
   int i;
-  SDL_Rect ennemi_ini_pos,ennemi_ini_rcSrc;
-  if(nb_ennemi>0){
+
+  if (nb_ennemi > 0) {
     ennemi_info = ini_player(ennemi_info);
-    ennemi_ini_pos.y=0; 
-    ennemi_ini_rcSrc.y=0;
-    ennemi_ini_rcSrc.h=75;
-    ennemi_ini_rcSrc.w=75;
-    if (ennemi_ini_pos.x>player.position.x){
-      ennemi_ini_rcSrc.x=11*75;
-    }else{
-      ennemi_ini_rcSrc.x=0;
-    }
-    for(i=0;i<nb_ennemi;i++) {
-      ennemi_ini_pos.x=(rand()%600)+100;
-      ennemi = list_cons(ennemi,0,ennemi_ini_pos,ennemi_ini_rcSrc,0);
-      //printf("%d\n",i);
+
+    for (i=0 ; i<nb_ennemi ; i++) {
+      ennemi_info.position.x = (rand()%600)+100;
+      ennemi_info.movement = ennemi_info.position.x+20;
+      ennemi_info.rcSrc.x = 11*75;
+
+      ennemi = list_cons(ennemi, ennemi_info);
     }
     return ennemi;
   }
@@ -121,15 +108,16 @@ int update_ennemi(int nb_ennemi,list_ptr ennemi)
 {
   int res=0;
   list_ptr ennemi_list=ennemi;
-  while(ennemi_list!=NULL) {
-      if(ennemi_list->info.life<=0) {
-	  //Supprimer de la liste
+  while (ennemi_list!=NULL) {
+      if (ennemi_list->info.life<=0) {
+	//Supprimer de la liste
       }
       ennemi_list=ennemi_list->next;
     }
   if (nb_ennemi>0) { 
-    res=nb_ennemi-1;
+    res = nb_ennemi-1;
   }
+
   return res;
 }
 

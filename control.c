@@ -56,27 +56,29 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
 list_ptr shooting(s_information player,list_ptr shots)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
-  if (keystate[SDLK_SPACE])
-    {
-      SDL_Rect bullet_ini_pos,bullet_ini_rcSrc;
-      if (player.state==0)
-	{
-	  bullet_ini_pos.x=player.position.x+60+rand()%2;
-	  bullet_ini_rcSrc.x=0;  
-	}
-      else
-	{
-	  bullet_ini_rcSrc.x=8;
-	  bullet_ini_pos.x=player.position.x+20+rand()%2;
-	}
-      bullet_ini_rcSrc.y=0;
-      bullet_ini_rcSrc.w=8;
-      bullet_ini_rcSrc.h=6;
-      bullet_ini_pos.y=player.position.y+50;
-      shots=list_cons(shots,0,bullet_ini_pos,bullet_ini_rcSrc,0);
-      if (player.state==1)
-	shots->info.state=1;
+  if (keystate[SDLK_SPACE]) {
+    s_information bullet;
+
+    if (player.state == 0) {
+      bullet.position.x = player.position.x+60+rand()%2;
+      bullet.rcSrc.x = 0;  
+    } else {
+      bullet.rcSrc.x = 8;
+      bullet.position.x = player.position.x+20+rand()%2;
     }
+    bullet.rcSrc.y = 0;
+    bullet.rcSrc.w = 8;
+    bullet.rcSrc.h = 6;
+    bullet.position.y = player.position.y+50;
+
+    shots = list_cons(shots, bullet);
+    if (player.state == 1) {
+      shots->info.state = 1;
+    } else {
+      shots->info.state = 0;
+    }
+  }
+
   return shots;
 }
 
