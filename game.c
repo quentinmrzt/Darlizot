@@ -25,7 +25,7 @@ list_ptr list_cons(list_ptr list, s_information information)
   return new;
 }
 
-list_ptr list_element_delete(list_ptr list)
+/*list_ptr list_element_delete(list_ptr list)
 {
   if (list==NULL) {
     return list;
@@ -36,6 +36,35 @@ list_ptr list_element_delete(list_ptr list)
   free(list_temp);
 
   return list;
+  }*/
+
+list_ptr list_element_delete(list_ptr list)
+{ 
+  if (list==NULL){
+    return NULL;
+  }
+  list_ptr copy_list=list;
+  list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
+  if (copy_list->info.life==0){
+    if (copy_list->next==NULL){
+      return NULL;
+    }else{
+      copy_list=copy_list->next;
+    }
+  }
+  while (copy_list!=NULL && copy_list->next!=NULL)
+    {
+      if (copy_list->next->info.life==0)
+	{
+	  
+	  tmp=copy_list->next;
+	  copy_list->next=copy_list->next->next;
+	}
+      else 
+	copy_list=copy_list->next;
+    }
+  free(tmp);
+  return list;  
 }
 
 int list_size(list_ptr list)
@@ -205,6 +234,7 @@ void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_
 }
 
 
+
 /****************************************************************************************************/
 /* TAB */
 
@@ -322,17 +352,6 @@ int boundingbox(int x_max, int y_max, int tab[y_max][x_max], s_information playe
     return 1;
   }
   return 0;
-}
-
-int collision_AABB (s_information obj1, s_information obj2)//obj1 = bullet et obj2 = ennemi, renvois 1 si collision
-{
-  if(obj1.position.y <= obj2.position.y +35
-     || obj1.position.y >= obj2.position.y +75
-     || obj1.position.x <= obj2.position.x +25
-     || obj1.position.x >=  obj2.position.x +50){
-    return 0;
-  }
-  return 1;
 }
 
 

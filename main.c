@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
   draw_tab(x_max,y_max,tab);
   
   close = 0;
-  nb_ennemi = 1;
+  nb_ennemi = 5;
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
   
 
@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     { 
       /****************************************************************************************************/
       /* KEYBOARD AND MOUSE */
-  
+      ennemi=list_element_delete(ennemi);
       close = quit(close);
       player = control(x_max,y_max,tab,player);
       shots = shooting(player,shots);
@@ -61,7 +61,6 @@ int main(int argc, char* argv[])
 
       /****************************************************************************************************/
       /* DRAW */
-      
       draw(x_max,y_max,tab,sprite,player);
       draw_shooting(player,shots,sprite);
       draw_ennemis(ennemi,sprite);

@@ -53,6 +53,7 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
   return player;
 }
 
+
 list_ptr shooting(s_information player,list_ptr shots)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
