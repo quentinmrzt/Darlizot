@@ -23,7 +23,7 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
   pos_sprite.w = 50;
   pos_sprite.h = 50;
 
-  if (player.movement > 800/2 && player.movement < x_max*50 - 800/2) {
+  if (player.movement >= 800/2 && player.movement < (x_max*50)-(800/2)) {
     a = 0;
     for (y=0 ; y<y_max ; y++) {
       b = 0;
@@ -80,12 +80,23 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
 }
 
 
-void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite)
+void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite, s_information player)
 {
   list_ptr ennemi_list=ennemi_ptr;
+  SDL_Rect position;
+  int test;
+
   while (ennemi_list!=NULL)
     {
-      SDL_BlitSurface(sprite.ennemi,&ennemi_list->info.rcSrc,sprite.screen,&ennemi_list->info.position);
+      // BOUGE PAS 
+      position.y = ennemi_list->info.position.y;
+
+      // CASSE LES COUILLES
+      test = player.movement-13-player.position.x;
+
+      position.x = ennemi_list->info.movement-20-test;
+
+      SDL_BlitSurface(sprite.ennemi,&ennemi_list->info.rcSrc,sprite.screen,&position);
       ennemi_list=ennemi_list->next;
     }
 }

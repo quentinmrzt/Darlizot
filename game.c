@@ -17,9 +17,7 @@ list_ptr list_cons(list_ptr list, s_information information)
   list_ptr new = NULL;
   /* dynamic allocation */
   new = (list_ptr) malloc(sizeof(struct s_node));
-
   new->info = information;
-
   new->next = list;
 
   return new;
@@ -86,12 +84,12 @@ s_information ini_player(s_information player)
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
   player.rcSrc.h = 75;
-  player.position.x = 0;
+  player.position.x = 360;
   player.position.y = 0;
   player.jump = 0;
   player.state = 0;
   player.map_x = 0;
-  player.movement = 13;
+  player.movement = player.position.x+13;
 
   return player;
 }
@@ -102,9 +100,8 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
   int i;
 
   if (nb_ennemi > 0) {
-    ennemi_info = ini_player(ennemi_info);
-
     for (i=0 ; i<nb_ennemi ; i++) {
+      ennemi_info = ini_player(ennemi_info);      
       ennemi_info.position.x = (rand()%600)+100;
       ennemi_info.movement = ennemi_info.position.x+20;
       ennemi_info.rcSrc.x = 11*75;
@@ -141,7 +138,7 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 {
   int i;
 
-  for (i=player.map_x ; i>(player.movement-2*75)/50; i--) {
+  for (i=player.movement/50 ; i>(player.movement-2*75)/50; i--) {
     if (i >= 0) {
       if (tab[(player.position.y+74)/50][i] == -1) {
 	// -50 pour coin de gauche
@@ -156,11 +153,15 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   int i;
+  int x = player.movement+(75-13*2); //pied droit
 
-  for (i=(player.movement+(75-13*2))/50 ; i<(player.movement+(75-13*2)+2*75)/50 ; i++) {
-    if (tab[(player.position.y+74)/50][i] == -1) {
+  for (i=x/50 ; i<(x+2*75)/50 ; i++) {
+    if (i>=x_max) {
+      return x_max*50-x;
+    }
+    if (tab[(player.position.y+75-1)/50][i] == -1) {
       // -13 car pos du pied droit *2 pour pos pied gauche
-      return (i*50)-(player.movement+75-13*2);
+      return (i*50)-x;
     }
   }
 
@@ -177,12 +178,13 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
       return (i*50)-(player.position.y+75);
     }
   }
+  return player.position.y+75;
 }
 
 s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   int distance = distance_of_floor(x_max,y_max,tab,player);
-
+  
   if (player.jump == 0) {
     if (distance >= 15) {
       player.position.y += 15;

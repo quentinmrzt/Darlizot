@@ -42,12 +42,13 @@ int main(int argc, char* argv[])
   recup_map(x_max,y_max,tab);
 
   draw_tab(x_max,y_max,tab);
+
+  printf("\nx:%d  y:%d\n",x_max,y_max);
   
   close = 0;
-  nb_ennemi = 5;
+  nb_ennemi = 500;
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
   
-
   while (!close)
     { 
       /****************************************************************************************************/
@@ -64,12 +65,12 @@ int main(int argc, char* argv[])
       
       draw(x_max,y_max,tab,sprite,player);
       draw_shooting(player,shots,sprite);
-      draw_ennemis(ennemi,sprite);
+      draw_ennemis(ennemi,sprite,player);
 
       // tampon car BlitSurface remet a 0 si nega
       position = player.position;
-      SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);  
-
+      SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+      
       /****************************************************************************************************/
       /* OTHER */
       
