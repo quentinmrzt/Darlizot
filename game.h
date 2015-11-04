@@ -34,6 +34,7 @@ int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_informati
 int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 void ennemi_gravity(int x_max, int y_max, int tab[y_max][x_max], list_ptr ennemi,s_surface sprite);
+int collision_AABB (s_information obj1, s_information obj2);
 
 /****************************************************************************************************/
 /* TAB */

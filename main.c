@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
   draw_tab(x_max,y_max,tab);
   
   close = 0;
-  nb_ennemi = 5;
+  nb_ennemi = 1;
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
   
 

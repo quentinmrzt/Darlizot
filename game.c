@@ -205,7 +205,6 @@ void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_
 }
 
 
-
 /****************************************************************************************************/
 /* TAB */
 
@@ -323,6 +322,17 @@ int boundingbox(int x_max, int y_max, int tab[y_max][x_max], s_information playe
     return 1;
   }
   return 0;
+}
+
+int collision_AABB (s_information obj1, s_information obj2)//obj1 = bullet et obj2 = ennemi, renvois 1 si collision
+{
+  if(obj1.position.y <= obj2.position.y +35
+     || obj1.position.y >= obj2.position.y +75
+     || obj1.position.x <= obj2.position.x +25
+     || obj1.position.x >=  obj2.position.x +50){
+    return 0;
+  }
+  return 1;
 }
 
 
