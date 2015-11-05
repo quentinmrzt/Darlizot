@@ -17,6 +17,7 @@
 
 struct s_information
 {
+  int id;
   int speed;
   int life;
   int map_x;
@@ -45,6 +46,7 @@ struct s_surface
   SDL_Surface *bullet;
   SDL_Surface *ennemi;
   SDL_Surface *platform;
+  SDL_Surface *ammo;
 };
 typedef struct s_surface s_surface;
 

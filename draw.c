@@ -117,7 +117,7 @@ void draw_tab(int x_max, int y_max, int tab[y_max][x_max])
 
   for (y=0;y<y_max;y++) {
     for (x=0;x<x_max;x++) {
-      if (tab[y][x] == 0) {
+      if (tab[y][x] >= 0) {
 	printf(" %d ",tab[y][x]);
       } else {
 	printf("%d ",tab[y][x]);

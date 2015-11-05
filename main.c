@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
   while (!close) { 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
+    ennemi = list_element_delete(ennemi);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots);
@@ -66,7 +67,12 @@ int main(int argc, char* argv[])
 
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
-    SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);  
+    SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+
+    // temporaire
+    if (player.position.y > 400) {
+      player = ini_player(player);
+    }
 
     /****************************************************************************************************/
     /* OTHER */
