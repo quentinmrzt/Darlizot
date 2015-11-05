@@ -108,6 +108,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.ennemi = load(sprite.ennemi, name, sprite.screen);
   name[15] = '7';
   sprite.platform = load(sprite.platform, name, sprite.screen);
+  name[15] = '8';
+  sprite.platform = load(sprite.ammo, name, sprite.screen);
   return sprite;
 }
 
