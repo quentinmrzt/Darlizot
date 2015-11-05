@@ -171,7 +171,7 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
-
+  int distance = distance_of_floor(x_max,y_max,tab,player);
   if (player.jump > 2) {
     player.position.y -= 15;
   }
@@ -181,13 +181,18 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
   }
 
   /* si SAUT et AU SOL */
-  if (keystate[SDLK_UP] && distance_of_floor(x_max,y_max,tab,player) == 0) { 
+  if (keystate[SDLK_UP] && distance == 0) { 
     player.jump = 7;
   } 
 
   /* pour couper en vol */
-  if (!keystate[SDLK_UP] && distance_of_floor(x_max,y_max,tab,player) >= 65) {
+  if (!keystate[SDLK_UP] && distance >= 65) {
     player.jump = 0;
+  }
+
+
+  if (keystate[SDLK_DOWN]) {
+    player.position.y += 1;
   }
 
   return player;
