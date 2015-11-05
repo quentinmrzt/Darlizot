@@ -195,7 +195,5 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
     player.position.y += 1;
   }
 
-
-
   return player;
 }

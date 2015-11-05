@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
   while (!close) { 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi=list_element_delete(ennemi);
+    ennemi = list_element_delete(ennemi);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots);
@@ -68,7 +68,10 @@ int main(int argc, char* argv[])
     position = player.position;
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
 
-    printf("\n");
+    // temporaire
+    if (player.position.y >= 800) {
+      player = ini_player(player);
+    }
 
     /****************************************************************************************************/
     /* OTHER */

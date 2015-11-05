@@ -225,9 +225,6 @@ s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information
 {
   int distance = distance_of_floor(x_max,y_max,tab,player);
 
-  if (player.id == 0) 
-    printf("%d  %d  ",distance,player.jump);
-
   if (player.jump == 0) {
     if (distance >= 15) {
       player.position.y += 15;
