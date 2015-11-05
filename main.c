@@ -44,20 +44,20 @@ int main(int argc, char* argv[])
   draw_tab(x_max,y_max,tab);
   
   close = 0;
-  nb_ennemi = 5;
+  nb_ennemi = 2;
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
   
 
   while (!close) { 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi=list_element_delete(ennemi);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots);
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
+    
     /****************************************************************************************************/
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
@@ -70,7 +70,14 @@ int main(int argc, char* argv[])
 
     /****************************************************************************************************/
     /* OTHER */
-      
+    if (shots!=NULL && ennemi!=NULL){
+      printf("%d\n",collision_AABB(shots->info,ennemi->info));
+    }
+    collision_bullet_ennemi(&shots,&ennemi);
+    if (ennemi == NULL) {
+      printf("FDP\n");
+    }
+
     /* update the screen */
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     /* fps */
