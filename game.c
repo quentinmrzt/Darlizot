@@ -106,6 +106,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.bullet = load(sprite.bullet, name, sprite.screen);
   name[15] = '6';
   sprite.ennemi = load(sprite.ennemi, name, sprite.screen);
+  name[15] = '7';
+  sprite.platform = load(sprite.platform, name, sprite.screen);
   return sprite;
 }
 
@@ -201,7 +203,7 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
   int i; 
   for (i=(player.position.y+75)/50 ; i<(player.position.y+75*5)/50 ; i++) {
     /* [1/3;2/3] */
-    if (tab[i][(player.movement-13+75/3)/50] == -1 || tab[i][(player.movement-13+75/3*2)/50] == -1) {
+    if (tab[i][(player.movement-13+75/3)/50] == -1 || tab[i][(player.movement-13+75/3*2)/50] == -1 || tab[i][(player.movement-13+75/3)/50] == 1 || tab[i][(player.movement-13+75/3*2)/50] == 1) {
       return (i*50)-(player.position.y+75);
     }
   }

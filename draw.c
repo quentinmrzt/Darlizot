@@ -31,13 +31,8 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
 	pos_screen.x = b*50-player.movement%50;
 	pos_screen.y = a*50;
 
-	if (tab[y][x] == 0) {
-	  SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
-	}
+	draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
 
-	if (tab[y][x] == -1) {
-	  SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
-	}
 	b++;
       }
       a++;
@@ -48,13 +43,7 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
 	pos_screen.x = x*50;
 	pos_screen.y = y*50;
 
-	if (tab[y][x] == 0) {
-	  SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
-	}
-
-	if (tab[y][x] == -1) {
-	  SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
-	}
+	draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
       }
     }
   } else {
@@ -65,13 +54,8 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
 	pos_screen.x = b*50;
 	pos_screen.y = a*50;
 
-	if (tab[y][x] == 0) {
-	  SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
-	}
+	draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
 
-	if (tab[y][x] == -1) {
-	  SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
-	}
 	b++;
       }
       a++;
@@ -79,6 +63,20 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
   }
 }
 
+void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_surface sprite, SDL_Rect pos_sprite, SDL_Rect pos_screen) 
+{
+  if (tab[y][x] == 0) {
+    SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
+  }
+  
+  if (tab[y][x] == -1) {
+    SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
+  } 
+
+  if (tab[y][x] == 1) {
+    SDL_BlitSurface(sprite.platform, &pos_sprite, sprite.screen, &pos_screen);
+  } 
+}
 
 void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite, s_information player)
 {
