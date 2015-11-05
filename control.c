@@ -10,8 +10,7 @@
 #include "draw.h"
 #include "control.h"
 
-
-/******************************************************************/
+/****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
 
 int quit(int close) 
@@ -54,20 +53,19 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
   return player;
 }
 
+
 list_ptr shooting(s_information player,list_ptr shots)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
-
   if (keystate[SDLK_SPACE] && list_size(shots)<10) {
     s_information bullet;
+
     if (player.state == 0) {
       bullet.position.x = player.position.x+60+rand()%2;
-      bullet.rcSrc.x = 0;
-      bullet.state = 0;
+      bullet.rcSrc.x = 0;  
     } else {
       bullet.rcSrc.x = 8;
       bullet.position.x = player.position.x+20+rand()%2;
-      bullet.state = 1;
     }
     bullet.rcSrc.y = 0;
     bullet.rcSrc.w = 8;
@@ -75,11 +73,17 @@ list_ptr shooting(s_information player,list_ptr shots)
     bullet.position.y = player.position.y+50;
 
     shots = list_cons(shots, bullet);
+    if (player.state == 1) {
+      shots->info.state = 1;
+    } else {
+      shots->info.state = 0;
+    }
   }
 
   return shots;
 }
 
+/**********************************************************/
 
 s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
@@ -91,10 +95,9 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 
       modulo = 20-player.movement%20;
       distance = distance_wall_right(x_max,y_max,tab,player);
-
       if (player.movement >= 800/2 && player.movement < (x_max*50)-(800/2)) {
 	// on avance dans la map
-	if (distance >= 20 && modulo == 0) {
+	if (distance >= 20 && modulo == 0) {   
 	  player.movement += 20;
 	} else if (distance > modulo && modulo != 0) {
 	  player.movement += modulo;
@@ -103,7 +106,7 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 	}
       } else {
 	// on avance dans la map + l'écran
-	if (distance >= 20 && modulo == 0) { 
+	if (distance >= 20 && modulo == 0) {   
 	  player.position.x += 20;
 	  player.movement += 20;
 	} else if (distance > modulo && modulo != 0) {
@@ -131,11 +134,10 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
   if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]) {
 
     if (player.state == 1) {
+
       modulo = player.movement%20;
       distance = distance_wall_left(x_max,y_max,tab,player);
-
-      // +10 car si x_map impair, x_map*50=..50! Allant de 20 en 20, 60 ne fait pas partit de <=
-      if (player.movement > 800/2 && player.movement <= (x_max*50)-(800/2)+10) {
+      if (player.movement > 800/2 && player.movement <= (x_max*50)-(800/2)) {
 	// on avance dans la map + l'écran
 	if (distance >= 20 && modulo == 0) {   
 	  player.movement -= 20;

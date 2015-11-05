@@ -2,7 +2,7 @@
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 26/10/15                                    */
+/* Last modification: 05/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -13,12 +13,12 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max,nb_ennemi;
+  int close, x_max, y_max, nb_ennemi;
   s_information player;
   s_surface sprite;
   SDL_Rect position;
   list_ptr shots = NULL;
-  list_ptr ennemi= NULL;
+  list_ptr ennemi = NULL;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -42,43 +42,40 @@ int main(int argc, char* argv[])
   recup_map(x_max,y_max,tab);
 
   draw_tab(x_max,y_max,tab);
-
-  printf("\nx:%d  y:%d\n",x_max,y_max);
   
   close = 0;
-  nb_ennemi = 500;
+  nb_ennemi = 5;
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
   
-  while (!close)
-    { 
-      /****************************************************************************************************/
-      /* KEYBOARD AND MOUSE */
-  
-      close = quit(close);
-      player = control(x_max,y_max,tab,player);
-      shots = shooting(player,shots);
-      player = gravity(x_max,y_max,tab,player);
-      ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
-      /****************************************************************************************************/
-      /* DRAW */
-      
-      draw(x_max,y_max,tab,sprite,player);
-      draw_shooting(player,shots,sprite);
-      draw_ennemis(ennemi,sprite,player);
+  while (!close) { 
+    /****************************************************************************************************/
+    /* KEYBOARD AND MOUSE */
+    ennemi=list_element_delete(ennemi);
+    close = quit(close);
+    player = control(x_max,y_max,tab,player);
+    shots = shooting(player,shots);
+    player = gravity(x_max,y_max,tab,player);
+    ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
-      // tampon car BlitSurface remet a 0 si nega
-      position = player.position;
-      SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+    /****************************************************************************************************/
+    /* DRAW */
+    draw(x_max,y_max,tab,sprite,player);
+    draw_shooting(player,shots,sprite);
+    draw_ennemis(ennemi,sprite,player);
+
+    // tampon car BlitSurface remet a 0 si nega
+    position = player.position;
+    SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);  
+
+    /****************************************************************************************************/
+    /* OTHER */
       
-      /****************************************************************************************************/
-      /* OTHER */
-      
-      /* update the screen */
-      SDL_UpdateRect(sprite.screen,0,0,0,0);
-      /* fps */
-      SDL_Delay(80);
-    }
+    /* update the screen */
+    SDL_UpdateRect(sprite.screen,0,0,0,0);
+    /* fps */
+    SDL_Delay(80);
+  }
 
   /****************************************************************************************************/
   /* CLEAN */

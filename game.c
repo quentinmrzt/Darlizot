@@ -2,7 +2,7 @@
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 27/10/15                                    */
+/* Last modification: 05/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -17,13 +17,15 @@ list_ptr list_cons(list_ptr list, s_information information)
   list_ptr new = NULL;
   /* dynamic allocation */
   new = (list_ptr) malloc(sizeof(struct s_node));
+
   new->info = information;
+
   new->next = list;
 
   return new;
 }
 
-list_ptr list_element_delete(list_ptr list)
+/*list_ptr list_element_delete(list_ptr list)
 {
   if (list==NULL) {
     return list;
@@ -34,6 +36,35 @@ list_ptr list_element_delete(list_ptr list)
   free(list_temp);
 
   return list;
+  }*/
+
+list_ptr list_element_delete(list_ptr list)
+{ 
+  if (list==NULL){
+    return NULL;
+  }
+  list_ptr copy_list=list;
+  list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
+  if (copy_list->info.life==0){
+    if (copy_list->next==NULL){
+      return NULL;
+    }else{
+      copy_list=copy_list->next;
+    }
+  }
+  while (copy_list!=NULL && copy_list->next!=NULL)
+    {
+      if (copy_list->next->info.life==0)
+	{
+	  
+	  tmp=copy_list->next;
+	  copy_list->next=copy_list->next->next;
+	}
+      else 
+	copy_list=copy_list->next;
+    }
+  free(tmp);
+  return list;  
 }
 
 int list_size(list_ptr list)
@@ -101,7 +132,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
 
   if (nb_ennemi > 0) {
     for (i=0 ; i<nb_ennemi ; i++) {
-      ennemi_info = ini_player(ennemi_info);      
+      ennemi_info = ini_player(ennemi_info);
       ennemi_info.position.x = (rand()%600)+100;
       ennemi_info.movement = ennemi_info.position.x+20;
       ennemi_info.rcSrc.x = 11*75;
@@ -138,7 +169,7 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 {
   int i;
 
-  for (i=player.movement/50 ; i>(player.movement-2*75)/50; i--) {
+  for (i=player.map_x ; i>(player.movement-2*75)/50; i--) {
     if (i >= 0) {
       if (tab[(player.position.y+74)/50][i] == -1) {
 	// -50 pour coin de gauche
@@ -153,15 +184,11 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   int i;
-  int x = player.movement+(75-13*2); //pied droit
 
-  for (i=x/50 ; i<(x+2*75)/50 ; i++) {
-    if (i>=x_max) {
-      return x_max*50-x;
-    }
-    if (tab[(player.position.y+75-1)/50][i] == -1) {
+  for (i=(player.movement+(75-13*2))/50 ; i<(player.movement+(75-13*2)+2*75)/50 ; i++) {
+    if (tab[(player.position.y+74)/50][i] == -1) {
       // -13 car pos du pied droit *2 pour pos pied gauche
-      return (i*50)-x;
+      return (i*50)-(player.movement+75-13*2);
     }
   }
 
@@ -184,7 +211,7 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
 s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   int distance = distance_of_floor(x_max,y_max,tab,player);
-  
+
   if (player.jump == 0) {
     if (distance >= 15) {
       player.position.y += 15;
