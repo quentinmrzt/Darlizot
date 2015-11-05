@@ -17,6 +17,7 @@
 
 struct s_information
 {
+  int id;
   int speed;
   int life;
   int map_x;

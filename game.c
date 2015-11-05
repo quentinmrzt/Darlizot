@@ -113,6 +113,7 @@ s_surface load_sprite(s_surface sprite)
 
 s_information ini_player(s_information player) 
 {
+  player.id = 0;
   player.rcSrc.x = 0;
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
@@ -135,6 +136,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
   if (nb_ennemi > 0) {
     for (i=0 ; i<nb_ennemi ; i++) {
       ennemi_info = ini_player(ennemi_info);
+      ennemi_info.id = 1;
       ennemi_info.position.x = (rand()%600)+100;
       ennemi_info.movement = ennemi_info.position.x+20;
       ennemi_info.rcSrc.x = 11*75;
@@ -203,16 +205,28 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
   int i; 
   for (i=(player.position.y+75)/50 ; i<(player.position.y+75*5)/50 ; i++) {
     /* [1/3;2/3] */
-    if (tab[i][(player.movement-13+75/3)/50] == -1 || tab[i][(player.movement-13+75/3*2)/50] == -1 || tab[i][(player.movement-13+75/3)/50] == 1 || tab[i][(player.movement-13+75/3*2)/50] == 1) {
+    if (tab[i][(player.movement-13+75/3)/50] == -1 || tab[i][(player.movement-13+75/3*2)/50] == -1) {
       return (i*50)-(player.position.y+75);
     }
+
+    if (tab[i][(player.movement-13+75/3)/50] == 1 || tab[i][(player.movement-13+75/3*2)/50] == 1) {
+      if ((i*50)-(player.position.y+75) < 0) {
+	return player.movement;
+      } else {
+	return (i*50)-(player.position.y+75);
+      }
+    }
   }
+
   return player.position.y+75;
 }
 
 s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   int distance = distance_of_floor(x_max,y_max,tab,player);
+
+  if (player.id == 0) 
+    printf("%d  %d  ",distance,player.jump);
 
   if (player.jump == 0) {
     if (distance >= 15) {

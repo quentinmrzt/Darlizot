@@ -66,7 +66,9 @@ int main(int argc, char* argv[])
 
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
-    SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);  
+    SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+
+    printf("\n");
 
     /****************************************************************************************************/
     /* OTHER */
