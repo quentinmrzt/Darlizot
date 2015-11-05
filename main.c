@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
 
     // temporaire
-    if (player.position.y >= 800) {
+    if (player.position.y > 400) {
       player = ini_player(player);
     }
 
