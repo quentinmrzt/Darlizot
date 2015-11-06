@@ -380,7 +380,6 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
   list_ptr shot = NULL;
   list_ptr ennemis = NULL;
 
-<<<<<<< HEAD
   list_ptr copy_shot = NULL;
   list_ptr copy_ennemis = NULL;
 
@@ -404,23 +403,6 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
 
   ennemis = list_element_delete(ennemis);
   shot = list_element_delete(shot);
-=======
-  shot=*shots;
-  ennemis=*ennemi;
-
-  /*if(ennemis!=NULL && shot!=NULL){
-      printf("%d\n",collision_AABB(shot->info,ennemis->info));
-      }*/
-  if (ennemis!=NULL && shot!=NULL && collision_AABB(shot->info,ennemis->info)){
-    ennemis->info.life=0;
-    ennemis = list_element_delete(ennemis);
-    if (ennemis == NULL) {
-      printf("BAISE MOI\n");
-    }
-    //shot->info.life=0;
-    //shot=list_element_delete(shot);
-  }
->>>>>>> 1b2d11bda0786e4de03f2d5eee5ff5075afe378b
   
   *ennemi=ennemis;
   *shots=shot;

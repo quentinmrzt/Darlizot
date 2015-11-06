@@ -66,7 +66,6 @@ int main(int argc, char* argv[])
       printf("C'est vide\n");
     }
 
-    
     /****************************************************************************************************/
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
@@ -84,18 +83,6 @@ int main(int argc, char* argv[])
 
     /****************************************************************************************************/
     /* OTHER */
-<<<<<<< HEAD
-=======
-    if (shots!=NULL && ennemi!=NULL){
-      printf("%d\n",collision_AABB(shots->info,ennemi->info));
-    }
-    collision_bullet_ennemi(&shots,&ennemi);
-    if (ennemi == NULL) {
-      printf("FDP\n");
-    }
-
-    /* update the screen */
->>>>>>> 1b2d11bda0786e4de03f2d5eee5ff5075afe378b
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     /* ~ 12,5 fps */
     SDL_Delay(80);
