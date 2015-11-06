@@ -2,7 +2,7 @@
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 05/11/15                                    */
+/* Last modification: 06/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -25,18 +25,6 @@ list_ptr list_cons(list_ptr list, s_information information)
   return new;
 }
 
-/*list_ptr list_element_delete(list_ptr list)
-{
-  if (list==NULL) {
-    return list;
-  }
-  list_ptr list_temp;
-  list_temp=list;
-  list=list->next;
-  free(list_temp);
-
-  return list;
-  }*/
 
 list_ptr list_element_delete(list_ptr list)
 { 
@@ -47,22 +35,27 @@ list_ptr list_element_delete(list_ptr list)
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
   if (copy_list->info.life==0){
     if (copy_list->next==NULL){
+      printf("swag\n");
+      tmp=copy_list;
+      free(tmp);
       return NULL;
     }else{
-      copy_list=copy_list->next;
+      printf("gottagofast\n");
+      tmp=copy_list;
+      list=copy_list->next;
     }
+  }else{
+    while (copy_list!=NULL && copy_list->next!=NULL)
+      {
+	if (copy_list->next->info.life==0)
+	  {	  
+	    tmp=copy_list->next;
+	    copy_list->next=copy_list->next->next;
+	  }
+	else 
+	  copy_list=copy_list->next;
+      }
   }
-  while (copy_list!=NULL && copy_list->next!=NULL)
-    {
-      if (copy_list->next->info.life==0)
-	{
-	  
-	  tmp=copy_list->next;
-	  copy_list->next=copy_list->next->next;
-	}
-      else 
-	copy_list=copy_list->next;
-    }
   free(tmp);
   return list;  
 }
@@ -138,6 +131,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
   if (nb_ennemi > 0) {
     for (i=0 ; i<nb_ennemi ; i++) {
       ennemi_info = ini_player(ennemi_info);
+      ennemi_info.position.x =  (rand()%600)+100;
       ennemi_info.id = 1;
       ennemi_info.position.x = (rand()%600)+100;
       ennemi_info.movement = ennemi_info.position.x+20;
@@ -243,8 +237,8 @@ void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_
   list_ptr ennemi_list=ennemi;
   
   while(ennemi_list != NULL) {
-      ennemi_list->info = gravity(x_max,y_max,tab,ennemi_list->info);
-      ennemi_list = ennemi_list->next;
+    ennemi_list->info = gravity(x_max,y_max,tab,ennemi_list->info);
+    ennemi_list = ennemi_list->next;
   }
 }
 
@@ -369,28 +363,73 @@ int boundingbox(int x_max, int y_max, int tab[y_max][x_max], s_information playe
   return 0;
 }
 
+int collision_AABB(s_information obj1, s_information obj2)
+{
+  //printf("1: %d  2: %d\n",obj1.movement, obj2.movement);
+  if(obj1.movement  <= obj2.movement +5
+     || obj1.movement >= obj2.movement +30
+     || obj1.position.y <= obj2.position.y +35
+     || obj1.position.y >= obj2.position.y +75){
+    return 0;
+  }
+  return 1;
+}
 
-/* https://openclassrooms.com/courses/modifier-une-image-pixel-par-pixel */
+void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
+{
+  list_ptr shot = NULL;
+  list_ptr ennemis = NULL;
+
+  list_ptr copy_shot = NULL;
+  list_ptr copy_ennemis = NULL;
+
+  shot=*shots;
+  ennemis=*ennemi;
+
+  copy_shot = shot;
+  while (copy_shot != NULL) {
+    copy_ennemis = ennemis;
+    while (copy_ennemis != NULL) {
+      if (collision_AABB(copy_shot->info,copy_ennemis->info)){
+	if (copy_ennemis->info.life != 0 && copy_shot->info.life != 0) {
+	  copy_ennemis->info.life = 0;
+	  copy_shot->info.life = 0;
+	}
+      }
+      copy_ennemis = copy_ennemis->next;
+    }
+    copy_shot = copy_shot->next;   
+  }
+
+  ennemis = list_element_delete(ennemis);
+  shot = list_element_delete(shot);
+  
+  *ennemi=ennemis;
+  *shots=shot;
+
+}
+
+  /* https://openclassrooms.com/courses/modifier-une-image-pixel-par-pixel */
 Uint32 get_pixel(SDL_Surface *surface, int x, int y)
 {
-    int nbOctetsParPixel = surface->format->BytesPerPixel;
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * nbOctetsParPixel;
+  int nbOctetsParPixel = surface->format->BytesPerPixel;
+  Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * nbOctetsParPixel;
 
-    switch(nbOctetsParPixel) {
-        case 1:
-            return *p;
-        case 2:
-            return *(Uint16 *)p;
-        case 3:
-            if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-                return p[0] << 16 | p[1] << 8 | p[2];
-            else
-                return p[0] | p[1] << 8 | p[2] << 16;
-        case 4:
-            return *(Uint32 *)p;
-        default:
-            return 0; 
-    }
+  switch(nbOctetsParPixel) {
+  case 1:
+    return *p;
+  case 2:
+    return *(Uint16 *)p;
+  case 3:
+    if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+      return p[0] << 16 | p[1] << 8 | p[2];
+    else
+      return p[0] | p[1] << 8 | p[2] << 16;
+  case 4:
+    return *(Uint32 *)p;
+  default:
+    return 0; 
+  }
 }
 
 

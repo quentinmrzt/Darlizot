@@ -59,13 +59,15 @@ list_ptr shooting(s_information player,list_ptr shots)
   Uint8 *keystate = SDL_GetKeyState(NULL);
   if (keystate[SDLK_SPACE] && list_size(shots)<10) {
     s_information bullet;
-
+    
     if (player.state == 0) {
-      bullet.position.x = player.position.x+60+rand()%2;
+      bullet.position.x = player.position.x+60;
+      bullet.movement = player.movement-13+60;
       bullet.rcSrc.x = 0;  
     } else {
       bullet.rcSrc.x = 8;
-      bullet.position.x = player.position.x+20+rand()%2;
+      bullet.position.x = player.position.x+20;
+      bullet.movement = player.movement-13+20;
     }
     bullet.rcSrc.y = 0;
     bullet.rcSrc.w = 8;

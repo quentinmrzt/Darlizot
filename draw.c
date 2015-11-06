@@ -98,10 +98,14 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
   list_ptr shots_copy=shots;
   while (shots_copy!=NULL)
     {
-      if (shots_copy->info.state==0)
-	shots_copy->info.position.x+=30;
-      else 
-	shots_copy->info.position.x-=30;
+      if (shots_copy->info.state==0){
+	shots_copy->info.position.x+=24;
+	shots_copy->info.movement+=24;
+      
+      } else{ 
+	shots_copy->info.position.x-=24;
+	shots_copy->info.movement-=24;
+      }
       SDL_BlitSurface(sprite.bullet,&shots_copy->info.rcSrc,sprite.screen,&shots_copy->info.position);
       shots_copy=shots_copy->next;
     }

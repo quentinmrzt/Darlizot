@@ -2,7 +2,7 @@
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 05/11/15                                    */
+/* Last modification: 06/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -44,19 +44,27 @@ int main(int argc, char* argv[])
   draw_tab(x_max,y_max,tab);
   
   close = 0;
-  nb_ennemi = 5;
+  nb_ennemi = 2;
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
   
+  while (!close) {
 
-  while (!close) { 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
     ennemi = list_element_delete(ennemi);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots);
+
+    /****************************************************************************************************/
+    /* GAME */
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
+    collision_bullet_ennemi(&shots,&ennemi);
+
+    if (ennemi == NULL) {
+      printf("C'est vide\n");
+    }
 
     /****************************************************************************************************/
     /* DRAW */
@@ -75,10 +83,8 @@ int main(int argc, char* argv[])
 
     /****************************************************************************************************/
     /* OTHER */
-      
-    /* update the screen */
     SDL_UpdateRect(sprite.screen,0,0,0,0);
-    /* fps */
+    /* ~ 12,5 fps */
     SDL_Delay(80);
   }
 
