@@ -78,21 +78,6 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
   } 
 }
 
-void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite, s_information player)
-{
-  list_ptr ennemi_list = ennemi_ptr;
-  SDL_Rect position;
-
-  while (ennemi_list != NULL) {
-    position.y = ennemi_list->info.position.y;
-    position.x = ennemi_list->info.movement-20-(player.movement-13-player.position.x);
-
-    SDL_BlitSurface(sprite.ennemi,&ennemi_list->info.rcSrc,sprite.screen,&position);
-    ennemi_list = ennemi_list->next;
-  }
-}
-
-
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
 {
   list_ptr shots_copy=shots;
@@ -110,6 +95,38 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
       shots_copy=shots_copy->next;
     }
 }
+
+void  draw_ammo(list_ptr shots,s_surface sprite,int *ammo)
+{ 
+  SDL_Rect rcSrc;
+  SDL_Rect position;
+  rcSrc.w=14;
+  rcSrc.h=80;
+  rcSrc.y=0;
+  rcSrc.x=(30-*ammo)*14;
+  position.x=770;
+  position.y = 10;
+  
+  SDL_BlitSurface(sprite.ammo, &rcSrc, sprite.screen, &position);
+}
+
+
+void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite, s_information player)
+{
+  list_ptr ennemi_list = ennemi_ptr;
+  SDL_Rect position;
+
+  while (ennemi_list != NULL) {
+    position.y = ennemi_list->info.position.y;
+    position.x = ennemi_list->info.movement-20-(player.movement-13-player.position.x);
+
+    SDL_BlitSurface(sprite.ennemi,&ennemi_list->info.rcSrc,sprite.screen,&position);
+    ennemi_list = ennemi_list->next;
+  }
+}
+
+
+
 
 void draw_tab(int x_max, int y_max, int tab[y_max][x_max]) 
 {

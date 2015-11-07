@@ -35,12 +35,10 @@ list_ptr list_element_delete(list_ptr list)
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
   if (copy_list->info.life==0){
     if (copy_list->next==NULL){
-      printf("swag\n");
       tmp=copy_list;
       free(tmp);
       return NULL;
     }else{
-      printf("gottagofast\n");
       tmp=copy_list;
       list=copy_list->next;
     }
@@ -397,6 +395,9 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
 	}
       }
       copy_ennemis = copy_ennemis->next;
+    }
+    if (copy_shot->info.position.x>800 || copy_shot->info.position.x<=0){
+      copy_shot->info.life=0;
     }
     copy_shot = copy_shot->next;   
   }
