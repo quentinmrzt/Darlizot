@@ -375,40 +375,41 @@ int collision_AABB(s_information obj1, s_information obj2)
 
 void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
 {
-  list_ptr shot = NULL;
-  list_ptr ennemis = NULL;
+  list_ptr copy_shots = NULL;
+  list_ptr copy_ennemi = NULL;
 
-  list_ptr copy_shot = NULL;
-  list_ptr copy_ennemis = NULL;
+  list_ptr copy_copy_shots = NULL;
+  list_ptr copy_copy_ennemi = NULL;
 
-  shot=*shots;
-  ennemis=*ennemi;
+  copy_shots=*shots;
+  copy_ennemi=*ennemi;
 
-  copy_shot = shot;
-  while (copy_shot != NULL) {
-    copy_ennemis = ennemis;
-    while (copy_ennemis != NULL) {
-      if (collision_AABB(copy_shot->info,copy_ennemis->info)){
-	if (copy_ennemis->info.life != 0 && copy_shot->info.life != 0) {
-	  copy_ennemis->info.life = 0;
-	  copy_shot->info.life = 0;
+  copy_copy_shots = copy_shots;
+  while (copy_copy_shots != NULL) {
+    copy_copy_ennemi = copy_ennemi;
+    while (copy_copy_ennemi != NULL) {
+      if (collision_AABB(copy_copy_shots->info,copy_copy_ennemi->info)){
+	if (copy_copy_ennemi->info.life != 0 && copy_copy_shots->info.life != 0) {
+	  copy_copy_ennemi->info.life = 0;
+	  copy_copy_shots->info.life = 0;
 	}
       }
-      copy_ennemis = copy_ennemis->next;
+      copy_copy_ennemi = copy_copy_ennemi->next;
     }
-    if (copy_shot->info.position.x>800 || copy_shot->info.position.x<=0){
-      copy_shot->info.life=0;
+    if (copy_copy_shots->info.position.x>800 || copy_copy_shots->info.position.x<=0){
+      copy_copy_shots->info.life=0;
     }
-    copy_shot = copy_shot->next;   
+    copy_copy_shots = copy_copy_shots->next;   
   }
 
-  ennemis = list_element_delete(ennemis);
-  shot = list_element_delete(shot);
+  copy_ennemi = list_element_delete(copy_ennemi);
+  copy_shots = list_element_delete(copy_shots);
   
-  *ennemi=ennemis;
-  *shots=shot;
+  *ennemi=copy_ennemi;
+  *shots=copy_shots;
 
 }
+
 
   /* https://openclassrooms.com/courses/modifier-une-image-pixel-par-pixel */
 Uint32 get_pixel(SDL_Surface *surface, int x, int y)
