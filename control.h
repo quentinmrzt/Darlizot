@@ -13,7 +13,7 @@
 
 int quit(int close);
 s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player);
-list_ptr shooting(s_information player,list_ptr shots);
+list_ptr shooting(s_information player,list_ptr shots, int *ammo);
 
 /****************************************************************************************************/
 /* MOVE */
