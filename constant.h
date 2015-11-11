@@ -47,6 +47,7 @@ struct s_surface
   SDL_Surface *ennemi;
   SDL_Surface *platform;
   SDL_Surface *ammo;
+  SDL_Surface *health;
 };
 typedef struct s_surface s_surface;
 

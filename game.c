@@ -101,6 +101,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.platform = load(sprite.platform, name, sprite.screen);
   name[15] = '8';
   sprite.ammo = load(sprite.ammo, name, sprite.screen);
+  name[15] = '9';
+  sprite.health = load(sprite.health, name, sprite.screen);
   return sprite;
 }
 
@@ -110,6 +112,7 @@ s_information ini_player(s_information player)
   player.rcSrc.x = 0;
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
+  player.life=5;
   player.rcSrc.h = 75;
   player.position.x = 360;
   player.position.y = 0;
@@ -338,6 +341,8 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.block);
   SDL_FreeSurface(sprite.bullet);
   SDL_FreeSurface(sprite.ennemi);
+  SDL_FreeSurface(sprite.ammo);
+  SDL_FreeSurface(sprite.health);
 }
 
 

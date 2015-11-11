@@ -110,6 +110,19 @@ void  draw_ammo(list_ptr shots,s_surface sprite,int *ammo)
   SDL_BlitSurface(sprite.ammo, &rcSrc, sprite.screen, &position);
 }
 
+void  draw_health(s_information player,s_surface sprite)
+{ 
+  SDL_Rect rcSrc;
+  SDL_Rect position;
+  rcSrc.w=200;
+  rcSrc.h=50;
+  rcSrc.y=0;
+  rcSrc.x=1000-(player.life*200);
+  position.x=5;
+  position.y = 10;
+  SDL_BlitSurface(sprite.health, &rcSrc, sprite.screen, &position);
+}
+
 void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite, s_information player)
 {
   list_ptr ennemi_list = ennemi_ptr;
