@@ -18,7 +18,10 @@ s_information ini_player(s_information player);
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
 
 
+/****************************************************************************************************/
+/* ENEMIES */
 
+list_ptr ennemies_moves(list_ptr ennemi, s_information player);
 
 /****************************************************************************************************/
 /* LIST */

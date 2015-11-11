@@ -78,6 +78,27 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
   } 
 }
 
+list_ptr anim_ennemis(list_ptr ennemis,s_information player)
+{
+  list_ptr copy_ennemi=ennemis;
+  while (copy_ennemi!=NULL){
+    if (player.movement>=copy_ennemi->info.movement)
+      {
+	if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
+	  copy_ennemi->info.rcSrc.x+=75;
+	else
+	  copy_ennemi->info.rcSrc.x=2*75;
+      }else{
+      if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
+	copy_ennemi->info.rcSrc.x+=75;
+      else
+	copy_ennemi->info.rcSrc.x=12*75;
+    }
+    copy_ennemi=copy_ennemi->next;
+  }
+  return ennemis;
+}
+
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
 {
   list_ptr shots_copy=shots;

@@ -223,7 +223,22 @@ void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_
   }
 }
 
+/****************************************************************************************************/
+/* ENEMIES */
 
+list_ptr ennemies_moves(list_ptr ennemi, s_information player)
+{
+  list_ptr copy_ennemi=ennemi;
+  while (copy_ennemi!=NULL){
+    if (player.movement>copy_ennemi->info.movement)
+      {
+	copy_ennemi->info.movement+=5;
+      }else{
+      copy_ennemi->info.movement-=5;
+    }
+    copy_ennemi=copy_ennemi->next;
+  }
+}
 
 /****************************************************************************************************/
 /* TAB */

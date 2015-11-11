@@ -66,7 +66,6 @@ int main(int argc, char* argv[])
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
     collision_bullet_ennemi(&shots,&ennemi);
-
     /* if (ennemi == NULL) {
       printf("C'est vide\n");
       } */
@@ -78,7 +77,8 @@ int main(int argc, char* argv[])
     draw_ammo(shots,sprite,&ammo_enable);
     draw_health(player,sprite);
     //draw_pos(sprite.screen,font,player); 
-
+    ennemies_moves(ennemi,player);
+    anim_ennemis(ennemi,player);
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
