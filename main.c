@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
   SDL_Rect position;
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
-
+  int current_time,previous_time=0;
   TTF_Font *font = NULL;
 
   /****************************************************************************************************/
@@ -53,13 +53,13 @@ int main(int argc, char* argv[])
   ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
   
   while (!close) {
-
+    current_time=SDL_GetTicks();
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
     ennemi = list_element_delete(ennemi);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
-    shots = shooting(player,shots,&ammo_enable);
+    shots = shooting(player,shots,&ammo_enable,&previous_time,&current_time);
 
     /****************************************************************************************************/
     /* GAME */
@@ -76,7 +76,8 @@ int main(int argc, char* argv[])
     draw_ennemis(ennemi,sprite,player);
     draw_shooting(player,shots,sprite);
     draw_ammo(shots,sprite,&ammo_enable);
-    draw_pos(sprite.screen,font,player); 
+    draw_health(player,sprite);
+    //draw_pos(sprite.screen,font,player); 
 
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
