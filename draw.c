@@ -162,6 +162,7 @@ void draw_text(SDL_Surface *screen, TTF_Font *font, s_information player, char s
   
   text = TTF_RenderText_Blended(font, sentence, black_color);
   SDL_BlitSurface(text, NULL, screen, &position);
+  SDL_FreeSurface(text);
 }
 
 /****************************************************************************************************/

@@ -16,7 +16,7 @@ SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen);
 s_surface load_sprite(s_surface sprite);
 s_information ini_player(s_information player);
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
-int update_ennemi(int nb_ennemi,list_ptr ennemi);
+
 
 
 

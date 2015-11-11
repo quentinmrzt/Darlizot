@@ -21,7 +21,6 @@ list_ptr list_cons(list_ptr list, s_information information)
   new->info = information;
 
   new->next = list;
-
   return new;
 }
 
@@ -107,6 +106,7 @@ s_surface load_sprite(s_surface sprite)
 s_information ini_player(s_information player) 
 {
   player.id = 0;
+  player.life=5;
   player.rcSrc.x = 0;
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
@@ -131,32 +131,13 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
       ennemi_info = ini_player(ennemi_info);
       ennemi_info.position.x =  (rand()%600)+100;
       ennemi_info.id = 1;
-      ennemi_info.position.x = (rand()%600)+100;
       ennemi_info.movement = ennemi_info.position.x+20;
       ennemi_info.rcSrc.x = 11*75;
-
       ennemi = list_cons(ennemi, ennemi_info);
     }
     return ennemi;
   }
   return ennemi;
-}
-
-int update_ennemi(int nb_ennemi,list_ptr ennemi)
-{
-  int res=0;
-  list_ptr ennemi_list=ennemi;
-  while (ennemi_list!=NULL) {
-      if (ennemi_list->info.life<=0) {
-	//Supprimer de la liste
-      }
-      ennemi_list=ennemi_list->next;
-    }
-  if (nb_ennemi>0) { 
-    res = nb_ennemi-1;
-  }
-
-  return res;
 }
 
 
@@ -190,7 +171,6 @@ int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_informati
     }
   }
 
-  // 
   return player.movement+75-13*2;
 }
 
@@ -253,7 +233,7 @@ void size_tab(int *x_ptr, int *y_ptr)
   *y_ptr = 0;
   recuperation = NULL;
   x = 0;
-
+  number=0;
   /* mode read */
   recuperation = fopen("data/map_1", "r");
 
@@ -279,7 +259,6 @@ void size_tab(int *x_ptr, int *y_ptr)
 	x++;
       }
     }
-
     fclose(recuperation);
   }
 }
@@ -338,6 +317,8 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.block);
   SDL_FreeSurface(sprite.bullet);
   SDL_FreeSurface(sprite.ennemi);
+  SDL_FreeSurface(sprite.ammo);
+  SDL_FreeSurface(sprite.platform);
 }
 
 
@@ -408,6 +389,8 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
   *ennemi=copy_ennemi;
   *shots=copy_shots;
 
+  free(copy_copy_shots);
+  free(copy_copy_ennemi);
 }
 
 

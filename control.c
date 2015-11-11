@@ -61,6 +61,7 @@ list_ptr shooting(s_information player,list_ptr shots, int *ammo)
   if (keystate[SDLK_SPACE] && *ammo<=30 && *ammo>0) {
     s_information bullet;
     *ammo-=1;
+    bullet.life=1;
     if (player.state == 0) {
       bullet.position.x = player.position.x+60;
       bullet.movement = player.movement-13+60;
