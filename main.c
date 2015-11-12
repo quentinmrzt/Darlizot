@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     /* GAME */
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
-    ennemis_jump(x_max,y_max,tab,ennemi,sprite);
+    ennemis_jump(x_max,y_max,tab,ennemi,player);
     collision_bullet_ennemi(&shots,&ennemi);
     /****************************************************************************************************/
     /* DRAW */

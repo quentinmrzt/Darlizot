@@ -252,18 +252,42 @@ list_ptr ennemies_moves(list_ptr ennemi, s_information player)
   }
 }
 
-void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_surface sprite)
+void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_information player)
 {
   list_ptr ennemi_list=ennemi;
   
   while(ennemi_list != NULL) {
-    ennemi_list->info = move_jump(x_max,y_max,tab,ennemi_list->info);
+    ennemi_list->info = jump(x_max,y_max,tab,ennemi_list->info,player);
     ennemi_list = ennemi_list->next;
   }
 }
 
-/****************************************************************************************************/
-/* TAB */
+s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennemi,s_information player)
+{
+  int distance = distance_of_floor(x_max,y_max,tab,ennemi);
+  if (ennemi.jump > 2) {
+    ennemi.position.y -= 15;
+  }
+
+  if (ennemi.jump > 0) {
+    ennemi.jump -= 1;
+  }
+
+  /* si SAUT et AU SOL */
+  if(player.movement>ennemi.movement){
+    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance == 0) { 
+      ennemi.jump = 7;
+    } 
+  }else{
+    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance == 0) { 
+      ennemi.jump = 7;
+    } 
+  }
+  return ennemi;
+
+}
+  /****************************************************************************************************/
+  /* TAB */
 
 void size_tab(int *x_ptr, int *y_ptr) 
 {
@@ -346,8 +370,8 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
   }
 }
 
-/****************************************************************************************************/
-/* CLEAN */
+  /****************************************************************************************************/
+  /* CLEAN */
 
 void free_all_sprite(s_surface sprite) 
 {
@@ -367,7 +391,7 @@ void free_all_sprite(s_surface sprite)
 
 
 
-/*********************************************/
+  /*********************************************/
 
 
 
@@ -436,7 +460,7 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
 }
 
 
-  /* https://openclassrooms.com/courses/modifier-une-image-pixel-par-pixel */
+/* https://openclassrooms.com/courses/modifier-une-image-pixel-par-pixel */
 Uint32 get_pixel(SDL_Surface *surface, int x, int y)
 {
   int nbOctetsParPixel = surface->format->BytesPerPixel;
