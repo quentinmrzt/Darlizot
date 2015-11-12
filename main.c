@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
   //draw_tab(x_max,y_max,tab);
   
   close = 0;
-  level= 2;
+  level= 10;
   ennemi = respawn(ennemi,level,player,x_max,y_max,tab);
   
   while (!close) {
@@ -88,6 +88,7 @@ int main(int argc, char* argv[])
     if (player.position.y > 400) {
       player = ini_player(player);
     }
+    printf("Gauche :%d\n",distance_wall_left(x_max,y_max,tab,player));
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     /* ~ 12,5 fps */
     SDL_Delay(60);

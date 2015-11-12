@@ -133,7 +133,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
   if (nb_ennemi > 0) {
     for (i=0 ; i<nb_ennemi ; i++) {
       ennemi_info = ini_player(ennemi_info);
-      ennemi_info.position.x =  (rand()%600)+100;
+      ennemi_info.position.x =  (rand()%1200)+100;
       ennemi_info.id = 1;
       ennemi_info.movement = ennemi_info.position.x+20;
       ennemi_info.rcSrc.x = 11*75;
@@ -151,19 +151,16 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
 int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   int i;
-
-  for (i=player.map_x ; i>(player.movement-2*75)/50; i--) {
-    if (i >= 0) {
-      if (tab[(player.position.y+74)/50][i] == -1) {
-	// -50 pour coin de gauche
-	return (player.movement)-(i*50)-50;
-      }
+  for (i=(player.movement/50) ; i>(player.movement-2*75)/50; i--) {
+    if (tab[(player.position.y+74)/50][i] == -1) {
+      // -50 pour coin de gauche
+      return (player.movement)-(i*50)-50;
     }
+    
   }
 
   return player.movement;
 }
-
 int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
   int i;
@@ -285,9 +282,10 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
   }
   return ennemi;
 
+
 }
-  /****************************************************************************************************/
-  /* TAB */
+/****************************************************************************************************/
+/* TAB */
 
 void size_tab(int *x_ptr, int *y_ptr) 
 {
@@ -370,8 +368,8 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
   }
 }
 
-  /****************************************************************************************************/
-  /* CLEAN */
+/****************************************************************************************************/
+/* CLEAN */
 
 void free_all_sprite(s_surface sprite) 
 {
@@ -391,7 +389,7 @@ void free_all_sprite(s_surface sprite)
 
 
 
-  /*********************************************/
+/*********************************************/
 
 
 
