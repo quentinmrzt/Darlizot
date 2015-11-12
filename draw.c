@@ -117,13 +117,18 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
     }
 }
 
-void  draw_ammo(list_ptr shots,s_surface sprite,int *ammo)
+void  draw_ammo(list_ptr shots,s_surface sprite,int *ammo, int *reload)
 { 
   SDL_Rect rcSrc;
   SDL_Rect position;
   rcSrc.w=14;
   rcSrc.h=80;
-  rcSrc.y=0;
+  if (*reload==1)
+    rcSrc.y=0;
+  if (*reload==3)
+    rcSrc.y=80;
+  if (*reload==6)
+    rcSrc.y=160;
   rcSrc.x=(30-*ammo)*14;
   position.x=770;
   position.y = 10;
