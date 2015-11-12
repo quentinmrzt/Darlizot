@@ -15,51 +15,37 @@
 
 void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_information player)
 {
-  int x,y,a,b;
-  SDL_Rect pos_sprite,pos_screen;
+  int x, y, a, b, map_x, modulo;
+  SDL_Rect pos_sprite, pos_screen;
 
   pos_sprite.x = 0;
   pos_sprite.y = 0;
   pos_sprite.w = 50;
   pos_sprite.h = 50;
+  modulo = 0;
 
   if (player.movement > 800/2 && player.movement < x_max*50 - 800/2) {
-    a = 0;
-    for (y=0 ; y<y_max ; y++) {
-      b = 0;
-      for (x=player.map_x-800/100 ; x<x_max ; x++) {
-	pos_screen.x = b*50-player.movement%50;
-	pos_screen.y = a*50;
-
-	draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
-
-	b++;
-      }
-      a++;
-    }
+    // camera bouge: début d'affichage selon la pos du player
+    map_x = player.movement/50-(800/50)/2;
+    modulo = player.movement%50;
   } else if (player.movement <= 800/2) {
-    for (y=0 ; y<y_max ; y++) {
-      for (x=0;x<x_max;x++) {
-	pos_screen.x = x*50;
-	pos_screen.y = y*50;
-
-	draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
-      }
-    }
+    map_x = 0;
   } else {
-    a = 0;
-    for (y=0 ; y<y_max ; y++) {
-      b = 0;
-      for (x=x_max-800/50 ; x<x_max ; x++) {
-	pos_screen.x = b*50;
-	pos_screen.y = a*50;
+    map_x = x_max-800/50;
+  }
 
-	draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
+  a = 0;
+  for (y=0 ; y<y_max ; y++) {
+    b = 0;
+    for (x=map_x ; x<=map_x+800/50 ; x++) {
+      pos_screen.x = b*50-modulo;
+      pos_screen.y = a*50;
 
-	b++;
-      }
-      a++;
+      draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
+
+      b++;
     }
+    a++;
   }
 }
 
