@@ -32,7 +32,7 @@ list_ptr list_element_delete(list_ptr list)
   }
   list_ptr copy_list=list;
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
-  if (copy_list->info.life==0){
+  if (copy_list->info.life==0 ||copy_list->info.position.y>450 ){
     if (copy_list->next==NULL){
       tmp=copy_list;
       free(tmp);
@@ -44,7 +44,7 @@ list_ptr list_element_delete(list_ptr list)
   }else{
     while (copy_list!=NULL && copy_list->next!=NULL)
       {
-	if (copy_list->next->info.life==0)
+	if (copy_list->next->info.life==0 || copy_list->next->info.position.y>450)
 	  {	  
 	    tmp=copy_list->next;
 	    copy_list->next=copy_list->next->next;

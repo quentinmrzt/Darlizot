@@ -13,7 +13,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, nb_ennemi,ammo_enable=30;
+  int close, x_max, y_max, nb_ennemi,reload=6,ammo_enable=30;
   s_information player;
   s_surface sprite;
   SDL_Rect position;
@@ -56,10 +56,9 @@ int main(int argc, char* argv[])
     current_time=SDL_GetTicks();
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi = list_element_delete(ennemi);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
-    shots = shooting(player,shots,&ammo_enable,&previous_time,&current_time);
+    shots = shooting(player,shots,&ammo_enable,&previous_time,&current_time,&reload);
 
     /****************************************************************************************************/
     /* GAME */
@@ -74,7 +73,7 @@ int main(int argc, char* argv[])
     draw(x_max,y_max,tab,sprite,player);
     draw_ennemis(ennemi,sprite,player);
     draw_shooting(player,shots,sprite);
-    draw_ammo(shots,sprite,&ammo_enable);
+    draw_ammo(shots,sprite,&ammo_enable,&reload);
     draw_health(player,sprite);
     //draw_pos(sprite.screen,font,player); 
     ennemies_moves(ennemi,player);
