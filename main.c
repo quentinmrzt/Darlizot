@@ -13,7 +13,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, nb_ennemi,ammo_enable=30;
+  int close, x_max, y_max, level,ammo_enable=30;
   s_information player;
   s_surface sprite;
   SDL_Rect position;
@@ -49,26 +49,24 @@ int main(int argc, char* argv[])
   //draw_tab(x_max,y_max,tab);
   
   close = 0;
-  nb_ennemi = 2;
-  ennemi = ennemi_spawn(player,ennemi,nb_ennemi,x_max,y_max,tab);
+  level= 2;
+  ennemi = respawn(ennemi,level,player,x_max,y_max,tab);
   
   while (!close) {
     current_time=SDL_GetTicks();
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi = list_element_delete(ennemi);
+    ennemi = respawn(ennemi,level,player,x_max,y_max,tab);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots,&ammo_enable,&previous_time,&current_time);
-
+    
     /****************************************************************************************************/
     /* GAME */
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
+    ennemis_jump(x_max,y_max,tab,ennemi,sprite);
     collision_bullet_ennemi(&shots,&ennemi);
-    /* if (ennemi == NULL) {
-      printf("C'est vide\n");
-      } */
     /****************************************************************************************************/
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
@@ -90,7 +88,7 @@ int main(int argc, char* argv[])
     }
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     /* ~ 12,5 fps */
-    SDL_Delay(80);
+    SDL_Delay(50);
   }
 
   /****************************************************************************************************/

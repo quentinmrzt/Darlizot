@@ -8,6 +8,7 @@
 #include "constant.h"
 #include "draw.h"
 #include "game.h"
+#include "control.h"
 
 /****************************************************************************************************/
 /* LIST */
@@ -32,7 +33,7 @@ list_ptr list_element_delete(list_ptr list)
   }
   list_ptr copy_list=list;
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
-  if (copy_list->info.life==0){
+  if (copy_list->info.life==0 || copy_list->info.position.y>450){
     if (copy_list->next==NULL){
       tmp=copy_list;
       free(tmp);
@@ -44,7 +45,7 @@ list_ptr list_element_delete(list_ptr list)
   }else{
     while (copy_list!=NULL && copy_list->next!=NULL)
       {
-	if (copy_list->next->info.life==0)
+	if (copy_list->next->info.life==0 || copy_list->next->info.position.y>450)
 	  {	  
 	    tmp=copy_list->next;
 	    copy_list->next=copy_list->next->next;
@@ -223,8 +224,19 @@ void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_
   }
 }
 
+
+
 /****************************************************************************************************/
 /* ENEMIES */
+list_ptr respawn(list_ptr ennemi,int level, s_information player,int x_max, int y_max,int tab[y_max][x_max])
+{
+  list_ptr new_ennemi=NULL;
+  if(ennemi==NULL){
+    new_ennemi=ennemi_spawn(player,ennemi,level*level,x_max,y_max,tab);
+    return new_ennemi;
+  }
+  return ennemi;
+}
 
 list_ptr ennemies_moves(list_ptr ennemi, s_information player)
 {
@@ -237,6 +249,16 @@ list_ptr ennemies_moves(list_ptr ennemi, s_information player)
       copy_ennemi->info.movement-=5;
     }
     copy_ennemi=copy_ennemi->next;
+  }
+}
+
+void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_surface sprite)
+{
+  list_ptr ennemi_list=ennemi;
+  
+  while(ennemi_list != NULL) {
+    ennemi_list->info = move_jump(x_max,y_max,tab,ennemi_list->info);
+    ennemi_list = ennemi_list->next;
   }
 }
 
