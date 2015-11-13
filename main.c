@@ -10,6 +10,7 @@
 #include "draw.h"
 #include "control.h"
 #include "time.h"
+#include "physic.h"
 
 int main(int argc, char* argv[])
 {
@@ -49,7 +50,7 @@ int main(int argc, char* argv[])
   //draw_tab(x_max,y_max,tab);
   
   close = 0;
-  level= 1;
+  level= 10;
   ennemi = respawn(ennemi,level,player,x_max,y_max,tab);
   
   while (!close) {
