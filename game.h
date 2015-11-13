@@ -15,7 +15,7 @@
 SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen);
 s_surface load_sprite(s_surface sprite);
 s_information ini_player(s_information player);
-list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int *previous_time_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
 
 /****************************************************************************************************/
 /* LIST */
@@ -31,7 +31,7 @@ int list_size(list_ptr list);
 /****************************************************************************************************/
 /* ENEMIES */
 
-list_ptr respawn(list_ptr ennemi,int level, s_information player,int x_max, int y_max,int tab[y_max][x_max]);
+list_ptr respawn(list_ptr ennemi,int* level, s_information player,int *previous_time_ennemi,int *load,int x_max, int y_max,int tab[y_max][x_max]);
 list_ptr ennemies_moves(list_ptr ennemi, s_information player);
 void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_information player);
 s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennemi,s_information player);
