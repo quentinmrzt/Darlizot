@@ -9,6 +9,7 @@
 #include "game.h"
 #include "draw.h"
 #include "control.h"
+#include "physic.h"
 
 /****************************************************************************************************/
 /* KEYBOARD AND MOUSE */
