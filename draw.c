@@ -41,9 +41,7 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
     for (x=map_x ; x<=map_x+800/50 ; x++) {
       pos_screen.x = b*50-modulo;
       pos_screen.y = a*50;
-
       draw_element(x_max,y_max,tab,x,y,sprite,pos_sprite,pos_screen);
-
       b++;
     }
     a++;
@@ -69,28 +67,24 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player)
 {
   list_ptr copy_ennemi=ennemis;
   while (copy_ennemi!=NULL){
-    if (player.position.y+90>=copy_ennemi->info.position.y && player.position.y-90<=copy_ennemi->info.position.y ){
-      if (player.movement-100>copy_ennemi->info.movement)
-	{
-	  if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
-	    copy_ennemi->info.rcSrc.x+=75;
-	  else
-	    copy_ennemi->info.rcSrc.x=2*75;
-	}
-      if (player.movement+100<copy_ennemi->info.movement){
-	if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
+    if (player.movement>=copy_ennemi->info.movement)
+      {
+	if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
 	  copy_ennemi->info.rcSrc.x+=75;
-	else{
-	  copy_ennemi->info.rcSrc.x=12*75;
-	}
-      }
+	else
+	  copy_ennemi->info.rcSrc.x=2*75;
+      }else{
+      if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
+	copy_ennemi->info.rcSrc.x+=75;
+      else
+	copy_ennemi->info.rcSrc.x=12*75;
     }
     copy_ennemi=copy_ennemi->next;
   }
   return ennemis;
 }
 
-  void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
+void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
 {
   list_ptr shots_copy=shots;
   while (shots_copy!=NULL)
@@ -108,22 +102,23 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player)
     }
 }
 
-void  draw_ammo(list_ptr shots,s_surface sprite,int *ammo, int *reload)
+void  draw_ammo(s_surface sprite,int ammo)
 { 
-  SDL_Rect rcSrc;
-  SDL_Rect position;
-  rcSrc.w=14;
-  rcSrc.h=80;
-  if (*reload==1)
-    rcSrc.y=0;
-  if (*reload==3)
-    rcSrc.y=80;
-  if (*reload==6)
-    rcSrc.y=160;
-  rcSrc.x=(30-*ammo)*14;
-  position.x=770;
-  position.y = 10;
-  
+  SDL_Rect rcSrc_set,rcSrc;
+  SDL_Rect position_set,position;
+  position_set.x=760;
+  position_set.y=10;
+  position.x=764;
+  position.y=14+(60-ammo);
+  rcSrc_set.w=14;
+  rcSrc_set.h=80;
+  rcSrc_set.x=0;
+  rcSrc_set.y=0;
+  rcSrc.w=8;
+  rcSrc.h=ammo;
+  rcSrc.x=0;
+  rcSrc.y=0;
+  SDL_BlitSurface(sprite.ammo_set, &rcSrc_set, sprite.screen, &position_set);
   SDL_BlitSurface(sprite.ammo, &rcSrc, sprite.screen, &position);
 }
 

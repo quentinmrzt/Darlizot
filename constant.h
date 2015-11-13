@@ -46,6 +46,7 @@ struct s_surface
   SDL_Surface *bullet;
   SDL_Surface *ennemi;
   SDL_Surface *platform;
+  SDL_Surface *ammo_set;
   SDL_Surface *ammo;
   SDL_Surface *health;
 };

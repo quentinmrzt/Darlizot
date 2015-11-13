@@ -55,14 +55,16 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
 }
 
 
-list_ptr shooting(s_information player,list_ptr shots, int *ammo,int *previous_time,int *current_time, int *reload)
+list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,int *previous_time,int current_time)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
-
-  if (keystate[SDLK_SPACE] && *ammo<=30 && *ammo>0 && (*previous_time>=*current_time+200 || *previous_time<=*current_time-200)) {
-    *previous_time=*current_time;
+  if (keystate[SDLK_SPACE] && *ammo<=60 && *ammo>0 && (*previous_time>=current_time+200 || *previous_time<=current_time-200)) {
+    *previous_time=current_time;
     s_information bullet;
-    *ammo-=*reload;
+    *ammo-=energy;
+    if (*ammo<=0){
+      *ammo=0;
+    }
     bullet.life=1;
     if (player.state == 0) {
       bullet.position.x = player.position.x+60;
@@ -85,11 +87,11 @@ list_ptr shooting(s_information player,list_ptr shots, int *ammo,int *previous_t
       shots->info.state = 0;
     }
   }else{
-    if (*current_time-*previous_time>=3000 && *ammo<30){
-      *ammo+=*reload;
-      *previous_time=*current_time;
-      if (*ammo>25 && *ammo<=35){
-	*ammo=30;
+    if (current_time-*previous_time>=2000 && *ammo<60){
+      *ammo+=15;
+      *previous_time=current_time;
+      if (*ammo>=60){
+	*ammo=60;
       }
     }
   }

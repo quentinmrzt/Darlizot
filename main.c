@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level,reload=6,ammo_enable=30;
+  int close, x_max, y_max, level,ammo=60,energy=10;
   s_information player;
   s_surface sprite;
   SDL_Rect position;
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
   //draw_tab(x_max,y_max,tab);
   
   close = 0;
-  level= 10;
+  level= 2;
   ennemi = respawn(ennemi,level,player,x_max,y_max,tab);
   
   while (!close) {
@@ -60,7 +60,7 @@ int main(int argc, char* argv[])
     ennemi = respawn(ennemi,level,player,x_max,y_max,tab);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
-    shots = shooting(player,shots,&ammo_enable,&previous_time,&current_time,&reload);
+    shots = shooting(player,shots,&ammo,energy,&previous_time,current_time);
     /****************************************************************************************************/
     /* GAME */
     player = gravity(x_max,y_max,tab,player);
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
     draw(x_max,y_max,tab,sprite,player);
     draw_ennemis(ennemi,sprite,player);
     draw_shooting(player,shots,sprite);
-    draw_ammo(shots,sprite,&ammo_enable,&reload);
+    draw_ammo(sprite,ammo);
     draw_health(player,sprite);
     //draw_pos(sprite.screen,font,player); 
     ennemies_moves(ennemi,player);

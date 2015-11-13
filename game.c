@@ -39,6 +39,8 @@ s_surface load_sprite(s_surface sprite)
   sprite.ennemi = load(sprite.ennemi, name, sprite.screen);
   name[15] = '7';
   sprite.platform = load(sprite.platform, name, sprite.screen);
+  name[15] = '5';
+  sprite.ammo_set = load(sprite.ammo_set, name, sprite.screen);
   name[15] = '8';
   sprite.ammo = load(sprite.ammo, name, sprite.screen);
   name[15] = '9';
@@ -161,14 +163,11 @@ list_ptr ennemies_moves(list_ptr ennemi, s_information player)
 {
   list_ptr copy_ennemi=ennemi;
   while (copy_ennemi!=NULL){
-    if (){
-      if (player.movement-100>copy_ennemi->info.movement)
-	{
-	  copy_ennemi->info.movement+=5;
-	}
-      if (player.movement+100<copy_ennemi->info.movement){
-	copy_ennemi->info.movement-=5;
-      }
+    if (player.movement-100>copy_ennemi->info.movement){
+      copy_ennemi->info.movement+=5;
+    }
+    if (player.movement+100<copy_ennemi->info.movement){
+      copy_ennemi->info.movement-=5;
     }
     copy_ennemi=copy_ennemi->next;
   }

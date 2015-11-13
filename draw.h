@@ -18,7 +18,7 @@ void draw_tab(int x_max, int y_max, int tab[y_max][x_max]);
 list_ptr anim_ennemis(list_ptr ennemis,s_information player);
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite);
 void  draw_health(s_information player,s_surface sprite);
-void draw_ammo(list_ptr shots,s_surface sprite,int *ammo,int *reload);
+void draw_ammo(s_surface sprite,int ammo);
 void draw_pos(SDL_Surface *screen, TTF_Font *font, s_information player);
 void draw_text(SDL_Surface *screen, TTF_Font *font, s_information player, char sentence[], SDL_Rect position);
 
