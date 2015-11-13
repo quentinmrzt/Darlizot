@@ -306,11 +306,14 @@ list_ptr ennemies_moves(list_ptr ennemi, s_information player)
 {
   list_ptr copy_ennemi=ennemi;
   while (copy_ennemi!=NULL){
-    if (player.movement>copy_ennemi->info.movement)
-      {
-	copy_ennemi->info.movement+=5;
-      }else{
-      copy_ennemi->info.movement-=5;
+    if (){
+      if (player.movement-100>copy_ennemi->info.movement)
+	{
+	  copy_ennemi->info.movement+=5;
+	}
+      if (player.movement+100<copy_ennemi->info.movement){
+	copy_ennemi->info.movement-=5;
+      }
     }
     copy_ennemi=copy_ennemi->next;
   }

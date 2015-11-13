@@ -68,24 +68,28 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player)
 {
   list_ptr copy_ennemi=ennemis;
   while (copy_ennemi!=NULL){
-    if (player.movement>=copy_ennemi->info.movement)
-      {
-	if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
+    if (player.position.y+90>=copy_ennemi->info.position.y && player.position.y-90<=copy_ennemi->info.position.y ){
+      if (player.movement-100>copy_ennemi->info.movement)
+	{
+	  if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
+	    copy_ennemi->info.rcSrc.x+=75;
+	  else
+	    copy_ennemi->info.rcSrc.x=2*75;
+	}
+      if (player.movement+100<copy_ennemi->info.movement){
+	if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
 	  copy_ennemi->info.rcSrc.x+=75;
-	else
-	  copy_ennemi->info.rcSrc.x=2*75;
-      }else{
-      if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
-	copy_ennemi->info.rcSrc.x+=75;
-      else
-	copy_ennemi->info.rcSrc.x=12*75;
+	else{
+	  copy_ennemi->info.rcSrc.x=12*75;
+	}
+      }
     }
     copy_ennemi=copy_ennemi->next;
   }
   return ennemis;
 }
 
-void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
+  void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
 {
   list_ptr shots_copy=shots;
   while (shots_copy!=NULL)
