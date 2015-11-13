@@ -80,7 +80,38 @@ int main(int argc, char* argv[])
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
-    printf("%d\n",load);
+    // fermeture de porte
+    if (current_time >= 3500 && current_time <= 4000) {
+      tab[1][0] = -1;
+      tab[5][0] = -1;
+
+      tab[1][x_max-1] = -1;
+      tab[5][x_max-1] = -1;
+    }
+    if (current_time >= 3000 && current_time <= 3500) {
+      tab[2][0] = -1;
+      tab[6][0] = -1;
+
+      tab[2][x_max-1] = -1;
+      tab[6][x_max-1] = -1;
+    }
+
+    // ouverture de la porte
+    if (current_time > 6000) {
+      tab[1][0] = 0;
+      tab[5][0] = 0;
+
+      tab[1][x_max-1] = 0;
+      tab[5][x_max-1] = 0;
+    }
+    if (current_time > 6500) {
+      tab[2][0] = 0;
+      tab[6][0] = 0;
+
+      tab[2][x_max-1] = 0;
+      tab[6][x_max-1] = 0;
+    }
+    //printf("%d\n",load);
     /****************************************************************************************************/
     /* OTHER */
     if (player.position.y > 400) {

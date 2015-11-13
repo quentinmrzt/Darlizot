@@ -14,9 +14,16 @@
 
 int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
-  int i;
-  for (i=(player.movement/50) ; i>(player.movement-2*75)/50; i--) {
-    if (tab[(player.position.y+74)/50][i] == -1) {
+  int i, y;
+
+  if (player.id == 0) {
+    y = player.position.y+23;
+  } else {
+    y = player.position.y+35;
+  }
+
+  for (i=(player.movement/50) ; i>(player.movement-2*50)/50; i--) {
+    if (tab[(player.position.y+74)/50][i] == -1 || tab[y/50][i] == -1) {
       // -50 pour coin de gauche
       return (player.movement)-(i*50)-50;
     }   
@@ -26,12 +33,19 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
 
 int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
 {
-  int i;
+  int i,y,x;
 
-  for (i=(player.movement+(75-13*2))/50 ; i<(player.movement+(75-13*2)+2*75)/50 ; i++) {
-    if (tab[(player.position.y+74)/50][i] == -1) {
+  if (player.id == 0) {
+    y = player.position.y+23;
+  } else {
+    y = player.position.y+35;
+  }
+  x = player.movement+75-13*2;
+
+  for (i=(player.movement+(75-13*2))/50 ; i<(x+2*50)/50 ; i++) {
+    if (tab[(player.position.y+74)/50][i] == -1 || tab[y/50][i] == -1) {
       // -13 car pos du pied droit *2 pour pos pied gauche
-      return (i*50)-(player.movement+75-13*2);
+      return (i*50)-x;
     }
   }
 
@@ -63,18 +77,20 @@ int distance_of_floor(int x_max, int y_max, int tab[y_max][x_max], s_information
 
 int distance_of_ceiling(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
-  int i, j, head; 
-  head = player.position.y+31;
-  j = head;
+  int i, head;
 
-  /*while (j > head-(50*3)) {
-    if (tab[j/50][(player.movement-13+75/3)/50] == -1 || tab[j/50][(player.movement-13+75/3*2)/50] == -1) {
-      printf("%d  %d\n",j, head);
-      //return head-(j/50)*50;
-      return head-(j-j%50);
+  if (player.id == 0) {
+    head = player.position.y+23;
+  } else {
+    head = player.position.y+35;
+  }
+
+  for (i=head/50 ; i>=head/50-3 ; i--) {
+    if (tab[i][(player.movement-13+75/3)/50] == -1 || tab[i][(player.movement-13+75/3*2)/50] == -1) {
+      //-50 car 0 à i donc manque 1
+      return head-(i*50)-50;
     }
-    j -= 50;
-    }*/
+  }
 
   return head;
 }
