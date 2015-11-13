@@ -10,6 +10,7 @@
 #include "game.h"
 #include "control.h"
 #include "physic.h"
+#include "time.h"
 /****************************************************************************************************/
 /* INITIALIZE */
 
@@ -63,25 +64,6 @@ s_information ini_player(s_information player)
   player.movement = player.position.x+13;
 
   return player;
-}
-
-list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
-{
-  s_information ennemi_info;
-  int i;
-
-  if (nb_ennemi > 0) {
-    for (i=0 ; i<nb_ennemi ; i++) {
-      ennemi_info = ini_player(ennemi_info);
-      ennemi_info.position.x = ((x_max)*50);
-      ennemi_info.id = 1;
-      ennemi_info.movement = ennemi_info.position.x+20;
-      ennemi_info.rcSrc.x = 11*75;
-      ennemi = list_cons(ennemi, ennemi_info);
-    }
-    return ennemi;
-  }
-  return ennemi;
 }
 
 /****************************************************************************************************/
@@ -147,12 +129,50 @@ int list_size(list_ptr list)
 /****************************************************************************************************/
 /* ENEMIES */
 
-list_ptr respawn(list_ptr ennemi,int level, s_information player,int x_max, int y_max,int tab[y_max][x_max])
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int *previous_time_ennemi,int x_max, int y_max,int tab[y_max][x_max])
+{
+  s_information ennemi_info;
+  int i;
+  int time=SDL_GetTicks();
+  if (nb_ennemi > 0) {
+    for (i=0 ; i<nb_ennemi ; i++) {
+      if(time-*previous_time_ennemi>600){
+	*previous_time_ennemi=time;
+	ennemi_info = ini_player(ennemi_info);
+	if(rand()%2==0){
+	  ennemi_info.position.x=0;
+	}else{
+	  ennemi_info.position.x = ((x_max)*50);
+	}
+	ennemi_info.id = 1;
+	ennemi_info.movement = ennemi_info.position.x+20;
+	ennemi_info.rcSrc.x = 11*75;
+	ennemi = list_cons(ennemi, ennemi_info);
+      }
+      return ennemi;
+    }
+    return ennemi;
+  }else{
+    return ennemi;
+  }
+}
+
+list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_time_ennemi,int *load,int x_max, int y_max,int tab[y_max][x_max])
 {
   list_ptr new_ennemi=NULL;
-  if(ennemi==NULL){
-    new_ennemi=ennemi_spawn(player,ennemi,level*level,x_max,y_max,tab);
-    return new_ennemi;
+  int nb_ennemi=*level*(*level);
+  if(*load==1){
+    if(list_size(ennemi)!=nb_ennemi){
+      new_ennemi=ennemi_spawn(player,ennemi,nb_ennemi,previous_time_ennemi,x_max,y_max,tab);
+      return new_ennemi;
+    }else{
+      *load=0;
+      *level=*level+1;
+    }
+  }else{
+    if(ennemi==NULL){
+      *load=1;
+    }
   }
   return ennemi;
 }
