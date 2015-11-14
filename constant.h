@@ -2,7 +2,7 @@
 /* constant.h                                                     */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/10/15                                    */
+/* Last modification: 15/11/15                                    */
 /******************************************************************/
 
 #ifndef CONSTANT_H
@@ -18,10 +18,7 @@
 struct s_information
 {
   int id;
-  int speed;
   int life;
-  int map_x;
-  int map_y;
   SDL_Rect position;
   SDL_Rect rcSrc;
   int state;
@@ -54,10 +51,10 @@ typedef struct s_surface s_surface;
 
 struct s_time
 {
-  int current_time; 
+  int current; 
   int previous_time;
   int previous_time_ennemi; 
-  int level_time;
+  int level;
   int chrono;
   int time_max;
 };

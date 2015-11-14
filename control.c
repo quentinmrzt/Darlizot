@@ -2,7 +2,7 @@
 /* control.c                                                      */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 21/10/15                                             */
-/* Last modification: 13/11/15                                    */
+/* Last modification: 15/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -60,8 +60,8 @@ list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,s_ti
   Uint8 *keystate = SDL_GetKeyState(NULL);
   s_time time = *time_p;
 
-  if (keystate[SDLK_SPACE] && *ammo<=60 && *ammo>0 && (time.previous_time >= time.current_time+200 || time.previous_time<=time.current_time-200)) {
-    time.previous_time=time.current_time;
+  if (keystate[SDLK_SPACE] && *ammo<=60 && *ammo>0 && (time.previous_time >= time.current+200 || time.previous_time<=time.current-200)) {
+    time.previous_time=time.current;
     s_information bullet;
     *ammo-=energy;
     if (*ammo<=0){
@@ -89,9 +89,9 @@ list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,s_ti
       shots->info.state = 0;
     }
   }else{
-    if (time.current_time-time.previous_time>=2000 && *ammo<60){
+    if (time.current-time.previous_time>=2000 && *ammo<60){
       *ammo+=15;
-      time.previous_time=time.current_time;
+      time.previous_time=time.current;
       if (*ammo>=60){
 	*ammo=60;
       }
@@ -175,7 +175,6 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
       player.state = 0;
     }
   }
-  player.map_x = player.movement/50;
 
   return player;
 }
@@ -223,7 +222,6 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
       player.state=1;
     }
   }
-  player.map_x = player.movement/50;
 
   return player;
 }

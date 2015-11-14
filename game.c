@@ -2,7 +2,7 @@
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 13/11/15                                    */
+/* Last modification: 15/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -63,7 +63,6 @@ s_information ini_player(s_information player)
   player.position.y = 400-50-75;
   player.jump = 0;
   player.state = 0;
-  player.map_x = 0;
   player.movement = player.position.x+13;
 
   return player;
@@ -71,10 +70,10 @@ s_information ini_player(s_information player)
 
 s_time ini_time(s_time time)
 {
-  time.current_time = 0; 
+  time.current = 0; 
   time.previous_time = 0;
   time.previous_time_ennemi = 0; 
-  time.level_time = 0;
+  time.level = 0;
   time.time_max = 20000;
   time.chrono = time.time_max;
 
@@ -84,12 +83,12 @@ s_time ini_time(s_time time)
 s_time duration_chrono(s_information player,s_time time ,int x_max) 
 {  
   // DEBUT DU CHRONO
-  if (player.movement/50 == x_max-2 && time.level_time == 0) {
-    time.level_time = time.current_time;
+  if (player.movement/50 == x_max-2 && time.level == 0) {
+    time.level = time.current;
   }
   // DEFILER DU CHRONO
-  if (time.level_time != 0 && time.chrono >= 0) {
-    time.chrono = time.time_max - time.current_time + time.level_time;
+  if (time.level != 0 && time.chrono >= 0) {
+    time.chrono = time.time_max - time.current + time.level;
   }
 
   return time;
@@ -190,11 +189,11 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p
   int nb_ennemi=nb_ennemi_update(*level);
 
   if(*load==1){
-    if(time.current_time - time.previous_time_ennemi>600){
+    if(time.current - time.previous_time_ennemi>600){
       if(*nb_ennemi_spawn!=nb_ennemi){
 	new_ennemi=ennemi_spawn(player,ennemi,1,x_max,y_max,tab);
 	*nb_ennemi_spawn=*nb_ennemi_spawn+1;
-	time.previous_time_ennemi=time.current_time;
+	time.previous_time_ennemi=time.current;
 	*time_p = time;
 	return new_ennemi;
       }else{
@@ -408,7 +407,7 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
 
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time)
 {
-  if (load == 0 && time.previous_time_ennemi+1000 <= time.current_time) {
+  if (load == 0 && time.previous_time_ennemi+1000 <= time.current) {
     // pas de chargement: on ferme la porte
     tab[1][0] = -1;
     tab[1][x_max-1] = -1;

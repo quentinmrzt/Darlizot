@@ -2,7 +2,7 @@
 /* draw.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 21/10/15                                             */
-/* Last modification: 05/11/15                                    */
+/* Last modification: 15/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"

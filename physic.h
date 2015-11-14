@@ -1,9 +1,8 @@
-
 /******************************************************************/
 /* physic.h                                                       */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 13/11/15                                    */
+/* Last modification: 15/11/15                                    */
 /******************************************************************/
 
 #ifndef PHYSIC_H

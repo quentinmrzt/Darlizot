@@ -2,7 +2,7 @@
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 06/11/15                                    */
+/* Last modification: 15/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level, ammo=60, energy=1, load=1, nb_ennemi_spawn;
+  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn;
   s_information player;
   s_surface sprite;
   s_time time;
@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
   nb_ennemi_spawn=0;
 
   while (!close) {
-    time.current_time = SDL_GetTicks();
+    time.current = SDL_GetTicks();
 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
