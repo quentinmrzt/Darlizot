@@ -55,11 +55,13 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
 }
 
 
-list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,int *previous_time,int current_time)
+list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,s_time *time_p)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
-  if (keystate[SDLK_SPACE] && *ammo<=60 && *ammo>0 && (*previous_time>=current_time+200 || *previous_time<=current_time-200)) {
-    *previous_time=current_time;
+  s_time time = *time_p;
+
+  if (keystate[SDLK_SPACE] && *ammo<=60 && *ammo>0 && (time.previous_time >= time.current_time+200 || time.previous_time<=time.current_time-200)) {
+    time.previous_time=time.current_time;
     s_information bullet;
     *ammo-=energy;
     if (*ammo<=0){
@@ -87,14 +89,16 @@ list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,int 
       shots->info.state = 0;
     }
   }else{
-    if (current_time-*previous_time>=2000 && *ammo<60){
+    if (time.current_time-time.previous_time>=2000 && *ammo<60){
       *ammo+=15;
-      *previous_time=current_time;
+      time.previous_time=time.current_time;
       if (*ammo>=60){
 	*ammo=60;
       }
     }
   }
+
+  *time_p = time;
   return shots;
 }
 

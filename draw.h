@@ -20,7 +20,7 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player);
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite);
 void  draw_health(s_information player,s_surface sprite);
 void draw_ammo(s_surface sprite,int ammo);
-void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_information player, int chrono);
+void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_information player, s_time chrono);
 
 /****************************************************************************************************/
 /* ANIM */

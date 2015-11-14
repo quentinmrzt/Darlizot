@@ -187,14 +187,14 @@ void draw_tab(int x_max, int y_max, int tab[y_max][x_max])
   }
 }
 
-void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_information player, int chrono) 
+void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_information player, s_time time) 
 {
   char sentence[20] = "";
   SDL_Rect position;
   SDL_Color black_color = {0,0,0,0};
   SDL_Surface *text;
 
-  sprintf(sentence, "Time: %d",chrono/1000);
+  sprintf(sentence, "Time: %d",time.chrono/1000);
   
   text = TTF_RenderText_Blended(font, sentence, black_color);
   position.x = 400-text->w/2;

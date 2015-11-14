@@ -52,4 +52,15 @@ struct s_surface
 };
 typedef struct s_surface s_surface;
 
+struct s_time
+{
+  int current_time; 
+  int previous_time;
+  int previous_time_ennemi; 
+  int level_time;
+  int chrono;
+  int time_max;
+};
+typedef struct s_time s_time;
+
 #endif 

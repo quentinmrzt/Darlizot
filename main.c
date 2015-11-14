@@ -14,14 +14,13 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level,ammo=60,energy=1;
+  int close, x_max, y_max, level, ammo=60, energy=1, load=1, nb_ennemi_spawn;
   s_information player;
   s_surface sprite;
-  SDL_Rect position;
+  s_time time;
+
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
-  int current_time,previous_time=0,previous_time_ennemi=0,level_time=0, chrono = 10000;
-  int load=1,nb_ennemi_spawn;
   TTF_Font *font = NULL;
 
   /****************************************************************************************************/
@@ -43,6 +42,7 @@ int main(int argc, char* argv[])
   /* initialize variable */
   sprite = load_sprite(sprite);
   player = ini_player(player);
+  time = ini_time(time);
   /* table */
   size_tab(&x_max,&y_max);
   int tab[y_max][x_max];
@@ -53,15 +53,17 @@ int main(int argc, char* argv[])
   close = 0;
   level= 1;
   nb_ennemi_spawn=0;
+
   while (!close) {
-    current_time=SDL_GetTicks();
+    time.current_time = SDL_GetTicks();
 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi = respawn(ennemi,&level,player,&previous_time_ennemi,&nb_ennemi_spawn,&load,x_max,y_max,tab);
+    ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab);
+
     close = quit(close);
     player = control(x_max,y_max,tab,player);
-    shots = shooting(player,shots,&ammo,energy,&previous_time,current_time);
+    shots = shooting(player,shots,&ammo,energy,&time);
 
     /****************************************************************************************************/
     /* GAME */
@@ -70,9 +72,9 @@ int main(int argc, char* argv[])
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
     ennemis_jump(x_max,y_max,tab,ennemi,player);
     collision_bullet_ennemi(&shots,&ennemi);
-    chrono = duration_chrono(player,&level_time,x_max);
-    door_ennemy(x_max,y_max,tab,player,load,previous_time_ennemi);
-    door_player(x_max,y_max,tab,player,chrono);
+    time = duration_chrono(player,time,x_max);
+    door_ennemy(x_max,y_max,tab,player,load,time);
+    door_player(x_max,y_max,tab,player,time);
 
     /****************************************************************************************************/
     /* DRAW */
@@ -84,7 +86,7 @@ int main(int argc, char* argv[])
     draw_health(player,sprite);
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player);
-    draw_chrono(sprite.screen,font,player,chrono); 
+    draw_chrono(sprite.screen,font,player,time); 
 
     /****************************************************************************************************/
     /* OTHER */

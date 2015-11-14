@@ -13,7 +13,7 @@
 
 int quit(int close);
 s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player);
-list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,int *previous_time,int current_time);
+list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,s_time *time_p);
 void a_and_z(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 list_ptr killing(list_ptr ennemi);
 
