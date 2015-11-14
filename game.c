@@ -240,9 +240,20 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
   return ennemi;
 }
 
-
-/****************************************************************************************************/
-/* TAB */
+list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
+{
+  list_ptr shots_list=shots;
+  while(shots_list!=NULL){
+    if(tab[shots_list->info.position.y/50][(shots_list->info.movement+25)/50]==-1 || tab[shots_list->info.position.y/50][(shots_list->info.movement-25)/50]==-1){
+	shots_list->info.life=0;
+	printf("couille\n");
+      }
+    shots_list=shots_list->next;
+  }
+  return shots;
+}
+    /****************************************************************************************************/
+    /* TAB */
 
 void size_tab(int *x_ptr, int *y_ptr) 
 {

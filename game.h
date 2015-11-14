@@ -27,7 +27,7 @@ int list_size(list_ptr list);
 /****************************************************************************************************/
 /* PHYSICS */
 
-
+list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max]);
 /****************************************************************************************************/
 /* ENEMIES */
 int nb_ennemi_update(int level);
