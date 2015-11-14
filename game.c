@@ -179,15 +179,29 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_
   return ennemi;
 }
 
-list_ptr ennemies_moves(list_ptr ennemi, s_information player)
+void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,int tab[y_max][x_max])
 {
+  int limit;
   list_ptr copy_ennemi=ennemi;
   while (copy_ennemi!=NULL){
-    if (player.movement-100>copy_ennemi->info.movement){
-      copy_ennemi->info.movement+=5;
-    }
-    if (player.movement+100<copy_ennemi->info.movement){
-      copy_ennemi->info.movement-=5;
+    if (tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+10)/50]==1 || tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+40)/50]==1){
+      if (copy_ennemi->info.state==0)
+	copy_ennemi->info.movement-=5;
+      else
+	copy_ennemi->info.movement+=5;
+    }else{
+      if (player.position.y==copy_ennemi->info.position.y)
+	limit=200;
+      else
+	limit=0;
+      if (player.movement-limit>copy_ennemi->info.movement){
+	copy_ennemi->info.movement+=5;
+	copy_ennemi->info.state=1;
+      }
+      if (player.movement+limit<copy_ennemi->info.movement){
+	copy_ennemi->info.movement-=5;
+	copy_ennemi->info.state=0;
+      }
     }
     copy_ennemi=copy_ennemi->next;
   }
@@ -214,13 +228,37 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
     ennemi.jump -= 1;
   }
 
+/*
+list_ptr ennemis_shots(list_ptr ennemis,list_ptr shots, s_information player,int x_max,int y_max,int tab[y_max][x_max])
+{
+  list_ptr copy_ennemis=ennemis;
+  list_ptr copy_shots=shots;
+  while (copy_ennemis!=NULL){
+    if (copy_ennemis->info.position.y==player.position.y){
+      if (distance_wall_right(x_max,y_max,tab,ennemis->info)+copy_ennemis->info.movement<player.movement){
+	//y a un mur
+      }else{
+	//tir
+      }
+      if (distance_wall_left(x_max,y_max,tab,ennemis->info)+player.movement<copy_ennemis->info.movement){
+	// y a un mur
+      }else{
+	//tir 
+      }
+    }
+  }
+}
+*/
+
+
+
   /* si SAUT et AU SOL */
   if (player.movement>ennemi.movement){
-    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance == 0) { 
+    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance == 0 && ennemi.state==1) { 
       ennemi.jump = 7;
     } 
   } else {
-    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance == 0) { 
+    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance == 0 && ennemi.state==0) { 
       ennemi.jump = 7;
     } 
   }

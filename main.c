@@ -75,12 +75,11 @@ int main(int argc, char* argv[])
     draw_ammo(sprite,ammo);
     draw_health(player,sprite);
     //draw_pos(sprite.screen,font,player); 
-    ennemies_moves(ennemi,player);
+    ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player);
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
-    printf("%d\n",load);
     /****************************************************************************************************/
     /* OTHER */
     if (player.position.y > 400) {

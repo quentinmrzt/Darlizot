@@ -65,19 +65,33 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
 
 list_ptr anim_ennemis(list_ptr ennemis,s_information player)
 {
+  int limit;
   list_ptr copy_ennemi=ennemis;
   while (copy_ennemi!=NULL){
-    if (player.movement>=copy_ennemi->info.movement)
-      {
+    if (player.position.y==copy_ennemi->info.position.y)
+      limit=200;
+    else
+      limit=0;
+    if (player.movement-limit>copy_ennemi->info.movement){
 	if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
 	  copy_ennemi->info.rcSrc.x+=75;
 	else
 	  copy_ennemi->info.rcSrc.x=2*75;
       }else{
-      if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
-	copy_ennemi->info.rcSrc.x+=75;
-      else
-	copy_ennemi->info.rcSrc.x=12*75;
+      if (player.movement+limit<copy_ennemi->info.movement){
+	if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
+	  copy_ennemi->info.rcSrc.x+=75;
+	else
+	  copy_ennemi->info.rcSrc.x=12*75;
+      }else{
+	if (player.movement>copy_ennemi->info.movement){
+	  copy_ennemi->info.rcSrc.x=0;
+	}
+	if (player.movement<copy_ennemi->info.movement){
+	  copy_ennemi->info.rcSrc.x=11*75;
+	}
+      }
+  
     }
     copy_ennemi=copy_ennemi->next;
   }

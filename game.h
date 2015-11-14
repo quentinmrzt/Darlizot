@@ -32,7 +32,7 @@ int list_size(list_ptr list);
 /* ENEMIES */
 
 list_ptr respawn(list_ptr ennemi,int* level, s_information player,int *previous_time_ennemi,int *load,int x_max, int y_max,int tab[y_max][x_max]);
-list_ptr ennemies_moves(list_ptr ennemi, s_information player);
+void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,int tab[y_max][x_max]);
 void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_information player);
 s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennemi,s_information player);
 
