@@ -22,12 +22,13 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
     y = player.position.y+35;
   }
 
-  for (i=(player.movement/50) ; i>(player.movement-2*50)/50; i--) {
+  for (i=(player.movement/50) ; i>=(player.movement-2*50)/50; i--) {
     if (tab[(player.position.y+74)/50][i] == -1 || tab[y/50][i] == -1) {
       // -50 pour coin de gauche
       return (player.movement)-(i*50)-50;
     }   
   }
+
   return player.movement;
 }
 
@@ -170,3 +171,5 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
   free(copy_copy_shots);
   free(copy_copy_ennemi);
 }
+
+

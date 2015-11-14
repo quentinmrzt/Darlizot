@@ -11,6 +11,7 @@
 #include "control.h"
 #include "physic.h"
 #include "time.h"
+
 /****************************************************************************************************/
 /* INITIALIZE */
 
@@ -58,14 +59,31 @@ s_information ini_player(s_information player)
   player.rcSrc.w = 75;
   player.life=5;
   player.rcSrc.h = 75;
-  player.position.x = 360;
-  player.position.y = 0;
+  player.position.x = -75;
+  player.position.y = 400-50-75;
   player.jump = 0;
   player.state = 0;
   player.map_x = 0;
   player.movement = player.position.x+13;
 
   return player;
+}
+
+int duration_chrono(s_information player,int *level_time,int x_max) 
+{
+  int chrono = 10000;
+  int current_time = SDL_GetTicks();
+  
+  // DEBUT DU CHRONO
+  if (player.movement/50 == x_max-2 && *level_time == 0) {
+    *level_time = current_time;
+  }
+  // DEFILER DU CHRONO
+  if (*level_time != 0 && chrono >= 0) {
+    chrono = 10000 - current_time + *level_time;
+  }
+
+  return chrono;
 }
 
 /****************************************************************************************************/
@@ -139,13 +157,15 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
     for (i=0 ; i<nb_ennemi ; i++) {
       ennemi_info = ini_player(ennemi_info);
       if(rand()%2==0){
-	ennemi_info.position.x=0;
+	ennemi_info.position.x=-40;
+	ennemi_info.rcSrc.x = 0*75;
       }else{
 	ennemi_info.position.x = ((x_max)*50);
+	ennemi_info.rcSrc.x = 11*75;
       }
+      ennemi_info.position.y = 100;
       ennemi_info.id = 1;
       ennemi_info.movement = ennemi_info.position.x+20;
-      ennemi_info.rcSrc.x = 11*75;
       ennemi = list_cons(ennemi, ennemi_info);
     }
     return ennemi;
@@ -159,6 +179,7 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_
   list_ptr new_ennemi=NULL;
   int time=SDL_GetTicks();
   int nb_ennemi=nb_ennemi_update(*level);
+
   if(*load==1){
     if(time-*previous_time_ennemi>600){
       if(*nb_ennemi_spawn!=nb_ennemi){
@@ -188,6 +209,7 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
 {
   int limit;
   list_ptr copy_ennemi=ennemi;
+
   while (copy_ennemi!=NULL){
     if (tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+10)/50]==1 || tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+40)/50]==1){
       if (copy_ennemi->info.state==0)
@@ -289,8 +311,8 @@ list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
   }
   return shots;
 }
-    /****************************************************************************************************/
-    /* TAB */
+/****************************************************************************************************/
+/* TAB */
 
 void size_tab(int *x_ptr, int *y_ptr) 
 {
@@ -370,6 +392,45 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
       y++;
     }
     fclose(recuperation);
+  }
+}
+
+void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, int previous_time_ennemi)
+{
+  int current_time = SDL_GetTicks();
+
+  if (load == 0 && previous_time_ennemi+1000 <= current_time) {
+    // pas de chargement: on ferme la porte
+    tab[1][0] = -1;
+    tab[1][x_max-1] = -1;
+    tab[2][0] = -1;
+    tab[2][x_max-1] = -1;
+  } else {
+    // chargement: on ouvre la porte
+    tab[1][0] = 0;
+    tab[1][x_max-1] = 0;
+    tab[2][0] = 0;
+    tab[2][x_max-1] = 0;
+  }
+}
+
+void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, int chrono)
+{
+  // le joueur s'écarte: on ferme la porte de gauche
+  if (player.movement >= 50) {
+    tab[5][0] = -1;
+    tab[6][0] = -1;
+  } else {
+    tab[5][0] = 0;
+    tab[6][0] = 0;
+  }
+  // fin du chrono: on ouvre la porte de droite
+  if (chrono < 0) {
+    tab[5][x_max-1] = 0;
+    tab[6][x_max-1] = 0;
+  } else {
+    tab[5][x_max-1] = -1;
+    tab[6][x_max-1] = -1;
   }
 }
 

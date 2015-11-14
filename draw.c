@@ -48,6 +48,13 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
   }
 }
 
+void draw_player(s_information player,s_surface sprite)
+{
+  // tampon car BlitSurface remet a 0 si nega
+  SDL_Rect position = player.position;
+  SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+}
+
 void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_surface sprite, SDL_Rect pos_sprite, SDL_Rect pos_screen) 
 {
   if (tab[y][x] == 0) {
@@ -180,27 +187,18 @@ void draw_tab(int x_max, int y_max, int tab[y_max][x_max])
   }
 }
 
-void draw_pos(SDL_Surface *screen, TTF_Font *font, s_information player) 
+void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_information player, int chrono) 
 {
   char sentence[20] = "";
   SDL_Rect position;
-
-  position.x = 5;
-  position.y = 5;
-  sprintf(sentence, "pos_x: %d pos_y: %d", player.position.x, player.position.y);
-  draw_text(screen,font,player,sentence,position);
-
-  position.y = 5+20;
-  sprintf(sentence, "mov: %d", player.movement);
-  draw_text(screen,font,player,sentence,position);
-}
-
-void draw_text(SDL_Surface *screen, TTF_Font *font, s_information player, char sentence[], SDL_Rect position) 
-{
   SDL_Color black_color = {0,0,0,0};
   SDL_Surface *text;
+
+  sprintf(sentence, "Time: %d",chrono/1000);
   
   text = TTF_RenderText_Blended(font, sentence, black_color);
+  position.x = 400-text->w/2;
+  position.y = 5;
   SDL_BlitSurface(text, NULL, screen, &position);
   SDL_FreeSurface(text);
 }

@@ -155,7 +155,7 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 	  }
 	} else {
 	  // on avance dans la map + l'écran
-	  if (distance >= 20 && modulo == 0) {   
+	  if ((distance >= 20 && modulo == 0) || player.movement < 0 || player.movement >= x_max*50-75+13*2) {   
 	    player.position.x += 20;
 	    player.movement += 20;
 	  } else if (distance > modulo && modulo != 0) {
@@ -203,7 +203,7 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 	  }
 	} else {
 	  // on avance dans la map + l'écran
-	  if ((distance >= 20 && modulo == 0) || (player.movement < 20)) {   
+	  if ((distance >= 20 && modulo == 0)) {   
 	    player.position.x -= 20;
 	    player.movement -= 20;
 	  } else if (distance > modulo && modulo != 0) {

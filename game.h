@@ -16,6 +16,7 @@ SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen);
 s_surface load_sprite(s_surface sprite);
 s_information ini_player(s_information player);
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
+int duration_chrono(s_information player,int *level_time,int x_max);
 
 /****************************************************************************************************/
 /* LIST */
@@ -28,6 +29,7 @@ int list_size(list_ptr list);
 /* PHYSICS */
 
 list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max]);
+
 /****************************************************************************************************/
 /* ENEMIES */
 void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,int tab[y_max][x_max]);
@@ -41,6 +43,8 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
 
 void size_tab(int *x_ptr, int *y_ptr) ;
 void recup_map(int x_max, int y_max, int tab[y_max][x_max]);
+void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, int previous_time_ennemi);
+void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, int chrono);
 
 /****************************************************************************************************/
 /* CLEAN */
