@@ -131,45 +131,46 @@ int list_size(list_ptr list)
 /****************************************************************************************************/
 /* ENEMIES */
 
-list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int *previous_time_ennemi,int x_max, int y_max,int tab[y_max][x_max])
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
 {
   s_information ennemi_info;
   int i;
-  int time=SDL_GetTicks();
   if (nb_ennemi > 0) {
     for (i=0 ; i<nb_ennemi ; i++) {
-      if(time-*previous_time_ennemi>600){
-	*previous_time_ennemi=time;
-	ennemi_info = ini_player(ennemi_info);
-	if(rand()%2==0){
-	  ennemi_info.position.x=0;
-	}else{
-	  ennemi_info.position.x = ((x_max)*50);
-	}
-	ennemi_info.id = 1;
-	ennemi_info.movement = ennemi_info.position.x+20;
-	ennemi_info.rcSrc.x = 11*75;
-	ennemi = list_cons(ennemi, ennemi_info);
+      ennemi_info = ini_player(ennemi_info);
+      if(rand()%2==0){
+	ennemi_info.position.x=0;
+      }else{
+	ennemi_info.position.x = ((x_max)*50);
       }
-      return ennemi;
+      ennemi_info.id = 1;
+      ennemi_info.movement = ennemi_info.position.x+20;
+      ennemi_info.rcSrc.x = 11*75;
+      ennemi = list_cons(ennemi, ennemi_info);
     }
     return ennemi;
-  }else{
-    return ennemi;
   }
+  return ennemi;
 }
 
-list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_time_ennemi,int *load,int x_max, int y_max,int tab[y_max][x_max])
+
+list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_time_ennemi,int *nb_ennemi_spawn,int *load,int x_max, int y_max,int tab[y_max][x_max])
 {
   list_ptr new_ennemi=NULL;
-  int nb_ennemi=*level*(*level);
+  int time=SDL_GetTicks();
+  int nb_ennemi=nb_ennemi_update(*level);
   if(*load==1){
-    if(list_size(ennemi)!=nb_ennemi){
-      new_ennemi=ennemi_spawn(player,ennemi,nb_ennemi,previous_time_ennemi,x_max,y_max,tab);
-      return new_ennemi;
-    }else{
-      *load=0;
-      *level=*level+1;
+    if(time-*previous_time_ennemi>600){
+      if(*nb_ennemi_spawn!=nb_ennemi){
+	new_ennemi=ennemi_spawn(player,ennemi,1,x_max,y_max,tab);
+	*nb_ennemi_spawn=*nb_ennemi_spawn+1;
+	*previous_time_ennemi=time;
+	return new_ennemi;
+      }else{
+	*load=0;
+	*level=*level+1;
+	*nb_ennemi_spawn=0;
+      }
     }
   }else{
     if(ennemi==NULL){
@@ -177,6 +178,10 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_
     }
   }
   return ennemi;
+}
+int nb_ennemi_update(int level)
+{
+  return level+3*level;
 }
 
 void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,int tab[y_max][x_max])
@@ -219,7 +224,13 @@ void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_in
 
 s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennemi,s_information player)
 {
-  int distance = distance_of_floor(x_max,y_max,tab,ennemi);
+  int distance_down = distance_of_floor(x_max,y_max,tab,ennemi);
+  int distance_up = distance_of_ceiling(x_max,y_max,tab,ennemi);
+
+  if (distance_up < 15) {
+    ennemi.jump = 0;
+  }
+
   if (ennemi.jump > 2) {
     ennemi.position.y -= 15;
   }
@@ -227,6 +238,23 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
   if (ennemi.jump > 0) {
     ennemi.jump -= 1;
   }
+
+
+  /* si SAUT et AU SOL */
+  if (player.movement>ennemi.movement){
+    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance_down == 0) { 
+      ennemi.jump = 7;
+    } 
+  } else {
+    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance_down == 0) { 
+      ennemi.jump = 7;
+    } 
+  }
+
+  return ennemi;
+}
+
+
 
 /*
 list_ptr ennemis_shots(list_ptr ennemis,list_ptr shots, s_information player,int x_max,int y_max,int tab[y_max][x_max])
@@ -250,23 +278,19 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr shots, s_information player,int
 }
 */
 
-
-
-  /* si SAUT et AU SOL */
-  if (player.movement>ennemi.movement){
-    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance == 0 && ennemi.state==1) { 
-      ennemi.jump = 7;
-    } 
-  } else {
-    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance == 0 && ennemi.state==0) { 
-      ennemi.jump = 7;
-    } 
+list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
+{
+  list_ptr shots_list=shots;
+  while(shots_list!=NULL){
+    if(tab[shots_list->info.position.y/50][(shots_list->info.movement+25)/50]==-1 || tab[shots_list->info.position.y/50][(shots_list->info.movement-25)/50]==-1){
+	shots_list->info.life=0;
+      }
+    shots_list=shots_list->next;
   }
-
-  return ennemi;
+  return shots;
 }
-/****************************************************************************************************/
-/* TAB */
+    /****************************************************************************************************/
+    /* TAB */
 
 void size_tab(int *x_ptr, int *y_ptr) 
 {

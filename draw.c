@@ -116,10 +116,11 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
     }
 }
 
-void  draw_ammo(s_surface sprite,int ammo)
+void draw_ammo(s_surface sprite,int ammo)
 { 
   SDL_Rect rcSrc_set,rcSrc;
   SDL_Rect position_set,position;
+
   position_set.x=760;
   position_set.y=10;
   position.x=764;
@@ -136,7 +137,7 @@ void  draw_ammo(s_surface sprite,int ammo)
   SDL_BlitSurface(sprite.ammo, &rcSrc, sprite.screen, &position);
 }
 
-void  draw_health(s_information player,s_surface sprite)
+void draw_health(s_information player,s_surface sprite)
 { 
   SDL_Rect rcSrc;
   SDL_Rect position;

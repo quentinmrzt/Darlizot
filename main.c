@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   SDL_Rect position;
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
-  int current_time,previous_time=0,previous_time_ennemi=0,load=1;
+  int current_time,previous_time=0,previous_time_ennemi=0,load=1,nb_ennemi_spawn;
   TTF_Font *font = NULL;
 
   /****************************************************************************************************/
@@ -48,21 +48,20 @@ int main(int argc, char* argv[])
   recup_map(x_max,y_max,tab);
 
   //draw_tab(x_max,y_max,tab);
-  
   close = 0;
   level= 2;
-  ennemi = respawn(ennemi,&level,player,&previous_time_ennemi,&load,x_max,y_max,tab);
-  
+  nb_ennemi_spawn=0;
   while (!close) {
     current_time=SDL_GetTicks();
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi = respawn(ennemi,&level,player,&previous_time_ennemi,&load,x_max,y_max,tab);
+    ennemi = respawn(ennemi,&level,player,&previous_time_ennemi,&nb_ennemi_spawn,&load,x_max,y_max,tab);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots,&ammo,energy,&previous_time,current_time);
     /****************************************************************************************************/
     /* GAME */
+    shots=wall_bang(shots,x_max,y_max,tab);
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
     ennemis_jump(x_max,y_max,tab,ennemi,player);
@@ -80,6 +79,38 @@ int main(int argc, char* argv[])
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+    // fermeture de porte
+    if (current_time >= 3500 && current_time <= 4000) {
+      tab[1][0] = -1;
+      tab[5][0] = -1;
+
+      tab[1][x_max-1] = -1;
+      tab[5][x_max-1] = -1;
+    }
+    if (current_time >= 3000 && current_time <= 3500) {
+      tab[2][0] = -1;
+      tab[6][0] = -1;
+
+      tab[2][x_max-1] = -1;
+      tab[6][x_max-1] = -1;
+    }
+
+    // ouverture de la porte
+    if (current_time > 6000) {
+      tab[1][0] = 0;
+      tab[5][0] = 0;
+
+      tab[1][x_max-1] = 0;
+      tab[5][x_max-1] = 0;
+    }
+    if (current_time > 6500) {
+      tab[2][0] = 0;
+      tab[6][0] = 0;
+
+      tab[2][x_max-1] = 0;
+      tab[6][x_max-1] = 0;
+    }
+
     /****************************************************************************************************/
     /* OTHER */
     if (player.position.y > 400) {
