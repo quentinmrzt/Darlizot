@@ -131,45 +131,46 @@ int list_size(list_ptr list)
 /****************************************************************************************************/
 /* ENEMIES */
 
-list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int *previous_time_ennemi,int x_max, int y_max,int tab[y_max][x_max])
+list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max])
 {
   s_information ennemi_info;
   int i;
-  int time=SDL_GetTicks();
   if (nb_ennemi > 0) {
     for (i=0 ; i<nb_ennemi ; i++) {
-      if(time-*previous_time_ennemi>600){
-	*previous_time_ennemi=time;
-	ennemi_info = ini_player(ennemi_info);
-	if(rand()%2==0){
-	  ennemi_info.position.x=0;
-	}else{
-	  ennemi_info.position.x = ((x_max)*50);
-	}
-	ennemi_info.id = 1;
-	ennemi_info.movement = ennemi_info.position.x+20;
-	ennemi_info.rcSrc.x = 11*75;
-	ennemi = list_cons(ennemi, ennemi_info);
+      ennemi_info = ini_player(ennemi_info);
+      if(rand()%2==0){
+	ennemi_info.position.x=0;
+      }else{
+	ennemi_info.position.x = ((x_max)*50);
       }
-      return ennemi;
+      ennemi_info.id = 1;
+      ennemi_info.movement = ennemi_info.position.x+20;
+      ennemi_info.rcSrc.x = 11*75;
+      ennemi = list_cons(ennemi, ennemi_info);
     }
     return ennemi;
-  }else{
-    return ennemi;
   }
+  return ennemi;
 }
 
-list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_time_ennemi,int *load,int x_max, int y_max,int tab[y_max][x_max])
+
+list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_time_ennemi,int *nb_ennemi_spawn,int *load,int x_max, int y_max,int tab[y_max][x_max])
 {
   list_ptr new_ennemi=NULL;
-  int nb_ennemi=*level*(*level);
+  int time=SDL_GetTicks();
+  int nb_ennemi=nb_ennemi_update(*level);
   if(*load==1){
-    if(list_size(ennemi)!=nb_ennemi){
-      new_ennemi=ennemi_spawn(player,ennemi,nb_ennemi,previous_time_ennemi,x_max,y_max,tab);
-      return new_ennemi;
-    }else{
-      *load=0;
-      *level=*level+1;
+    if(time-*previous_time_ennemi>600){
+      if(*nb_ennemi_spawn!=nb_ennemi){
+	new_ennemi=ennemi_spawn(player,ennemi,1,x_max,y_max,tab);
+	*nb_ennemi_spawn=*nb_ennemi_spawn+1;
+	*previous_time_ennemi=time;
+	return new_ennemi;
+      }else{
+	*load=0;
+	*level=*level+1;
+	*nb_ennemi_spawn=0;
+      }
     }
   }else{
     if(ennemi==NULL){
@@ -177,6 +178,11 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,int *previous_
     }
   }
   return ennemi;
+}
+
+int nb_ennemi_update(int level)
+{
+  return level+3*level;
 }
 
 list_ptr ennemies_moves(list_ptr ennemi, s_information player)
@@ -227,6 +233,8 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
 
   return ennemi;
 }
+
+
 /****************************************************************************************************/
 /* TAB */
 

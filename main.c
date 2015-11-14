@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
   SDL_Rect position;
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
-  int current_time,previous_time=0,previous_time_ennemi=0,load=1;
+  int current_time,previous_time=0,previous_time_ennemi=0,load=1,nb_ennemi_spawn;
   TTF_Font *font = NULL;
 
   /****************************************************************************************************/
@@ -48,16 +48,14 @@ int main(int argc, char* argv[])
   recup_map(x_max,y_max,tab);
 
   //draw_tab(x_max,y_max,tab);
-  
   close = 0;
   level= 2;
-  ennemi = respawn(ennemi,&level,player,&previous_time_ennemi,&load,x_max,y_max,tab);
-  
+  nb_ennemi_spawn=0;
   while (!close) {
     current_time=SDL_GetTicks();
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi = respawn(ennemi,&level,player,&previous_time_ennemi,&load,x_max,y_max,tab);
+    ennemi = respawn(ennemi,&level,player,&previous_time_ennemi,&nb_ennemi_spawn,&load,x_max,y_max,tab);
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots,&ammo,energy,&previous_time,current_time);
@@ -80,7 +78,8 @@ int main(int argc, char* argv[])
     // tampon car BlitSurface remet a 0 si nega
     position = player.position;
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
-    printf("%d\n",load);
+    printf("Ennemis qui spawn : %d\n Load : %d\n",nb_ennemi_spawn,load);
+    printf("Ennemis dans la liste : %d\n", list_size(ennemi));
     /****************************************************************************************************/
     /* OTHER */
     if (player.position.y > 400) {
