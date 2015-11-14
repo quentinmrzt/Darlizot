@@ -211,7 +211,13 @@ void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_in
 
 s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennemi,s_information player)
 {
-  int distance = distance_of_floor(x_max,y_max,tab,ennemi);
+  int distance_down = distance_of_floor(x_max,y_max,tab,ennemi);
+  int distance_up = distance_of_ceiling(x_max,y_max,tab,ennemi);
+
+  if (distance_up < 15) {
+    ennemi.jump = 0;
+  }
+
   if (ennemi.jump > 2) {
     ennemi.position.y -= 15;
   }
@@ -222,11 +228,11 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
 
   /* si SAUT et AU SOL */
   if (player.movement>ennemi.movement){
-    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance == 0) { 
+    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance_down == 0) { 
       ennemi.jump = 7;
     } 
   } else {
-    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance == 0) { 
+    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance_down == 0) { 
       ennemi.jump = 7;
     } 
   }

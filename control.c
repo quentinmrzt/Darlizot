@@ -203,7 +203,7 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 	  }
 	} else {
 	  // on avance dans la map + l'écran
-	  if (distance >= 20 && modulo == 0) {   
+	  if ((distance >= 20 && modulo == 0) || (player.movement < 20)) {   
 	    player.position.x -= 20;
 	    player.movement -= 20;
 	  } else if (distance > modulo && modulo != 0) {
@@ -227,7 +227,13 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
-  int distance = distance_of_floor(x_max,y_max,tab,player);
+  int distance_down = distance_of_floor(x_max,y_max,tab,player);
+  int distance_up = distance_of_ceiling(x_max,y_max,tab,player);
+
+  if (distance_up < 15) {
+    player.jump = 0;
+  }
+
   if (player.jump > 2) {
     player.position.y -= 15;
   }
@@ -237,12 +243,12 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
   }
 
   /* si SAUT et AU SOL */
-  if (keystate[SDLK_UP] && distance == 0) { 
+  if (keystate[SDLK_UP] && distance_down == 0) { 
     player.jump = 7;
   } 
 
   /* pour couper en vol */
-  if (!keystate[SDLK_UP] && distance >= 65) {
+  if (!keystate[SDLK_UP] && distance_down >= 65) {
     player.jump = 0;
   }
 
