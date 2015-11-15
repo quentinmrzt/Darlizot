@@ -231,7 +231,7 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
       }
     }else{
       if (player.position.y==copy_ennemi->info.position.y)
-	limit=200;
+	limit=300;
       else
 	limit=0;
       if (player.movement>copy_ennemi->info.movement){

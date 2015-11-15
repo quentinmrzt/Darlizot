@@ -172,4 +172,22 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
   free(copy_copy_ennemi);
 }
 
-
+void collision_bullet_player(list_ptr * army_shots, s_information * player, s_time * time_p)
+{
+  list_ptr copy_shots= *army_shots;
+  s_information copy_player=*player;
+  s_time time=*time_p;
+  if(time_p->previous_time_hit-time_p->current>2500){
+    time.previous_time_hit=time.current;
+    while (copy_shots != NULL){
+      if(collision_AABB(copy_shots->info,copy_player)){
+	copy_player.life=copy_player.life-10;
+	copy_shots->info.life=0;
+      }
+      copy_shots=copy_shots->next;
+    }
+  }
+  *player=copy_player;
+  *army_shots=copy_shots;
+  *time_p=time;
+}

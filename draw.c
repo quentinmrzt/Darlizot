@@ -77,7 +77,7 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,
   while (copy_ennemi!=NULL){
     int limit;
     if (player.position.y==copy_ennemi->info.position.y)
-    limit=200;
+    limit=300;
   else
     limit=0;
     if (copy_ennemi->info.state==0){

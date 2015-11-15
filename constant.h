@@ -53,7 +53,8 @@ struct s_time
 {
   int current; 
   int previous_time;
-  int previous_time_ennemi; 
+  int previous_time_ennemi;
+  int previous_time_hit;
   int level;
   int chrono;
   int time_max;
