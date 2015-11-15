@@ -42,7 +42,8 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
 /****************************************************************************************************/
 /* TAB */
 
-void size_tab(int *x_ptr, int *y_ptr) ;
+void size_tab(int *x_ptr, int *y_ptr);
+int nb_map(void);
 void recup_map(int x_max, int y_max, int tab[y_max][x_max]);
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time);
 void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time);

@@ -54,24 +54,28 @@ int main(int argc, char* argv[])
   level= 1;
   nb_ennemi_spawn=0;
 
+  printf("Nb map: %d\n",nb_map());
+
   while (!close) {
     time.current = SDL_GetTicks();
 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
-    ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab);
-
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots,&ammo,energy,&time);
 
     /****************************************************************************************************/
     /* GAME */
-    shots = wall_bang(shots,x_max,y_max,tab);
+    ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab);
+
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
-    ennemis_jump(x_max,y_max,tab,ennemi,player);
+
     collision_bullet_ennemi(&shots,&ennemi);
+    shots = wall_bang(shots,x_max,y_max,tab);
+
+    ennemis_jump(x_max,y_max,tab,ennemi,player);
     time = duration_chrono(player,time,x_max);
     door_ennemy(x_max,y_max,tab,player,load,time);
     door_player(x_max,y_max,tab,player,time);
@@ -84,9 +88,12 @@ int main(int argc, char* argv[])
     draw_shooting(player,shots,sprite);
     draw_ammo(sprite,ammo);
     draw_health(player,sprite);
+    draw_chrono(sprite.screen,font,player,time);
+
+    /* ??? */
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player);
-    draw_chrono(sprite.screen,font,player,time); 
+
 
     /****************************************************************************************************/
     /* OTHER */

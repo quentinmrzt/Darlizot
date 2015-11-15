@@ -334,7 +334,7 @@ void size_tab(int *x_ptr, int *y_ptr)
   x = 0;
   number=0;
   /* mode read */
-  recuperation = fopen("data/map_1", "r");
+  recuperation = fopen("data/map_0", "r");
 
   if (recuperation != NULL) {
 
@@ -362,6 +362,26 @@ void size_tab(int *x_ptr, int *y_ptr)
   }
 }
 
+int nb_map(void) 
+{
+  int compteur=0, fin=0;  
+  char name[15] = "data/map_0";
+  char tmp[15] = "";
+
+  while (fin == 0) {
+    sprintf (tmp, "%d", compteur) ;
+    name[9] = tmp[0];
+    name[10] = tmp[1];
+    if (fopen(name, "r") != NULL) {
+      compteur++;
+    } else {
+      fin = 1;
+    }
+  }
+
+  return compteur;
+}
+
 void recup_map(int x_max, int y_max, int tab[y_max][x_max])
 {
   FILE* recuperation;
@@ -370,7 +390,7 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
   recuperation = NULL;
   
   /* mode read */
-  recuperation = fopen("data/map_1", "r");
+  recuperation = fopen("data/map_0", "r");
 
   if (recuperation != NULL) {
 
