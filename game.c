@@ -334,7 +334,7 @@ void size_tab(int *x_ptr, int *y_ptr)
   x = 0;
   number=0;
   /* mode read */
-  recuperation = fopen("data/map_0", "r");
+  recuperation = fopen("data/map_1", "r");
 
   if (recuperation != NULL) {
 
@@ -390,7 +390,7 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max])
   recuperation = NULL;
   
   /* mode read */
-  recuperation = fopen("data/map_0", "r");
+  recuperation = fopen("data/map_1", "r");
 
   if (recuperation != NULL) {
 
