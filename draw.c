@@ -70,40 +70,39 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
   } 
 }
 
-list_ptr anim_ennemis(list_ptr ennemis,s_information player)
+list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,int tab[y_max][x_max])
 {
-  int limit;
   list_ptr copy_ennemi=ennemis;
-  while (copy_ennemi!=NULL){
-    if (player.position.y==copy_ennemi->info.position.y)
-      limit=200;
-    else
-      limit=0;
-    if (player.movement-limit>copy_ennemi->info.movement){
-	if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
-	  copy_ennemi->info.rcSrc.x+=75;
-	else
-	  copy_ennemi->info.rcSrc.x=2*75;
-      }else{
-      if (player.movement+limit<copy_ennemi->info.movement){
-	if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
-	  copy_ennemi->info.rcSrc.x+=75;
-	else
-	  copy_ennemi->info.rcSrc.x=12*75;
-      }else{
-	if (player.movement>copy_ennemi->info.movement){
-	  copy_ennemi->info.rcSrc.x=0;
-	}
-	if (player.movement<copy_ennemi->info.movement){
-	  copy_ennemi->info.rcSrc.x=11*75;
-	}
-      }
   
+  while (copy_ennemi!=NULL){
+    int limit;
+    if (player.position.y==copy_ennemi->info.position.y)
+    limit=200;
+  else
+    limit=0;
+    if (copy_ennemi->info.state==0){
+      if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
+	copy_ennemi->info.rcSrc.x+=75;
+      else
+	copy_ennemi->info.rcSrc.x=2*75;
+    }else{
+      if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
+	copy_ennemi->info.rcSrc.x+=75;
+      else
+	copy_ennemi->info.rcSrc.x=12*75;
+    }
+    if (player.movement>=copy_ennemi->info.movement &&  player.movement-limit<=copy_ennemi->info.movement ){
+      copy_ennemi->info.rcSrc.x=0;
+    }
+    if (player.movement<=copy_ennemi->info.movement &&  player.movement+limit>=copy_ennemi->info.movement){
+      copy_ennemi->info.rcSrc.x=11*75;
     }
     copy_ennemi=copy_ennemi->next;
   }
   return ennemis;
+
 }
+
 
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
 {
@@ -121,6 +120,22 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
       SDL_BlitSurface(sprite.bullet,&shots_copy->info.rcSrc,sprite.screen,&shots_copy->info.position);
       shots_copy=shots_copy->next;
     }
+}
+
+void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite)
+{
+  list_ptr copy_shots=army_shots;
+  while (copy_shots!=NULL){
+    if (copy_shots->info.state=0){
+      copy_shots->info.position.x-=24;
+      copy_shots->info.movement-=24;
+    }else{
+      copy_shots->info.position.x+=24;
+      copy_shots->info.movement+=24;
+    }
+    SDL_BlitSurface(sprite.bullet,&copy_shots->info.rcSrc,sprite.screen,&copy_shots->info.position);
+    copy_shots=copy_shots->next;
+  }
 }
 
 void draw_ammo(s_surface sprite,int ammo)

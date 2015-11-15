@@ -222,22 +222,28 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
 
   while (copy_ennemi!=NULL){
     if (tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+10)/50]==1 || tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+40)/50]==1){
-      if (copy_ennemi->info.state==0)
-	copy_ennemi->info.movement-=5;
-      else
+      if (copy_ennemi->info.state==0){
 	copy_ennemi->info.movement+=5;
+	copy_ennemi->info.state=0;
+      } else{
+	copy_ennemi->info.movement-=5;
+	copy_ennemi->info.state=1;
+      }
     }else{
       if (player.position.y==copy_ennemi->info.position.y)
 	limit=200;
       else
 	limit=0;
-      if (player.movement-limit>copy_ennemi->info.movement){
-	copy_ennemi->info.movement+=5;
-	copy_ennemi->info.state=1;
-      }
-      if (player.movement+limit<copy_ennemi->info.movement){
-	copy_ennemi->info.movement-=5;
+      if (player.movement>copy_ennemi->info.movement){
 	copy_ennemi->info.state=0;
+	if (player.movement-limit>copy_ennemi->info.movement)
+	  copy_ennemi->info.movement+=5;
+      }else{
+	if (player.movement<copy_ennemi->info.movement){
+	  copy_ennemi->info.state=1;
+	  if (player.movement+limit<copy_ennemi->info.movement)
+	    copy_ennemi->info.movement-=5;
+	}
       }
     }
     copy_ennemi=copy_ennemi->next;

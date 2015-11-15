@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
 
     /* ??? */
     ennemies_moves(ennemi,player,x_max,y_max,tab);
-    anim_ennemis(ennemi,player);
+    anim_ennemis(ennemi,player,x_max,y_max,tab);
 
 
     /****************************************************************************************************/
