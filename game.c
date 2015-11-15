@@ -286,29 +286,41 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
   return ennemi;
 }
 
-
-
-/*
-list_ptr ennemis_shots(list_ptr ennemis,list_ptr shots, s_information player,int x_max,int y_max,int tab[y_max][x_max])
+list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information player,int x_max,int y_max,int tab[y_max][x_max])
 {
   list_ptr copy_ennemis=ennemis;
-  list_ptr copy_shots=shots;
+  list_ptr copy_shots=army_shots;
+  
   while (copy_ennemis!=NULL){
     if (copy_ennemis->info.position.y==player.position.y){
-      if (distance_wall_right(x_max,y_max,tab,ennemis->info)+copy_ennemis->info.movement<player.movement){
-	//y a un mur
+      s_information bullet;
+      bullet.life=1;
+      bullet.rcSrc.y = 0;
+      bullet.rcSrc.w = 8;
+      bullet.rcSrc.h = 6;
+      bullet.position.y=copy_ennemis->info.position.y;
+      if (copy_ennemis->info.state==1){
+	if (distance_wall_right(x_max,y_max,tab,ennemis->info)+copy_ennemis->info.movement<=player.movement){
+	  bullet.movement=copy_ennemis->info.movement+7;
+	  bullet.position.x=copy_ennemis->info.position.x+60;
+	  bullet.rcSrc.x=0;
+	  bullet.state=1;
+	  army_shots=list_cons(army_shots,bullet);
+	}
       }else{
-	//tir
-      }
-      if (distance_wall_left(x_max,y_max,tab,ennemis->info)+player.movement<copy_ennemis->info.movement){
-	// y a un mur
-      }else{
-	//tir 
+	if (distance_wall_left(x_max,y_max,tab,ennemis->info)-copy_ennemis->info.movement>=player.movement){
+	  bullet.movement=copy_ennemis->info.movement+7;
+	  bullet.position.x=copy_ennemis->info.position.x+20;
+	  bullet.rcSrc.x=8;
+	  bullet.state=0;
+	  army_shots=list_cons(army_shots,bullet);
+	}
       }
     }
+    copy_ennemis=copy_ennemis->next;
   }
+  return army_shots;
 }
-*/
 
 list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
 {

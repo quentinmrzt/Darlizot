@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn;
+  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map;
   s_information player;
   s_surface sprite;
   s_time time;
@@ -43,12 +43,20 @@ int main(int argc, char* argv[])
   sprite = load_sprite(sprite);
   player = ini_player(player);
   time = ini_time(time);
+
+
   /* table */
+  map = 0;
   size_tab(&x_max,&y_max);
   int tab[y_max][x_max];
   recup_map(x_max,y_max,tab);
+  draw_tab(x_max,y_max,tab);
 
-  //draw_tab(x_max,y_max,tab);
+  printf("----------------------------------------\n");
+
+  /*tableau.id = map;
+  size_tab(&tableau.x_max,&tableau.y_max,map);
+  recup_map(tableau.x_max, tableau.y_max, tableau.tab, map);*/
 
   close = 0;
   level= 1;
