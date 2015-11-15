@@ -53,7 +53,7 @@ s_surface load_sprite(s_surface sprite)
 s_information ini_player(s_information player) 
 {
   player.id = 0;
-  player.life=5;
+  player.life=50;
   player.rcSrc.x = 0;
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
@@ -73,6 +73,7 @@ s_time ini_time(s_time time)
   time.current = 0; 
   time.previous_time = 0;
   time.previous_time_ennemi = 0; 
+  time.previous_time_hit=0;
   time.level = 0;
   time.time_max = 20000;
   time.chrono = time.time_max;

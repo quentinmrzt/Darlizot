@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
   TTF_Font *font = NULL;
-
+  list_ptr army_shots = NULL;
   /****************************************************************************************************/
   /* INITIALIZE */
 
@@ -101,8 +101,8 @@ int main(int argc, char* argv[])
     /* ??? */
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player);
-
-
+    army_shots=ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab);
+    collision_bullet_player(&army_shots,&player,&time);
     /****************************************************************************************************/
     /* OTHER */
     if (player.position.y > 400) {
