@@ -73,6 +73,7 @@ s_time ini_time(s_time time)
   time.current = 0; 
   time.previous_time = 0;
   time.previous_time_hit=0;
+  time.previous_time_ennemi_hit=0;
   time.previous_time_ennemi = 0;
   time.level = 0;
   time.time_max = 2000;
@@ -172,6 +173,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
 	ennemi_info.position.x = ((x_max)*50);
 	ennemi_info.rcSrc.x = 11*75;
       }
+      ennemi_info.limit=rand()%100+250;
       ennemi_info.position.y = 100;
       ennemi_info.id = 1;
       ennemi_info.movement = ennemi_info.position.x+20;
@@ -232,17 +234,17 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
       }
     }else{
       if (player.position.y==copy_ennemi->info.position.y)
-	limit=300;
+	limit=copy_ennemi->info.limit;
       else
 	limit=0;
-      if (player.movement>copy_ennemi->info.movement){
+      if (player.movement>=copy_ennemi->info.movement){
 	copy_ennemi->info.state=0;
-	if (player.movement-limit>copy_ennemi->info.movement)
+	if (player.movement-limit>=copy_ennemi->info.movement)
 	  copy_ennemi->info.movement+=5;
       }else{
-	if (player.movement<copy_ennemi->info.movement){
+	if (player.movement<=copy_ennemi->info.movement){
 	  copy_ennemi->info.state=1;
-	  if (player.movement+limit<copy_ennemi->info.movement)
+	  if (player.movement+limit<=copy_ennemi->info.movement)
 	    copy_ennemi->info.movement-=5;
 	}
       }
@@ -293,19 +295,20 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
   return ennemi;
 }
 
-list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information player,int x_max,int y_max,int tab[y_max][x_max])
+list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information player,int x_max,int y_max,int tab[y_max][x_max],s_time *time_p)
 {
   list_ptr copy_ennemis=ennemis;
   list_ptr copy_shots=army_shots;
   int limit;
   s_information bullet;
+  s_time time=*time_p;
   while (copy_ennemis!=NULL){
     if (player.position.y==copy_ennemis->info.position.y)
-      limit=300;
+      limit=copy_ennemis->info.limit;
     else
       limit=0;
-    if (copy_ennemis->info.position.y==player.position.y){
-      
+    if (copy_ennemis->info.position.y==player.position.y && time.previous_time_ennemi_hit<=time.current-1000){
+      time_p->previous_time_ennemi_hit=time_p->current;
       bullet.life=1;
       bullet.rcSrc.y = 0;
       bullet.rcSrc.w = 8;
@@ -479,7 +482,7 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map)
 
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time)
 {
-  if (load == 0 && time.previous_time_ennemi+1000 <= time.current) {
+  if (load == 0 && time.previous_time_ennemi+1000 <= time.current && player.movement >=49) {
     // pas de chargement: on ferme la porte
     tab[1][0] = -1;
     tab[1][x_max-1] = -1;

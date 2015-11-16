@@ -18,6 +18,7 @@
 struct s_information
 {
   int id;
+  int limit;
   int life;
   SDL_Rect position;
   SDL_Rect rcSrc;
@@ -54,6 +55,7 @@ struct s_time
   int current; 
   int previous_time;
   int previous_time_ennemi;
+  int previous_time_ennemi_hit;
   int previous_time_hit;
   int level;
   int chrono;

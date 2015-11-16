@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
 
 
     shots = wall_bang(shots,x_max,y_max,tab);
-
+    army_shots=wall_bang(army_shots,x_max,y_max,tab);
     ennemis_jump(x_max,y_max,tab,ennemi,player);
     time = duration_chrono(player,time,x_max);
     door_ennemy(x_max,y_max,tab,player,load,time);
@@ -87,10 +87,10 @@ int main(int argc, char* argv[])
     /****************************************************************************************************/
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
-    draw_player(player,sprite);
-    draw_shooting(player,shots,sprite);
-    collision_bullet_ennemi(&shots,&ennemi);
+    draw_player(player,sprite);    
     draw_ennemis(ennemi,sprite,player);
+    collision_bullet_ennemi(&shots,&ennemi);
+    draw_shooting(player,shots,sprite);
     draw_ennemis_shooting(army_shots,sprite,player);
     draw_ammo(sprite,ammo);
     draw_health(player,sprite);
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
     /* ??? */
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player,x_max,y_max,tab);
-    army_shots=ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab);
+    army_shots=ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
     army_shots=collision_bullet_player(army_shots,&player,&time);
     /****************************************************************************************************/
     /* OTHER */
