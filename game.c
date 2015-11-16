@@ -72,9 +72,9 @@ s_time ini_time(s_time time)
 {
   time.current = 0; 
   time.previous_time = 0;
-  time.previous_time_ennemi = 0; 
+  time.previous_time_ennemi = -1000; 
   time.level = 0;
-  time.time_max = 20000;
+  time.time_max = 2000;
   time.chrono = time.time_max;
 
   return time;
@@ -339,6 +339,19 @@ list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
   }
   return shots;
 }
+
+list_ptr kill_all(list_ptr ennemis)
+{
+  list_ptr copy_ennemis=ennemis;
+
+  while (copy_ennemis!=NULL) {
+    copy_ennemis->info.life = 0 ;
+    copy_ennemis = copy_ennemis->next;
+  }
+
+  return ennemis;
+}
+
 /****************************************************************************************************/
 /* TAB */
 
