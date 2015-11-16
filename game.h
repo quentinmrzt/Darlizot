@@ -39,6 +39,7 @@ list_ptr respawn(list_ptr ennemi,int* level, s_information player,s_time *time_p
 void ennemis_jump(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_information player);
 s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennemi,s_information player);
 list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information player,int x_max,int y_max,int tab[y_max][x_max]);
+list_ptr kill_all(list_ptr ennemis);
 
 /****************************************************************************************************/
 /* TAB */

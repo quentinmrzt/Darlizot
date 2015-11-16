@@ -14,11 +14,10 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map;
+  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map;
   s_information player;
   s_surface sprite;
   s_time time;
-  s_tab tableau;
 
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
@@ -47,17 +46,11 @@ int main(int argc, char* argv[])
 
 
   /* table */
-  map = 2;
+  map = 0;
+  previous_map = 0;
   size_tab(&x_max,&y_max,map);
-  int tab[y_max][x_max];
+  int tab[8][100];
   recup_map(x_max,y_max,tab,map);
-  //draw_tab(x_max,y_max,tab);
-
-  //printf("----------------------------------------\n");
-
-  /*tableau.id = map;
-  size_tab(&tableau.x_max,&tableau.y_max,map);
-  recup_map(tableau.x_max, tableau.y_max, tableau.tab, map);*/
 
   close = 0;
   level= 1;
@@ -76,7 +69,9 @@ int main(int argc, char* argv[])
 
     /****************************************************************************************************/
     /* GAME */
-    ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab);
+    if (map != 0 && map != 1) {
+      ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab);
+    }
 
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
@@ -111,10 +106,38 @@ int main(int argc, char* argv[])
     if (player.position.y > 400) {
       player = ini_player(player);
     }
+
     if (player.movement > x_max*50) {
-      close = 1;
+      /* choix de la map */
+      if (map == 0) {
+	map = 2;
+      } else if (map == 1) {
+	map = previous_map++;
+      } else {
+	previous_map = map;
+	map = 1;
+      }
+
+      if (map > nb_map()-1) {
+	map = 1;
+	previous_map = 0;
+      }
+
+      /* on remet à 0 */
+      player = ini_player(player);
+      ennemi = kill_all(ennemi);
+      time = ini_time(time);
+      if (map <= 1) {
+	time.time_max = 0;
+	time.chrono = 0;
+      }
+      load = 0;
+
+      size_tab(&x_max,&y_max,map);
+      recup_map(x_max,y_max,tab,map);
     }
 
+    
     a_and_z(x_max,y_max,tab,player);
     ennemi = killing(ennemi);
 

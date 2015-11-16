@@ -124,7 +124,7 @@ list_ptr killing(list_ptr ennemi)
   list_ptr list;
   Uint8 *keystate = SDL_GetKeyState(NULL);
   if (keystate[SDLK_k]){
-    list=NULL;
+    list = kill_all(ennemi);
   }else{
     list=ennemi;
   }

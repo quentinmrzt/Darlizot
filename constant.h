@@ -61,13 +61,4 @@ struct s_time
 };
 typedef struct s_time s_time;
 
-struct s_tab
-{
-  int id;
-  int x_max;
-  int y_max;
-  int tab[10][100];
-};
-typedef struct s_tab s_tab;
-
 #endif 
