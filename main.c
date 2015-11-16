@@ -47,13 +47,17 @@ int main(int argc, char* argv[])
 
   /* table */
   map = 0;
+  if (map <= 1) {
+    time.time_max = 0;
+    time.chrono = 0;
+  }
   previous_map = 0;
   size_tab(&x_max,&y_max,map);
   int tab[8][100];
   recup_map(x_max,y_max,tab,map);
 
   close = 0;
-  level= 1;
+  level= 0;
   nb_ennemi_spawn=0;
 
   printf("Nb map: %d\n",nb_map());
@@ -105,34 +109,11 @@ int main(int argc, char* argv[])
       player = ini_player(player);
     }
 
+    
     if (player.movement > x_max*50) {
       /* choix de la map */
-      if (map == 0) {
-	map = 2;
-      } else if (map == 1) {
-	map = previous_map++;
-      } else {
-	previous_map = map;
-	map = 1;
-      }
-
-      if (map > nb_map()-1) {
-	map = 1;
-	previous_map = 0;
-      }
-
-      /* on remet à 0 */
-      player = ini_player(player);
-      ennemi = kill_all(ennemi);
-      time = ini_time(time);
-      if (map <= 1) {
-	time.time_max = 0;
-	time.chrono = 0;
-      }
-      load = 0;
-
-      size_tab(&x_max,&y_max,map);
-      recup_map(x_max,y_max,tab,map);
+      change_map(&map,&previous_map);     
+      change_lvl(&player, &time, &shots, &ennemi, &army_shots, &load, &level, &x_max, &y_max, map, tab);
     }
 
     
