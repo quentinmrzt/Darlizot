@@ -526,7 +526,18 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.bullet);
   SDL_FreeSurface(sprite.ennemi);
   SDL_FreeSurface(sprite.ammo);
+  SDL_FreeSurface(sprite.ammo_set);
   SDL_FreeSurface(sprite.platform);
   SDL_FreeSurface(sprite.health);
 
 }
+
+void free_list(list_ptr list) {
+    while(list != NULL) {
+        list_ptr* tempo = &list;
+        list = list->next;
+        free(tempo);
+    }
+}
+
+    

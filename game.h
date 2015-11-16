@@ -54,5 +54,6 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
 /* CLEAN */
 
 void free_all_sprite(s_surface sprite);
+void free_list(list_ptr list);
 
 #endif

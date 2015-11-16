@@ -167,7 +167,6 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
   
   *ennemi=copy_ennemi;
   *shots=copy_shots;
-
   free(copy_copy_shots);
   free(copy_copy_ennemi);
 }
