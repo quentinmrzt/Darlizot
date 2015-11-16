@@ -73,7 +73,7 @@ s_time ini_time(s_time time)
   time.current = 0; 
   time.previous_time = 0;
   time.previous_time_hit=0;
-  time.previous_time_ennemi = 0;
+  time.previous_time_ennemi = -1000;
   time.level = 0;
   time.time_max = 2000;
   time.chrono = time.time_max;
@@ -274,7 +274,7 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p
 }
 int nb_ennemi_update(int level)
 {
-  return level;
+  return level+3*level;
 }
 
 void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,int tab[y_max][x_max])
