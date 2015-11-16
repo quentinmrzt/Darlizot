@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
-    collision_bullet_ennemi(&shots,&ennemi);
+
     shots = wall_bang(shots,x_max,y_max,tab);
 
     ennemis_jump(x_max,y_max,tab,ennemi,player);
@@ -92,8 +92,10 @@ int main(int argc, char* argv[])
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
     draw_player(player,sprite);
-    draw_ennemis(ennemi,sprite,player);
     draw_shooting(player,shots,sprite);
+    collision_bullet_ennemi(&shots,&ennemi);
+    draw_ennemis(ennemi,sprite,player);
+    draw_ennemis_shooting(army_shots,sprite,player);
     draw_ammo(sprite,ammo);
     draw_health(player,sprite);
     draw_chrono(sprite.screen,font,player,time);
@@ -102,7 +104,7 @@ int main(int argc, char* argv[])
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player,x_max,y_max,tab);
     army_shots=ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab);
-    collision_bullet_player(&army_shots,&player,&time);
+    army_shots=collision_bullet_player(army_shots,&player,&time);
     /****************************************************************************************************/
     /* OTHER */
     if (player.position.y > 400) {

@@ -72,7 +72,8 @@ s_time ini_time(s_time time)
 {
   time.current = 0; 
   time.previous_time = 0;
-  time.previous_time_ennemi = -1000; 
+  time.previous_time_hit=0;
+  time.previous_time_ennemi = 0;
   time.level = 0;
   time.time_max = 2000;
   time.chrono = time.time_max;
@@ -273,7 +274,7 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p
 }
 int nb_ennemi_update(int level)
 {
-  return level+3*level;
+  return level;
 }
 
 void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,int tab[y_max][x_max])
@@ -341,11 +342,11 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
 
   /* si SAUT et AU SOL */
   if (player.movement>ennemi.movement){
-    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance_down == 0) { 
+    if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance_down == 0 && player.movement!=ennemi.movement) { 
       ennemi.jump = 7;
     } 
   } else {
-    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance_down == 0) { 
+    if (distance_wall_left(x_max,y_max,tab,ennemi)<=10 && distance_down == 0  && player.movement!=ennemi.movement) { 
       ennemi.jump = 7;
     } 
   }
@@ -357,31 +358,38 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
 {
   list_ptr copy_ennemis=ennemis;
   list_ptr copy_shots=army_shots;
-  
+  int limit;
+  s_information bullet;
   while (copy_ennemis!=NULL){
+    if (player.position.y==copy_ennemis->info.position.y)
+      limit=300;
+    else
+      limit=0;
     if (copy_ennemis->info.position.y==player.position.y){
-      s_information bullet;
+      
       bullet.life=1;
       bullet.rcSrc.y = 0;
       bullet.rcSrc.w = 8;
       bullet.rcSrc.h = 6;
-      bullet.position.y=copy_ennemis->info.position.y;
-      if (copy_ennemis->info.state==1){
-	if (distance_wall_right(x_max,y_max,tab,ennemis->info)+copy_ennemis->info.movement<=player.movement){
-	  bullet.movement=copy_ennemis->info.movement+7;
-	  bullet.position.x=copy_ennemis->info.position.x+60;
-	  bullet.rcSrc.x=0;
-	  bullet.state=1;
-	  army_shots=list_cons(army_shots,bullet);
-	}
-      }else{
-	if (distance_wall_left(x_max,y_max,tab,ennemis->info)-copy_ennemis->info.movement>=player.movement){
-	  bullet.movement=copy_ennemis->info.movement+7;
-	  bullet.position.x=copy_ennemis->info.position.x+20;
-	  bullet.rcSrc.x=8;
-	  bullet.state=0;
-	  army_shots=list_cons(army_shots,bullet);
-	}
+      bullet.position.y=copy_ennemis->info.position.y+50;
+      if (distance_wall_right(x_max,y_max,tab,ennemis->info)>player.movement-copy_ennemis->info.movement -2
+	  && player.movement-limit<=copy_ennemis->info.movement 
+	  && copy_ennemis->info.state==0){
+	bullet.movement=copy_ennemis->info.movement+60-20;
+	bullet.position.x=copy_ennemis->info.position.x+60;
+	bullet.rcSrc.x=0;
+	bullet.state=0;
+	army_shots=list_cons(army_shots,bullet);
+      }
+    
+      if (copy_ennemis->info.movement - distance_wall_left(x_max,y_max,tab,ennemis->info)<player.movement +2
+	  && player.movement+limit>=copy_ennemis->info.movement
+	  && copy_ennemis->info.state==1){
+	bullet.movement=copy_ennemis->info.movement+20;
+	bullet.position.x=copy_ennemis->info.position.x+20;
+	bullet.rcSrc.x=8;
+	bullet.state=1;
+	army_shots=list_cons(army_shots,bullet);
       }
     }
     copy_ennemis=copy_ennemis->next;
