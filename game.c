@@ -178,11 +178,10 @@ list_ptr list_element_delete(list_ptr list)
   }
   list_ptr copy_list=list;
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
+  list_ptr res=NULL;
   if (copy_list->info.life==0 || copy_list->info.position.y>450){
     if (copy_list->next==NULL){
       tmp=copy_list;
-      free(tmp);
-      return NULL;
     }else{
       tmp=copy_list;
       list=copy_list->next;
@@ -198,9 +197,10 @@ list_ptr list_element_delete(list_ptr list)
 	else 
 	  copy_list=copy_list->next;
       }
+    res=list;
   }
   free(tmp);
-  return list;  
+  return res;  
 }
 
 int list_size(list_ptr list)
