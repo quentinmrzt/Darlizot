@@ -2,7 +2,7 @@
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 16/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -342,7 +342,7 @@ list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
 /****************************************************************************************************/
 /* TAB */
 
-void size_tab(int *x_ptr, int *y_ptr) 
+void size_tab(int *x_ptr, int *y_ptr, int map) 
 {
   FILE* recuperation;
   int number, end, x;
@@ -351,8 +351,15 @@ void size_tab(int *x_ptr, int *y_ptr)
   recuperation = NULL;
   x = 0;
   number=0;
+
+  char name[15] = "data/map_0";
+  char tmp[15] = "";
+  sprintf (tmp,"%d",map);
+  name[9] = tmp[0];
+  name[10] = tmp[1];
+
   /* mode read */
-  recuperation = fopen("data/map_1", "r");
+  recuperation = fopen(name, "r");
 
   if (recuperation != NULL) {
 
@@ -400,15 +407,21 @@ int nb_map(void)
   return compteur;
 }
 
-void recup_map(int x_max, int y_max, int tab[y_max][x_max])
+void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map)
 {
   FILE* recuperation;
   int x, y,number;
   number = 0;
   recuperation = NULL;
   
+  char name[15] = "data/map_0";
+  char tmp[15] = "";
+  sprintf (tmp,"%d",map);
+  name[9] = tmp[0];
+  name[10] = tmp[1];
+
   /* mode read */
-  recuperation = fopen("data/map_1", "r");
+  recuperation = fopen(name, "r");
 
   if (recuperation != NULL) {
 

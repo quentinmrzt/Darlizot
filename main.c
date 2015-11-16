@@ -2,7 +2,7 @@
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 16/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -18,14 +18,15 @@ int main(int argc, char* argv[])
   s_information player;
   s_surface sprite;
   s_time time;
+  s_tab tableau;
 
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
   TTF_Font *font = NULL;
   list_ptr army_shots = NULL;
+
   /****************************************************************************************************/
   /* INITIALIZE */
-
   /* initialize video system */
   SDL_Init(SDL_INIT_VIDEO);
   /* initialize ttf */
@@ -46,13 +47,13 @@ int main(int argc, char* argv[])
 
 
   /* table */
-  map = 0;
-  size_tab(&x_max,&y_max);
+  map = 2;
+  size_tab(&x_max,&y_max,map);
   int tab[y_max][x_max];
-  recup_map(x_max,y_max,tab);
-  draw_tab(x_max,y_max,tab);
+  recup_map(x_max,y_max,tab,map);
+  //draw_tab(x_max,y_max,tab);
 
-  printf("----------------------------------------\n");
+  //printf("----------------------------------------\n");
 
   /*tableau.id = map;
   size_tab(&tableau.x_max,&tableau.y_max,map);

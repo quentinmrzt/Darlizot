@@ -2,7 +2,7 @@
 /* game.h                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 16/11/15                                    */
 /******************************************************************/
 
 #ifndef GAME_H
@@ -43,9 +43,9 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
 /****************************************************************************************************/
 /* TAB */
 
-void size_tab(int *x_ptr, int *y_ptr);
+void size_tab(int *x_ptr, int *y_ptr, int map);
 int nb_map(void);
-void recup_map(int x_max, int y_max, int tab[y_max][x_max]);
+void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map);
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time);
 void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time);
 
