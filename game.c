@@ -73,7 +73,7 @@ s_time ini_time(s_time time)
   time.current = 0; 
   time.previous_time = 0;
   time.previous_time_hit=0;
-  time.previous_time_ennemi = 0;
+  time.previous_time_ennemi = -1000;
   time.level = 0;
   time.time_max = 2000;
   time.chrono = time.time_max;
@@ -94,6 +94,67 @@ s_time duration_chrono(s_information player,s_time time ,int x_max)
 
   return time;
 }
+
+void change_map(int *map_ptr, int *previous_map_ptr)
+{
+  int map = *map_ptr;
+  int previous_map = *previous_map_ptr;
+
+  /* choix de la map */
+  if (previous_map == 0 && map == 0) {
+    map = 2;
+  } else if (map == 1) {
+    map = previous_map+1;
+  } else {
+    previous_map = map;
+    map = 1;
+  }
+
+  if (map > nb_map()-1) {
+    map = 2;
+    previous_map = 0;
+  }
+
+  *map_ptr = map;
+  *previous_map_ptr = previous_map;
+}
+
+void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr, list_ptr *ennemi_ptr, list_ptr *army_shots_ptr, int *load_ptr, int *level,int *x_max, int *y_max, int map, int tab[*y_max][*x_max])
+{
+  s_information player = *player_ptr;
+  s_time time = *time_ptr;
+
+  list_ptr shots = *shots_ptr;
+  list_ptr ennemi = *ennemi_ptr;
+  list_ptr army_shots = *army_shots_ptr;
+
+  player = ini_player(player);
+  time = ini_time(time);
+
+  ennemi = kill_all(ennemi);
+  shots = kill_all(shots);
+  army_shots = kill_all(army_shots);
+    
+  *load_ptr = 0;
+  /* lvl up */
+  if (map > 1) {
+    *level = *level+1;
+  }
+  /* pas de temps pour map 0/1 */
+  if (map <= 1) {
+    time.time_max = 0;
+    time.chrono = 0;
+  }
+  size_tab(x_max,y_max,map);
+  recup_map(*x_max,*y_max,tab,map);
+
+  *player_ptr = player;
+  *time_ptr = time;
+  *shots_ptr = shots;
+  *ennemi_ptr = ennemi;
+  *army_shots_ptr = army_shots;
+}
+
 
 /****************************************************************************************************/
 /* LIST */
@@ -199,7 +260,7 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p
 	return new_ennemi;
       }else{
 	*load=0;
-	*level=*level+1;
+	//*level=*level+1;
 	*nb_ennemi_spawn=0;
       }
     }
@@ -213,7 +274,7 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p
 }
 int nb_ennemi_update(int level)
 {
-  return level;
+  return level+3*level;
 }
 
 void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,int tab[y_max][x_max])
@@ -531,7 +592,6 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.health);
 
 }
-
 void free_list(list_ptr list) {
     while(list != NULL) {
         list_ptr* tempo = &list;
@@ -540,4 +600,3 @@ void free_list(list_ptr list) {
     }
 }
 
-    
