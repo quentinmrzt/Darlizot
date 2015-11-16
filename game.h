@@ -18,6 +18,8 @@ s_information ini_player(s_information player);
 s_time ini_time(s_time time);
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
 s_time duration_chrono(s_information player, s_time time , int x_max);
+void change_map(int *map_ptr, int *previous_map_ptr);
+void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr, list_ptr *ennemi_ptr, list_ptr *army_shots_ptr, int *load_ptr, int *level,int *x_max, int *y_max, int map, int tab[*y_max][*x_max]);
 
 /****************************************************************************************************/
 /* LIST */
@@ -54,5 +56,6 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
 /* CLEAN */
 
 void free_all_sprite(s_surface sprite);
+void free_list(list_ptr list);
 
 #endif
