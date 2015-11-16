@@ -319,7 +319,7 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
 	  && copy_ennemis->info.state==0){
 	bullet.movement=copy_ennemis->info.movement+60-20;
 	bullet.position.x=copy_ennemis->info.position.x+60;
-	bullet.rcSrc.x=0;
+	bullet.rcSrc.x=16;
 	bullet.state=0;
 	army_shots=list_cons(army_shots,bullet);
       }
@@ -329,7 +329,7 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
 	  && copy_ennemis->info.state==1){
 	bullet.movement=copy_ennemis->info.movement+20;
 	bullet.position.x=copy_ennemis->info.position.x+20;
-	bullet.rcSrc.x=8;
+	bullet.rcSrc.x=24;
 	bullet.state=1;
 	army_shots=list_cons(army_shots,bullet);
       }
