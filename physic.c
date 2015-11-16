@@ -22,7 +22,7 @@ int distance_wall_left(int x_max, int y_max, int tab[y_max][x_max], s_informatio
     y = player.position.y+35;
   }
 
-  for (i=(player.movement/50) ; i>=(player.movement-2*50)/50; i--) {
+  for (i=(player.movement/50) ; i>=(player.movement-8*50)/50; i--) {
     if (tab[(player.position.y+74)/50][i] == -1 || tab[y/50][i] == -1) {
       // -50 pour coin de gauche
       return (player.movement)-(i*50)-50;
@@ -43,7 +43,7 @@ int distance_wall_right(int x_max, int y_max, int tab[y_max][x_max], s_informati
   }
   x = player.movement+75-13*2;
 
-  for (i=(player.movement+(75-13*2))/50 ; i<(x+2*50)/50 ; i++) {
+  for (i=(player.movement+(75-13*2))/50 ; i<(x+8*50)/50 ; i++) {
     if (tab[(player.position.y+74)/50][i] == -1 || tab[y/50][i] == -1) {
       // -13 car pos du pied droit *2 pour pos pied gauche
       return (i*50)-x;
@@ -172,22 +172,22 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
   free(copy_copy_ennemi);
 }
 
-void collision_bullet_player(list_ptr * army_shots, s_information * player, s_time * time_p)
+list_ptr collision_bullet_player(list_ptr army_shots, s_information * player, s_time * time_p)
 {
-  list_ptr copy_shots= *army_shots;
-  s_information copy_player=*player;
+  list_ptr copy_shots= army_shots;
   s_time time=*time_p;
-  if(time_p->previous_time_hit-time_p->current>2500){
-    time.previous_time_hit=time.current;
+  if(time_p->current-time_p->previous_time_hit>2500){
+    
     while (copy_shots != NULL){
-      if(collision_AABB(copy_shots->info,copy_player)){
-	copy_player.life=copy_player.life-10;
+      if(collision_AABB(copy_shots->info,*player)){
+	player->life=(player->life)-1;
 	copy_shots->info.life=0;
+	time.previous_time_hit=time.current;
       }
       copy_shots=copy_shots->next;
     }
   }
-  *player=copy_player;
-  *army_shots=copy_shots;
+  army_shots=list_element_delete(army_shots);
   *time_p=time;
+  return army_shots;
 }

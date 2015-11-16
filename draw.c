@@ -122,18 +122,19 @@ void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
     }
 }
 
-void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite)
+void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite, s_information player )
 {
   list_ptr copy_shots=army_shots;
+  SDL_Rect pos;
   while (copy_shots!=NULL){
-    if (copy_shots->info.state=0){
-      copy_shots->info.position.x-=24;
-      copy_shots->info.movement-=24;
-    }else{
-      copy_shots->info.position.x+=24;
+    if (copy_shots->info.state==0){
       copy_shots->info.movement+=24;
+    }else{
+      copy_shots->info.movement-=24;
     }
-    SDL_BlitSurface(sprite.bullet,&copy_shots->info.rcSrc,sprite.screen,&copy_shots->info.position);
+    pos.y=copy_shots->info.position.y;
+    pos.x=copy_shots->info.movement-20-(player.movement-13-player.position.x);
+    SDL_BlitSurface(sprite.bullet,&copy_shots->info.rcSrc,sprite.screen,&pos);
     copy_shots=copy_shots->next;
   }
 }
