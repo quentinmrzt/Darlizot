@@ -2,7 +2,7 @@
 /* main.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 16/11/15                                    */
+/* Last modification: 17/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-    int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map, choice, pos_choice,score=0;
+    int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map, choice, action, score=0;
   s_information player;
   s_surface sprite;
   s_time time;
@@ -59,31 +59,17 @@ int main(int argc, char* argv[])
   close = 0;
   level = 0;
   nb_ennemi_spawn=0;
-  choice = 1;
+  choice = 0;
+  action = 0;
+
   while (!close) {
     time.current = SDL_GetTicks();
 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
     close = quit(close);
-
-    if (map == 0 && player.movement < x_max*50/2 && choice == 0) {
-      player = control_auto(x_max,y_max,tab,player,x_max*50/2);
-    } else if (map == 0 && choice == 1) {
-      // 1: on commence le jeu
-      player = control_auto(x_max,y_max,tab,player,x_max*50);
-    } else if (map != 0 && player.movement < 50) {
-      player = control_auto(x_max,y_max,tab,player,50);
-    } else if (map != 0 && player.movement >= (x_max-1)*50) {
-      player = control_auto(x_max,y_max,tab,player,x_max*50);
-    } else {
-      player = control(x_max,y_max,tab,player);
-    }
-
-    if (map == 0 && choice == 0) {
-      //pos_choice = control_menu();
-    }
-
+    set_menu(map,&action,&choice,&player,x_max,y_max,tab,&time);
+    control(x_max,y_max,tab,map,&player,&shots,&time,&ammo,energy);
     shots = shooting(player,shots,&ammo,energy,&time);
     a_and_z(x_max,y_max,tab,player);
 
@@ -91,21 +77,15 @@ int main(int argc, char* argv[])
     /* GAME */
     killing(&ennemi);
     ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab,map);
-
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
-
     shots = wall_bang(shots,x_max,y_max,tab);
     army_shots = wall_bang(army_shots,x_max,y_max,tab);
-
     ennemis_jump(x_max,y_max,tab,ennemi,player);
     time = duration_chrono(player,time,x_max);
-
     door_ennemy(x_max,y_max,tab,player,load,time,map);
-    door_player(x_max,y_max,tab,player,time);
-
+    door_player(x_max,y_max,tab,player,time,map);
     army_shots = collision_bullet_player(army_shots,&player,&time);
-
     army_shots = ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
     ennemi=ennemis_death(ennemi);
 
@@ -124,8 +104,17 @@ int main(int argc, char* argv[])
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player,x_max,y_max,tab);
 
+    if (map == 0 && action == 0 && player.movement > x_max*50/2) {
+      draw_menu(sprite,time);
+      draw_outline(sprite,choice);
+    }
+
     /****************************************************************************************************/
     /* OTHER */
+    if (map == 0 && player.movement <= 0 && action == 3) {
+      close = 1;
+    }
+
     if (player.position.y > 400) {
       player = ini_player(player);
     }

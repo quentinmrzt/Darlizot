@@ -2,7 +2,7 @@
 /* draw.h                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 21/10/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 17/11/15                                    */
 /******************************************************************/
 
 #ifndef DRAW_H
@@ -25,6 +25,8 @@ void draw_ammo(s_surface sprite,int ammo);
 
 void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_time chrono, int map);
 void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map);
+void draw_menu(s_surface sprite, s_time time);
+void draw_outline(s_surface sprite, int choice);
 
 /****************************************************************************************************/
 /* ANIM */

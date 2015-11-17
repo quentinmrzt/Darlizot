@@ -2,7 +2,7 @@
 /* constant.h                                                     */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 17/11/15                                    */
 /******************************************************************/
 
 #ifndef CONSTANT_H
@@ -48,6 +48,7 @@ struct s_surface
   SDL_Surface *ammo_set;
   SDL_Surface *ammo;
   SDL_Surface *health;
+  SDL_Surface *outline;
 };
 typedef struct s_surface s_surface;
 
@@ -61,6 +62,7 @@ struct s_time
   int level;
   int chrono;
   int time_max;
+  int menu;
 };
 typedef struct s_time s_time;
 

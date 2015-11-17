@@ -2,7 +2,7 @@
 /* draw.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 21/10/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 17/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -254,6 +254,56 @@ void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map)
     SDL_BlitSurface(text, NULL, screen, &position);
     SDL_FreeSurface(text);
   }
+}
+
+void draw_menu(s_surface sprite, s_time time) 
+{
+  SDL_Color black_color = {255,255,255,0};
+  SDL_Surface *text;
+  TTF_Font *test = TTF_OpenFont("pixelmix.ttf", 46);
+  SDL_Rect position, pos_sprite, pos_screen;
+  int i, j;
+
+  pos_sprite.x = 0;
+  pos_sprite.y = 0;
+  pos_sprite.w = 50;
+  pos_sprite.h = 50;
+
+  text = TTF_RenderText_Blended(test, "Accueil", black_color);
+  position.x = 800/2 - text->w/2;
+  position.y = 400/5-35 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &position);
+
+  text = TTF_RenderText_Blended(test, "Jouer", black_color);
+  position.x = 800/2 - text->w/2;
+  position.y = 400/5+400/5*1-10 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &position);
+
+  text = TTF_RenderText_Blended(test, "Classement", black_color);
+  position.x = 800/2 - text->w/2;
+  position.y = 400/5+400/5*2-10 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &position);
+
+  text = TTF_RenderText_Blended(test, "Quitter", black_color);
+  position.x = 800/2 - text->w/2;
+  position.y = 400/5+400/5*3-10 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &position);
+
+  TTF_CloseFont(test);
+}
+
+void draw_outline(s_surface sprite, int choice)
+{
+  SDL_Rect pos_sprite, pos_screen;
+
+  pos_sprite.x = 0;
+  pos_sprite.y = 0;
+  pos_sprite.w = 350;
+  pos_sprite.h = 50;
+
+  pos_screen.x = 220;
+  pos_screen.y = 400/5+400/5*(choice+1)-10 - 22;
+  SDL_BlitSurface(sprite.outline, &pos_sprite, sprite.screen, &pos_screen);
 }
 
 /****************************************************************************************************/

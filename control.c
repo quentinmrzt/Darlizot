@@ -2,7 +2,7 @@
 /* control.c                                                      */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 21/10/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 17/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -38,7 +38,31 @@ int quit(int close)
   return close;
 }
 
-s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player)
+void control(int x_max,int y_max,int tab[y_max][x_max],int map,s_information *player_ptr,list_ptr *shots_ptr,s_time *time_ptr,int *ammo_ptr,int energy) 
+{
+
+  s_information player = *player_ptr;
+  list_ptr shots = *shots_ptr;
+
+  if (map != 0) {
+    if (player.movement < 50) {
+      // sortie entrée
+      player = control_auto(x_max,y_max,tab,player,50);
+    } else if (player.movement >= (x_max-1)*50) {
+      // sortie auto
+      player = control_auto(x_max,y_max,tab,player,x_max*50);
+    } else {
+      // control normal
+      player = control_manual(x_max,y_max,tab,player);
+    }
+    shots = shooting(player,shots,ammo_ptr,energy,time_ptr);
+  }
+
+  *player_ptr = player;
+  *shots_ptr = shots;
+}
+
+s_information control_manual(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   int automatic = 0;
   /* animation */
@@ -69,6 +93,33 @@ s_information control_auto(int x_max, int y_max, int tab[y_max][x_max], s_inform
   return player;
 }
 
+s_time control_menu(int x_max,int *choice_ptr, int *action_ptr, s_time time) 
+{
+  Uint8 *keystate = SDL_GetKeyState(NULL);
+
+  if (time.menu+400 < time.current) {
+    if (keystate[SDLK_UP]) {
+      *choice_ptr = *choice_ptr - 1;
+      if (*choice_ptr < 0) {
+	*choice_ptr = 2;
+      }
+      time.menu = time.current;
+    } 
+
+    if (keystate[SDLK_DOWN]) {
+      *choice_ptr = *choice_ptr + 1;
+      if (*choice_ptr > 2) {
+	*choice_ptr = 0;
+      }
+      time.menu = time.current;
+    }
+  }
+  if (keystate[SDLK_RETURN]) {
+    *action_ptr = *choice_ptr+1;
+  }
+  
+  return time;
+}
 
 list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,s_time *time_p)
 {
@@ -140,6 +191,7 @@ void killing(list_ptr *ennemi)
     free_list(ennemi);
   }
 }
+
 /****************************************************************************************************/
 /* MOVE */
 

@@ -2,7 +2,7 @@
 /* game.h                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 16/11/15                                    */
+/* Last modification: 17/11/15                                    */
 /******************************************************************/
 
 #ifndef GAME_H
@@ -20,6 +20,7 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
 s_time duration_chrono(s_information player, s_time time , int x_max);
 void change_map(int *map_ptr, int *previous_map_ptr);
 void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr, list_ptr *ennemi_ptr, list_ptr *army_shots_ptr, int *load_ptr, int *level,int *x_max, int *y_max, int map, int tab[*y_max][*x_max]);
+void set_menu(int map,int *action_ptr,int *choice_ptr,s_information *player_ptr,int x_max,int y_max,int tab[y_max][x_max],s_time *time_ptr);
 
 /****************************************************************************************************/
 /* LIST */
@@ -49,7 +50,7 @@ void size_tab(int *x_ptr, int *y_ptr, int map);
 int nb_map(void);
 void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map);
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time, int map);
-void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time);
+void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time, int map);
 
 
 /****************************************************************************************************/

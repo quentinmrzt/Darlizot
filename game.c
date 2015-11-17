@@ -1,9 +1,8 @@
-
 /******************************************************************/
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 16/11/15                                    */
+/* Last modification: 17/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -48,6 +47,9 @@ s_surface load_sprite(s_surface sprite)
   sprite.ammo = load(sprite.ammo, name, sprite.screen);
   name[15] = '9';
   sprite.health = load(sprite.health, name, sprite.screen);
+  name[14] = '1';
+  name[15] = '0';
+  sprite.outline = load(sprite.outline, name, sprite.screen);
   return sprite;
 }
 
@@ -79,6 +81,7 @@ s_time ini_time(s_time time)
   time.level = 0;
   time.time_max = 10000;
   time.chrono = time.time_max;
+  time.menu = 0;
 
   return time;
 }
@@ -150,6 +153,35 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
   *time_ptr = time;
 }
 
+void set_menu(int map,int *action_ptr,int *choice_ptr,s_information *player_ptr,int x_max,int y_max,int tab[y_max][x_max],s_time *time_ptr) 
+{
+  s_information player = *player_ptr;
+  s_time time = *time_ptr;
+
+  if (map == 0) {
+    if (*action_ptr == 0) {
+      // LANCEMENT
+      if (player.movement < x_max*50/2-10) {
+	player = control_auto(x_max,y_max,tab,player,(x_max*50)/2-(x_max*50/2)%2);
+      } else {
+	player.rcSrc.x = 0;
+	time = control_menu(x_max,choice_ptr,action_ptr,time);
+      }
+    } else if (*action_ptr == 1) {
+      // JOUER
+      player = control_auto(x_max,y_max,tab,player,x_max*50);
+    } else if (*action_ptr == 2) {
+      // RIEN
+      *action_ptr = 0;
+    } else {
+      // QUITTER
+      player = control_auto(x_max,y_max,tab,player,0);
+    }
+  }
+
+  *player_ptr = player;
+  *time_ptr = time;
+}
 
 /****************************************************************************************************/
 /* LIST */
@@ -587,9 +619,10 @@ void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information play
   }
 }
 
-void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time)
+void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time, int map)
 {
   // le joueur s'écarte: on ferme la porte de gauche
+
   if (player.movement >= 50) {
     tab[5][0] = -1;
     tab[6][0] = -1;
@@ -606,8 +639,13 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
     tab[5][x_max-1] = -1;
     tab[6][x_max-1] = -1;
   }
-}
 
+  // cas pour le menu
+  if (map == 0 && player.movement <= 50) {
+    tab[5][0] = 0;
+    tab[6][0] = 0;
+  }
+}
 
 /****************************************************************************************************/
 /* SCORING */
