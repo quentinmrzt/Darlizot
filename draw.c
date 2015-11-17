@@ -48,12 +48,12 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
   }
 }
 
-void draw_player(s_information player,s_surface sprite,s_time* time_p)
+void draw_player(s_information player,s_surface sprite,s_time* time_p,int map)
 {
   
   // tampon car BlitSurface remet a 0 si nega
   SDL_Rect position = player.position;
-  if (time_p->current-time_p->previous_time_hit<2500){
+  if (time_p->current-time_p->previous_time_hit<2500 && map!=0){
     if (time_p->current%2==0)
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
   }else{

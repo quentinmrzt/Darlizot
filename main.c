@@ -104,7 +104,6 @@ int main(int argc, char* argv[])
     door_ennemy(x_max,y_max,tab,player,load,time,map);
     door_player(x_max,y_max,tab,player,time);
 
-    collision_bullet_ennemi(&shots,&ennemi);
     army_shots = collision_bullet_player(army_shots,&player,&time);
 
     army_shots = ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
@@ -113,14 +112,14 @@ int main(int argc, char* argv[])
     /****************************************************************************************************/
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
-    draw_player(player,sprite,&time);    
+    draw_player(player,sprite,&time,map);    
     draw_ennemis(ennemi,sprite,player);
     collision_bullet_ennemi(&shots,&ennemi,&score,level);
     draw_shooting(player,shots,sprite);
     draw_ennemis_shooting(army_shots,sprite,player);    
     draw_ammo(sprite,ammo);
     draw_health(player,sprite);
-    draw_chrono(sprite.screen,font,player,time);
+    draw_chrono(sprite.screen,font,time,map);
     draw_level(sprite.screen,font,level,map);
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player,x_max,y_max,tab);
