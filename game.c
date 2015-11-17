@@ -1,3 +1,4 @@
+
 /******************************************************************/
 /* game.c                                                         */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
@@ -285,6 +286,11 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
   list_ptr copy_ennemi=ennemi;
 
   while (copy_ennemi!=NULL){
+    if (player.position.y==copy_ennemi->info.position.y)
+	limit=copy_ennemi->info.limit;
+      else
+	limit=0;
+    copy_ennemi->info.rcSrc.y=0;
     if (tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+10)/50]==1 || tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+40)/50]==1){
       if (copy_ennemi->info.state==0){
 	copy_ennemi->info.movement+=5;
@@ -294,18 +300,14 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
 	copy_ennemi->info.state=1;
       }
     }else{
-      if (player.position.y==copy_ennemi->info.position.y)
-	limit=copy_ennemi->info.limit;
-      else
-	limit=0;
       if (player.movement>=copy_ennemi->info.movement){
 	copy_ennemi->info.state=0;
-	if (player.movement-limit>=copy_ennemi->info.movement)
+	if (player.movement-limit>copy_ennemi->info.movement)
 	  copy_ennemi->info.movement+=5;
       }else{
 	if (player.movement<=copy_ennemi->info.movement){
 	  copy_ennemi->info.state=1;
-	  if (player.movement+limit<=copy_ennemi->info.movement)
+	  if (player.movement+limit<copy_ennemi->info.movement)
 	    copy_ennemi->info.movement-=5;
 	}
       }
@@ -341,7 +343,6 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
     ennemi.jump -= 1;
   }
 
-
   /* si SAUT et AU SOL */
   if (player.movement>ennemi.movement){
     if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance_down == 0 && player.movement!=ennemi.movement) { 
@@ -368,7 +369,7 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
       limit=copy_ennemis->info.limit;
     else
       limit=0;
-    if (copy_ennemis->info.position.y==player.position.y && time.previous_time_ennemi_hit<=time.current-1000){
+    if (copy_ennemis->info.position.y==player.position.y && time.previous_time_ennemi_hit<=time.current-1200){
       time_p->previous_time_ennemi_hit=time_p->current;
       bullet.life=1;
       bullet.rcSrc.y = 0;
@@ -577,6 +578,17 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
     tab[6][x_max-1] = -1;
   }
 }
+
+
+/****************************************************************************************************/
+/* SCORING */
+
+int scoring(int score, int level)
+{
+  score+=10*level;
+  return score;
+}
+
 
 /****************************************************************************************************/
 /* CLEAN */

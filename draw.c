@@ -48,11 +48,17 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
   }
 }
 
-void draw_player(s_information player,s_surface sprite)
+void draw_player(s_information player,s_surface sprite,s_time* time_p)
 {
+  
   // tampon car BlitSurface remet a 0 si nega
   SDL_Rect position = player.position;
-  SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+  if (time_p->current-time_p->previous_time_hit<2500){
+    if (time_p->current%2==0)
+      SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+  }else{
+    SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+  }
 }
 
 void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_surface sprite, SDL_Rect pos_sprite, SDL_Rect pos_screen) 
@@ -73,11 +79,12 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
 list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,int tab[y_max][x_max])
 {
   list_ptr copy_ennemi=ennemis;
-  
+  if (copy_ennemi!=NULL)
   while (copy_ennemi!=NULL){
     int limit;
+    copy_ennemi->info.rcSrc.y=0;
     if (player.position.y==copy_ennemi->info.position.y)
-      limit=ennemis->info.limit;
+      limit=copy_ennemi->info.limit;
     else
       limit=0;
     if (copy_ennemi->info.state==0){
@@ -93,9 +100,13 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,
     }
     if (player.movement>=copy_ennemi->info.movement &&  player.movement-limit<=copy_ennemi->info.movement ){
       copy_ennemi->info.rcSrc.x=0;
+      if (player.position.y==copy_ennemi->info.position.y)
+	copy_ennemi->info.rcSrc.y=75;
     }
     if (player.movement<=copy_ennemi->info.movement &&  player.movement+limit>=copy_ennemi->info.movement){
       copy_ennemi->info.rcSrc.x=11*75;
+      if (player.position.y==copy_ennemi->info.position.y)
+	copy_ennemi->info.rcSrc.y=75;
     }
     copy_ennemi=copy_ennemi->next;
   }

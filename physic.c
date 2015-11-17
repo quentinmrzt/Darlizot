@@ -133,7 +133,7 @@ int collision_AABB(s_information obj1, s_information obj2)
   return 1;
 }
 
-void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
+void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi,int *score,int level)
 {
   list_ptr copy_shots = NULL;
   list_ptr copy_ennemi = NULL;
@@ -149,6 +149,7 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
     copy_copy_ennemi = copy_ennemi;
     while (copy_copy_ennemi != NULL) {
       if (collision_AABB(copy_copy_shots->info,copy_copy_ennemi->info)){
+	*score=scoring(*score,level);
 	if (copy_copy_ennemi->info.life != 0 && copy_copy_shots->info.life != 0) {
 	  copy_copy_ennemi->info.life = 0;
 	  copy_copy_shots->info.life = 0;
@@ -174,19 +175,17 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi)
 list_ptr collision_bullet_player(list_ptr army_shots, s_information * player, s_time * time_p)
 {
   list_ptr copy_shots= army_shots;
-  s_time time=*time_p;
   if(time_p->current-time_p->previous_time_hit>2500){
     
     while (copy_shots != NULL){
       if(collision_AABB(copy_shots->info,*player)){
 	player->life=(player->life)-1;
 	copy_shots->info.life=0;
-	time.previous_time_hit=time.current;
+	time_p->previous_time_hit=time_p->current;
       }
       copy_shots=copy_shots->next;
     }
   }
   army_shots=list_element_delete(army_shots);
-  *time_p=time;
   return army_shots;
 }

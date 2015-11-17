@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map;
+  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map,score=0;
   s_information player;
   s_surface sprite;
   s_time time;
@@ -91,15 +91,15 @@ int main(int argc, char* argv[])
     /****************************************************************************************************/
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
-    draw_player(player,sprite);    
+    draw_player(player,sprite,&time);    
     draw_ennemis(ennemi,sprite,player);
-    collision_bullet_ennemi(&shots,&ennemi);
+    collision_bullet_ennemi(&shots,&ennemi,&score,level);
     draw_shooting(player,shots,sprite);
     draw_ennemis_shooting(army_shots,sprite,player);
     draw_ammo(sprite,ammo);
     draw_health(player,sprite);
     draw_chrono(sprite.screen,font,player,time);
-
+    
     /* ??? */
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player,x_max,y_max,tab);
@@ -118,7 +118,6 @@ int main(int argc, char* argv[])
       change_lvl(&player, &time, &shots, &ennemi, &army_shots, &load, &level, &x_max, &y_max, map, tab);
     }
 
-    
     a_and_z(x_max,y_max,tab,player);
     ennemi = killing(ennemi);
 

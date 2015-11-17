@@ -52,6 +52,13 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map);
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time);
 void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time);
 
+
+/****************************************************************************************************/
+/* SCORING */
+
+int scoring(int score, int level);
+
+
 /****************************************************************************************************/
 /* CLEAN */
 
