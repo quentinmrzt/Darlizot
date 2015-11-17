@@ -147,8 +147,8 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi,int *score,int le
     copy_copy_ennemi = copy_ennemi;
     while (copy_copy_ennemi != NULL) {
       if (collision_AABB(copy_copy_shots->info,copy_copy_ennemi->info)){
-	*score=scoring(*score,level);
 	if (copy_copy_ennemi->info.life > 0 && copy_copy_shots->info.life != -1) {
+	  *score=scoring(*score,level);
 	  copy_copy_ennemi->info.life = 0;
 	  copy_copy_shots->info.life = -1;
 	}
