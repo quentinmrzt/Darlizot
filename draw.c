@@ -74,6 +74,17 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
   if (tab[y][x] == 1) {
     SDL_BlitSurface(sprite.platform, &pos_sprite, sprite.screen, &pos_screen);
   } 
+
+  if (tab[y][x] == 2) {
+    SDL_BlitSurface(sprite.locked, &pos_sprite, sprite.screen, &pos_screen);
+  } 
+
+  if (tab[y][x] == 3) {
+    SDL_BlitSurface(sprite.download, &pos_sprite, sprite.screen, &pos_screen);
+  } 
+  if (tab[y][x] == 4) {
+    SDL_BlitSurface(sprite.unlocked, &pos_sprite, sprite.screen, &pos_screen);
+  } 
 }
 
 list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,int tab[y_max][x_max])
@@ -152,38 +163,42 @@ void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite, s_information p
   }
 }
 
-void draw_ammo(s_surface sprite,int ammo)
+void draw_ammo(s_surface sprite,int ammo, int map)
 { 
-  SDL_Rect rcSrc_set,rcSrc;
-  SDL_Rect position_set,position;
+  if (map!=0){
+    SDL_Rect rcSrc_set,rcSrc;
+    SDL_Rect position_set,position;
 
-  position_set.x=760;
-  position_set.y=10;
-  position.x=764;
-  position.y=14+(60-ammo);
-  rcSrc_set.w=14;
-  rcSrc_set.h=80;
-  rcSrc_set.x=0;
-  rcSrc_set.y=0;
-  rcSrc.w=8;
-  rcSrc.h=ammo;
-  rcSrc.x=0;
-  rcSrc.y=0;
-  SDL_BlitSurface(sprite.ammo_set, &rcSrc_set, sprite.screen, &position_set);
-  SDL_BlitSurface(sprite.ammo, &rcSrc, sprite.screen, &position);
+    position_set.x=760;
+    position_set.y=10;
+    position.x=764;
+    position.y=14+(60-ammo);
+    rcSrc_set.w=14;
+    rcSrc_set.h=80;
+    rcSrc_set.x=0;
+    rcSrc_set.y=0;
+    rcSrc.w=8;
+    rcSrc.h=ammo;
+    rcSrc.x=0;
+    rcSrc.y=0;
+    SDL_BlitSurface(sprite.ammo_set, &rcSrc_set, sprite.screen, &position_set);
+    SDL_BlitSurface(sprite.ammo, &rcSrc, sprite.screen, &position);
+  }
 }
 
-void draw_health(s_information player,s_surface sprite)
+void draw_health(s_information player,s_surface sprite,int map)
 { 
-  SDL_Rect rcSrc;
-  SDL_Rect position;
-  rcSrc.w=200;
-  rcSrc.h=50;
-  rcSrc.y=0;
-  rcSrc.x=1000-(player.life*200);
-  position.x=5;
-  position.y = 10;
-  SDL_BlitSurface(sprite.health, &rcSrc, sprite.screen, &position);
+  if (map!=0){
+    SDL_Rect rcSrc;
+    SDL_Rect position;
+    rcSrc.w=200;
+    rcSrc.h=50;
+    rcSrc.y=0;
+    rcSrc.x=1000-(player.life*200);
+    position.x=5;
+    position.y = 10;
+    SDL_BlitSurface(sprite.health, &rcSrc, sprite.screen, &position);
+  }
 }
 
 void draw_ennemis(list_ptr ennemi_ptr, s_surface sprite, s_information player)

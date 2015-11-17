@@ -50,6 +50,15 @@ s_surface load_sprite(s_surface sprite)
   name[14] = '1';
   name[15] = '0';
   sprite.outline = load(sprite.outline, name, sprite.screen);
+  name[14] = '1';
+  name[15] = '1';
+  sprite.locked = load(sprite.locked, name, sprite.screen);
+  name[14] = '1';
+  name[15] = '2';
+  sprite.download = load(sprite.download, name, sprite.screen);
+  name[14] = '1';
+  name[15] = '3';
+  sprite.unlocked = load(sprite.unlocked, name, sprite.screen);
   return sprite;
 }
 
@@ -86,11 +95,12 @@ s_time ini_time(s_time time)
   return time;
 }
 
-s_time duration_chrono(s_information player,s_time time ,int x_max) 
+s_time duration_chrono(s_information player,s_time time ,int x_max,int y_max,int tab[y_max][x_max]) 
 {  
   // DEBUT DU CHRONO
   if (player.movement/50 == x_max-2 && time.level == 0) {
     time.level = time.current;
+    tab[y_max-2][x_max-2]=3;
   }
   // DEFILER DU CHRONO
   if (time.level != 0 && time.chrono >= 0) {
@@ -635,6 +645,9 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
   if (time.chrono <= 0) {
     tab[5][x_max-1] = 0;
     tab[6][x_max-1] = 0;
+    if (map!=0 && map!=1){
+      tab[y_max-2][x_max-2]= 4;
+    }
   } else {
     tab[5][x_max-1] = -1;
     tab[6][x_max-1] = -1;
@@ -672,6 +685,9 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.ammo_set);
   SDL_FreeSurface(sprite.platform);
   SDL_FreeSurface(sprite.health);
+  SDL_FreeSurface(sprite.locked);
+  SDL_FreeSurface(sprite.download);
+  SDL_FreeSurface(sprite.unlocked);
 
 }
 

@@ -49,6 +49,9 @@ struct s_surface
   SDL_Surface *ammo;
   SDL_Surface *health;
   SDL_Surface *outline;
+  SDL_Surface *locked;
+  SDL_Surface *download;
+  SDL_Surface *unlocked;
 };
 typedef struct s_surface s_surface;
 

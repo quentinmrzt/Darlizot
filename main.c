@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
     shots = wall_bang(shots,x_max,y_max,tab);
     army_shots = wall_bang(army_shots,x_max,y_max,tab);
     ennemis_jump(x_max,y_max,tab,ennemi,player);
-    time = duration_chrono(player,time,x_max);
+    time = duration_chrono(player,time,x_max,y_max,tab);
     door_ennemy(x_max,y_max,tab,player,load,time,map);
     door_player(x_max,y_max,tab,player,time,map);
     army_shots = collision_bullet_player(army_shots,&player,&time);
@@ -97,8 +97,8 @@ int main(int argc, char* argv[])
     collision_bullet_ennemi(&shots,&ennemi,&score,level);
     draw_shooting(player,shots,sprite);
     draw_ennemis_shooting(army_shots,sprite,player);    
-    draw_ammo(sprite,ammo);
-    draw_health(player,sprite);
+    draw_ammo(sprite,ammo,map);
+    draw_health(player,sprite,map);
     draw_chrono(sprite.screen,font,time,map);
     draw_level(sprite.screen,font,level,map);
     ennemies_moves(ennemi,player,x_max,y_max,tab);
