@@ -76,7 +76,7 @@ s_time ini_time(s_time time)
   time.previous_time_ennemi_hit=0;
   time.previous_time_ennemi = -1000;
   time.level = 0;
-  time.time_max = 2000;
+  time.time_max = 10000;
   time.chrono = time.time_max;
 
   return time;
@@ -246,34 +246,37 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
 }
 
 
-list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p,int *nb_ennemi_spawn,int *load,int x_max, int y_max,int tab[y_max][x_max])
+list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p,int *nb_ennemi_spawn,int *load,int x_max, int y_max,int tab[y_max][x_max], int map)
 {
-  list_ptr new_ennemi=NULL;
-  s_time time = *time_p;
-  int nb_ennemi=nb_ennemi_update(*level);
+  if (map >= 2) {
+    list_ptr new_ennemi=NULL;
+    s_time time = *time_p;
+    int nb_ennemi=nb_ennemi_update(*level);
 
-  if(*load==1){
-    if(time.current - time.previous_time_ennemi>600){
-      if(*nb_ennemi_spawn!=nb_ennemi){
-	new_ennemi=ennemi_spawn(player,ennemi,1,x_max,y_max,tab);
-	*nb_ennemi_spawn=*nb_ennemi_spawn+1;
-	time.previous_time_ennemi=time.current;
-	*time_p = time;
-	return new_ennemi;
-      }else{
-	*load=0;
-	//*level=*level+1;
-	*nb_ennemi_spawn=0;
+    if(*load==1){
+      if(time.current - time.previous_time_ennemi>600){
+	if(*nb_ennemi_spawn!=nb_ennemi){
+	  new_ennemi=ennemi_spawn(player,ennemi,1,x_max,y_max,tab);
+	  *nb_ennemi_spawn=*nb_ennemi_spawn+1;
+	  time.previous_time_ennemi=time.current;
+	  *time_p = time;
+	  return new_ennemi;
+	}else{
+	  *load=0;
+	  //*level=*level+1;
+	  *nb_ennemi_spawn=0;
+	}
+      }
+    }else{
+      if(ennemi==NULL /*&& time.chrono > 0*/) {
+	*load=1;
       }
     }
-  }else{
-    if(ennemi==NULL /*&& time.chrono > 0*/) {
-      *load=1;
-    }
+    *time_p = time;
   }
-  *time_p = time;
   return ennemi;
 }
+
 int nb_ennemi_update(int level)
 {
   return level+3*level;
@@ -541,9 +544,9 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map)
   }
 }
 
-void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time)
+void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time, int map)
 {
-  if (load == 0 && time.previous_time_ennemi+1000 <= time.current && player.movement >=49) {
+  if ((load == 0 && time.previous_time_ennemi+1000 <= time.current && player.movement >=49) || map <= 1) {
     // pas de chargement: on ferme la porte
     tab[1][0] = -1;
     tab[1][x_max-1] = -1;
@@ -568,8 +571,9 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
     tab[5][0] = 0;
     tab[6][0] = 0;
   }
+  
   // fin du chrono: on ouvre la porte de droite
-  if (time.chrono < 0) {
+  if (time.chrono <= 0) {
     tab[5][x_max-1] = 0;
     tab[6][x_max-1] = 0;
   } else {

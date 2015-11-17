@@ -21,8 +21,9 @@ int main(int argc, char* argv[])
 
   list_ptr shots = NULL;
   list_ptr ennemi = NULL;
-  TTF_Font *font = NULL;
   list_ptr army_shots = NULL;
+
+  TTF_Font *font = NULL;
 
   /****************************************************************************************************/
   /* INITIALIZE */
@@ -32,7 +33,7 @@ int main(int argc, char* argv[])
   TTF_Init();
   /* open font */
   SDL_WM_SetCaption("Gestion du texte avec SDL_ttf", NULL);
-  font = TTF_OpenFont("font.ttf", 20);
+  font = TTF_OpenFont("font.ttf", 21);
   /* set the title bar */
   SDL_WM_SetCaption("S3", NULL);
   /* create window */
@@ -43,7 +44,6 @@ int main(int argc, char* argv[])
   sprite = load_sprite(sprite);
   player = ini_player(player);
   time = ini_time(time);
-
 
   /* table */
   map = 0;
@@ -57,10 +57,8 @@ int main(int argc, char* argv[])
   recup_map(x_max,y_max,tab,map);
 
   close = 0;
-  level= 0;
+  level = 0;
   nb_ennemi_spawn=0;
-
-  printf("Nb map: %d\n",nb_map());
 
   while (!close) {
     time.current = SDL_GetTicks();
@@ -70,58 +68,56 @@ int main(int argc, char* argv[])
     close = quit(close);
     player = control(x_max,y_max,tab,player);
     shots = shooting(player,shots,&ammo,energy,&time);
+    a_and_z(x_max,y_max,tab,player);
+    ennemi = killing(ennemi);
 
     /****************************************************************************************************/
     /* GAME */
-    if (map != 0 && map != 1) {
-      ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab);
-    }
+    ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab,map);
 
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
-
     shots = wall_bang(shots,x_max,y_max,tab);
-    army_shots=wall_bang(army_shots,x_max,y_max,tab);
+    army_shots = wall_bang(army_shots,x_max,y_max,tab);
+
     ennemis_jump(x_max,y_max,tab,ennemi,player);
     time = duration_chrono(player,time,x_max);
-    door_ennemy(x_max,y_max,tab,player,load,time);
+
+    door_ennemy(x_max,y_max,tab,player,load,time,map);
     door_player(x_max,y_max,tab,player,time);
+
+    collision_bullet_ennemi(&shots,&ennemi);
+    army_shots = collision_bullet_player(army_shots,&player,&time);
+
+    army_shots = ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
+
 
     /****************************************************************************************************/
     /* DRAW */
     draw(x_max,y_max,tab,sprite,player);
     draw_player(player,sprite);    
     draw_ennemis(ennemi,sprite,player);
-    collision_bullet_ennemi(&shots,&ennemi);
     draw_shooting(player,shots,sprite);
-    draw_ennemis_shooting(army_shots,sprite,player);
+    draw_ennemis_shooting(army_shots,sprite,player);    
     draw_ammo(sprite,ammo);
     draw_health(player,sprite);
-    draw_chrono(sprite.screen,font,player,time);
-
-    /* ??? */
+    draw_chrono(sprite.screen,font,time,map);
+    draw_level(sprite.screen,font,level,map);
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player,x_max,y_max,tab);
-    army_shots=ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
-    army_shots=collision_bullet_player(army_shots,&player,&time);
+
     /****************************************************************************************************/
     /* OTHER */
     if (player.position.y > 400) {
       player = ini_player(player);
     }
-
     
     if (player.movement > x_max*50) {
-      /* choix de la map */
       change_map(&map,&previous_map);     
       change_lvl(&player, &time, &shots, &ennemi, &army_shots, &load, &level, &x_max, &y_max, map, tab);
     }
-
     
-    a_and_z(x_max,y_max,tab,player);
-    ennemi = killing(ennemi);
-
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     /* ~ 12,5 fps */
     SDL_Delay(60);
@@ -130,8 +126,8 @@ int main(int argc, char* argv[])
   /****************************************************************************************************/
   /* CLEAN */
 
-  TTF_CloseFont(font);
   free_all_sprite(sprite);
+  TTF_CloseFont(font);
   TTF_Quit();
   SDL_Quit();
 

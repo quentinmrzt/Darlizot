@@ -54,7 +54,6 @@ s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information
   return player;
 }
 
-
 list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,s_time *time_p)
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
@@ -136,8 +135,9 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
   int distance, modulo;
-
+  
   if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
+    
     if (player.state == 0) {
 
       modulo = 20-player.movement%20;
