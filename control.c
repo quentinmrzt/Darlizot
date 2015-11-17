@@ -40,16 +40,31 @@ int quit(int close)
 
 s_information control(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
+  int automatic = 0;
   /* animation */
-  player = anim_right(x_max,y_max,tab,player);  
-  player = anim_left(x_max,y_max,tab,player);
+  player = anim_right(x_max,y_max,tab,player,automatic);  
+  player = anim_left(x_max,y_max,tab,player,automatic);
   player = anim_jump(x_max,y_max,tab,player);
   player = anim_shoot(x_max,y_max,tab,player);
 
   /* move */
-  player = move_right(x_max,y_max,tab,player);
-  player = move_left(x_max,y_max,tab,player);
+  player = move_right(x_max,y_max,tab,player,automatic);
+  player = move_left(x_max,y_max,tab,player,automatic);
   player = move_jump(x_max,y_max,tab,player);
+
+  return player;
+}
+
+s_information control_auto(int x_max, int y_max, int tab[y_max][x_max], s_information player, int x)
+{
+  int automatic = 1;
+  if (x+x%20 > player.movement) {
+    player = anim_right(x_max,y_max,tab,player,automatic);  
+    player = move_right(x_max,y_max,tab,player,automatic);
+  } else if (x+x%20 < player.movement) {
+    player = anim_left(x_max,y_max,tab,player,automatic);
+    player = move_left(x_max,y_max,tab,player,automatic);
+  }
 
   return player;
 }
@@ -128,12 +143,13 @@ void killing(list_ptr *ennemi)
 /****************************************************************************************************/
 /* MOVE */
 
-s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
+s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
   int distance, modulo;
-
-  if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
+  
+  if ((keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) || automatic) {
+    
     if (player.state == 0) {
 
       modulo = 20-player.movement%20;
@@ -174,12 +190,12 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
   return player;
 }
 
-s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
+s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
   int distance, modulo;
 
-  if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]) {
+  if ((keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]) || automatic) {
 
     if (player.state == 1) {
 
