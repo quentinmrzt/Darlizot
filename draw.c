@@ -348,16 +348,19 @@ void draw_menu(s_surface sprite, s_time time)
   position.x = 800/2 - text->w/2;
   position.y = 400/5-35 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
+  SDL_FreeSurface(text);
 
   text = TTF_RenderText_Blended(test, "Jouer", black_color);
   position.x = 800/2 - text->w/2;
   position.y = 400/5+400/5*1-10 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
+  SDL_FreeSurface(text);
 
   text = TTF_RenderText_Blended(test, "Classement", black_color);
   position.x = 800/2 - text->w/2;
   position.y = 400/5+400/5*2-10 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
+  SDL_FreeSurface(text);
 
   text = TTF_RenderText_Blended(test, "Quitter", black_color);
   position.x = 800/2 - text->w/2;
@@ -365,6 +368,7 @@ void draw_menu(s_surface sprite, s_time time)
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
 
   TTF_CloseFont(test);
+  SDL_FreeSurface(text);
 }
 
 void draw_outline(s_surface sprite, int choice)

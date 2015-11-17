@@ -659,6 +659,7 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.locked);
   SDL_FreeSurface(sprite.download);
   SDL_FreeSurface(sprite.unlocked);
+  SDL_FreeSurface(sprite.outline);
 
 }
 
