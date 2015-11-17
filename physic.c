@@ -107,14 +107,12 @@ s_information gravity(int x_max, int y_max, int tab[y_max][x_max], s_information
       player.position.y += distance; 
     }
   }
-
   return player;
 }
 
 void ennemi_gravity(int x_max,int y_max,int tab[y_max][x_max],list_ptr ennemi,s_surface sprite)
 {
   list_ptr ennemi_list=ennemi;
-  
   while(ennemi_list != NULL) {
     ennemi_list->info = gravity(x_max,y_max,tab,ennemi_list->info);
     ennemi_list = ennemi_list->next;

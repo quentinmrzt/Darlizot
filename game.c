@@ -125,16 +125,12 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
   s_information player = *player_ptr;
   s_time time = *time_ptr;
 
-  list_ptr shots = *shots_ptr;
-  list_ptr ennemi = *ennemi_ptr;
-  list_ptr army_shots = *army_shots_ptr;
-
   player = ini_player(player);
   time = ini_time(time);
 
-  ennemi = kill_all(ennemi);
-  shots = kill_all(shots);
-  army_shots = kill_all(army_shots);
+  free_list(ennemi_ptr);
+  free_list(shots_ptr);
+  free_list(army_shots_ptr);
     
   *load_ptr = 0;
   /* lvl up */
@@ -151,9 +147,6 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
 
   *player_ptr = player;
   *time_ptr = time;
-  *shots_ptr = shots;
-  *ennemi_ptr = ennemi;
-  *army_shots_ptr = army_shots;
 }
 
 
@@ -179,10 +172,10 @@ list_ptr list_element_delete(list_ptr list)
   }
   list_ptr copy_list=list;
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
-  list_ptr res=NULL;
   if (copy_list->info.life==0 || copy_list->info.position.y>450){
     if (copy_list->next==NULL){
       tmp=copy_list;
+      return NULL;
     }else{
       tmp=copy_list;
       list=copy_list->next;
@@ -198,10 +191,9 @@ list_ptr list_element_delete(list_ptr list)
 	else 
 	  copy_list=copy_list->next;
       }
-    res=list;
   }
   free(tmp);
-  return res;  
+  return list;  
 }
 
 int list_size(list_ptr list)
@@ -417,7 +409,7 @@ list_ptr kill_all(list_ptr ennemis)
   list_ptr copy_ennemis=ennemis;
 
   while (copy_ennemis!=NULL) {
-    copy_ennemis->info.life = 0 ;
+    free(ennemis);
     copy_ennemis = copy_ennemis->next;
   }
 
@@ -595,11 +587,21 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.health);
 
 }
-void free_list(list_ptr list) {
-    while(list != NULL) {
-        list_ptr* tempo = &list;
-        list = list->next;
-        free(tempo);
-    }
+
+list_ptr list_tail(list_ptr list) 
+{
+  if (list==NULL || list->next==NULL) {
+    return NULL;
+  }
+  return list->next;
 }
 
+void free_list(list_ptr *list) 
+{
+  list_ptr tmp;
+  while (*list!=NULL) {
+    tmp = *list;
+    *list= list_tail(*list);
+    free(tmp);
+  }
+}

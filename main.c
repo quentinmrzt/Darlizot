@@ -10,7 +10,7 @@
 #include "draw.h"
 #include "control.h"
 #include "time.h"
-#include "physic.h"
+#include "physic.h" 
 
 int main(int argc, char* argv[])
 {
@@ -73,10 +73,11 @@ int main(int argc, char* argv[])
 
     /****************************************************************************************************/
     /* GAME */
+    killing(&ennemi);
     if (map != 0 && map != 1) {
       ennemi = respawn(ennemi,&level,player,&time,&nb_ennemi_spawn,&load,x_max,y_max,tab);
     }
-
+    
     player = gravity(x_max,y_max,tab,player);
     ennemi_gravity(x_max,y_max,tab,ennemi,sprite);
 
@@ -120,7 +121,7 @@ int main(int argc, char* argv[])
 
     
     a_and_z(x_max,y_max,tab,player);
-    ennemi = killing(ennemi);
+   
 
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     /* ~ 12,5 fps */

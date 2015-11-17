@@ -118,16 +118,12 @@ void a_and_z(int x_max, int y_max, int tab[y_max][x_max], s_information player)
   }
 }
 
-list_ptr killing(list_ptr ennemi)
+void killing(list_ptr *ennemi)
 {
-  list_ptr list;
   Uint8 *keystate = SDL_GetKeyState(NULL);
-  if (keystate[SDLK_k]){
-    list = kill_all(ennemi);
-  }else{
-    list=ennemi;
+  if (keystate[SDLK_k] && ennemi!=NULL){
+    free_list(ennemi);
   }
-  return list;
 }
 /****************************************************************************************************/
 /* MOVE */
