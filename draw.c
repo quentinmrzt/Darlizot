@@ -214,30 +214,54 @@ void draw_tab(int x_max, int y_max, int tab[y_max][x_max])
   }
 }
 
-void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_information player, s_time time) 
+void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_time time, int map) 
 {
   char sentence[20] = "";
   SDL_Rect position;
   SDL_Color black_color = {0,0,0,0};
   SDL_Surface *text;
 
-  sprintf(sentence, "Time: %d",time.chrono/1000);
+  if (map >= 2) { 
+    if (time.chrono < 0) {
+      time.chrono = 0;
+    }
+    
+    sprintf(sentence, "Time: %d.%d",time.chrono/1000,(time.chrono%1000)/10);
+    
+    text = TTF_RenderText_Blended(font, sentence, black_color);
+    position.x = 400-text->w/2;
+    position.y = 35;
+    SDL_BlitSurface(text, NULL, screen, &position);
+    SDL_FreeSurface(text);
+  }
+}
+
+void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map) 
+{
+  char sentence[20] = "";
+  SDL_Rect position;
+  SDL_Color black_color = {0,0,0,0};
+  SDL_Surface *text;
+
+  if (map >= 2) { 
+    sprintf(sentence, "Level: %d",level);
   
-  text = TTF_RenderText_Blended(font, sentence, black_color);
-  position.x = 400-text->w/2;
-  position.y = 5;
-  SDL_BlitSurface(text, NULL, screen, &position);
-  SDL_FreeSurface(text);
+    text = TTF_RenderText_Blended(font, sentence, black_color);
+    position.x = 400-text->w/2;
+    position.y = 10;
+    SDL_BlitSurface(text, NULL, screen, &position);
+    SDL_FreeSurface(text);
+  }
 }
 
 /****************************************************************************************************/
 /* ANIM */
 
-s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
+s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
-  if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
+  if ((keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) || automatic) {
     /* AU SOL */
     if (distance_of_floor(x_max,y_max,tab,player) == 0) {
       player.rcSrc.y=0;
@@ -261,11 +285,11 @@ s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
   return player;
 }
 
-s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
+s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
-  if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]){
+  if ((keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]) || automatic){
     /* AU SOL */
     if (distance_of_floor(x_max,y_max,tab,player) == 0) {
       /* direction droite ou au bout des sprites */

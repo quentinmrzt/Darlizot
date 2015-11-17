@@ -77,7 +77,7 @@ s_time ini_time(s_time time)
   time.previous_time_ennemi_hit=0;
   time.previous_time_ennemi = -1000;
   time.level = 0;
-  time.time_max = 2000;
+  time.time_max = 10000;
   time.chrono = time.time_max;
 
   return time;
@@ -126,16 +126,12 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
   s_information player = *player_ptr;
   s_time time = *time_ptr;
 
-  list_ptr shots = *shots_ptr;
-  list_ptr ennemi = *ennemi_ptr;
-  list_ptr army_shots = *army_shots_ptr;
-
   player = ini_player(player);
   time = ini_time(time);
 
-  ennemi = kill_all(ennemi);
-  shots = kill_all(shots);
-  army_shots = kill_all(army_shots);
+  free_list(ennemi_ptr);
+  free_list(shots_ptr);
+  free_list(army_shots_ptr);
     
   *load_ptr = 0;
   /* lvl up */
@@ -152,9 +148,6 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
 
   *player_ptr = player;
   *time_ptr = time;
-  *shots_ptr = shots;
-  *ennemi_ptr = ennemi;
-  *army_shots_ptr = army_shots;
 }
 
 
@@ -180,10 +173,10 @@ list_ptr list_element_delete(list_ptr list)
   }
   list_ptr copy_list=list;
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
-  list_ptr res=NULL;
   if (copy_list->info.life==0 || copy_list->info.position.y>450){
     if (copy_list->next==NULL){
       tmp=copy_list;
+      return NULL;
     }else{
       tmp=copy_list;
       list=copy_list->next;
@@ -199,10 +192,9 @@ list_ptr list_element_delete(list_ptr list)
 	else 
 	  copy_list=copy_list->next;
       }
-    res=list;
   }
   free(tmp);
-  return res;  
+  return list;  
 }
 
 int list_size(list_ptr list)
@@ -247,34 +239,37 @@ list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_m
 }
 
 
-list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p,int *nb_ennemi_spawn,int *load,int x_max, int y_max,int tab[y_max][x_max])
+list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p,int *nb_ennemi_spawn,int *load,int x_max, int y_max,int tab[y_max][x_max], int map)
 {
-  list_ptr new_ennemi=NULL;
-  s_time time = *time_p;
-  int nb_ennemi=nb_ennemi_update(*level);
+  if (map >= 2) {
+    list_ptr new_ennemi=NULL;
+    s_time time = *time_p;
+    int nb_ennemi=nb_ennemi_update(*level);
 
-  if(*load==1){
-    if(time.current - time.previous_time_ennemi>600){
-      if(*nb_ennemi_spawn!=nb_ennemi){
-	new_ennemi=ennemi_spawn(player,ennemi,1,x_max,y_max,tab);
-	*nb_ennemi_spawn=*nb_ennemi_spawn+1;
-	time.previous_time_ennemi=time.current;
-	*time_p = time;
-	return new_ennemi;
-      }else{
-	*load=0;
-	//*level=*level+1;
-	*nb_ennemi_spawn=0;
+    if(*load==1){
+      if(time.current - time.previous_time_ennemi>600){
+	if(*nb_ennemi_spawn!=nb_ennemi){
+	  new_ennemi=ennemi_spawn(player,ennemi,1,x_max,y_max,tab);
+	  *nb_ennemi_spawn=*nb_ennemi_spawn+1;
+	  time.previous_time_ennemi=time.current;
+	  *time_p = time;
+	  return new_ennemi;
+	}else{
+	  *load=0;
+	  //*level=*level+1;
+	  *nb_ennemi_spawn=0;
+	}
+      }
+    }else{
+      if(ennemi==NULL /*&& time.chrono > 0*/) {
+	*load=1;
       }
     }
-  }else{
-    if(ennemi==NULL /*&& time.chrono > 0*/) {
-      *load=1;
-    }
+    *time_p = time;
   }
-  *time_p = time;
   return ennemi;
 }
+
 int nb_ennemi_update(int level)
 {
   return level+3*level;
@@ -418,7 +413,7 @@ list_ptr kill_all(list_ptr ennemis)
   list_ptr copy_ennemis=ennemis;
 
   while (copy_ennemis!=NULL) {
-    copy_ennemis->info.life = 0 ;
+    free(ennemis);
     copy_ennemis = copy_ennemis->next;
   }
 
@@ -542,9 +537,9 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map)
   }
 }
 
-void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time)
+void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time, int map)
 {
-  if (load == 0 && time.previous_time_ennemi+1000 <= time.current && player.movement >=49) {
+  if ((load == 0 && time.previous_time_ennemi+1000 <= time.current && player.movement >=49) || map <= 1) {
     // pas de chargement: on ferme la porte
     tab[1][0] = -1;
     tab[1][x_max-1] = -1;
@@ -569,8 +564,9 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
     tab[5][0] = 0;
     tab[6][0] = 0;
   }
+  
   // fin du chrono: on ouvre la porte de droite
-  if (time.chrono < 0) {
+  if (time.chrono <= 0) {
     tab[5][x_max-1] = 0;
     tab[6][x_max-1] = 0;
   } else {
@@ -607,11 +603,21 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.health);
 
 }
-void free_list(list_ptr list) {
-    while(list != NULL) {
-        list_ptr* tempo = &list;
-        list = list->next;
-        free(tempo);
-    }
+
+list_ptr list_tail(list_ptr list) 
+{
+  if (list==NULL || list->next==NULL) {
+    return NULL;
+  }
+  return list->next;
 }
 
+void free_list(list_ptr *list) 
+{
+  list_ptr tmp;
+  while (*list!=NULL) {
+    tmp = *list;
+    *list= list_tail(*list);
+    free(tmp);
+  }
+}
