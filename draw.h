@@ -17,10 +17,12 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
 void draw_ennemis(list_ptr ennemi_ptr,s_surface sprite, s_information player);
 void draw_tab(int x_max, int y_max, int tab[y_max][x_max]);
 list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,int tab[y_max][x_max]);
+s_information death(s_information player);
+list_ptr ennemis_death(list_ptr ennemis);
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite);
 void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite,s_information player,int x_max);
 void draw_health(s_information player,s_surface sprite, int map);
-void draw_ammo(s_surface sprite,int ammo, int map);
+void draw_ammo(s_surface sprite,int ammo, int map,s_information player);
 void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_time chrono, int map);
 void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map);
 void draw_menu(s_surface sprite, s_time time);

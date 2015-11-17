@@ -340,14 +340,14 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
 	  copy_ennemi->info.state=1;
 	}
       }else{
-	if (player.movement>=copy_ennemi->info.movement){
+	if (player.movement>=copy_ennemi->info.movement ){
 	  copy_ennemi->info.state=0;
-	  if (player.movement-limit>copy_ennemi->info.movement)
+	  if (player.movement-limit>=copy_ennemi->info.movement)
 	    copy_ennemi->info.movement+=5;
 	}else{
 	  if (player.movement<=copy_ennemi->info.movement){
 	    copy_ennemi->info.state=1;
-	    if (player.movement+limit<copy_ennemi->info.movement)
+	    if (player.movement+limit<=copy_ennemi->info.movement)
 	      copy_ennemi->info.movement-=5;
 	  }
 	}
@@ -410,7 +410,7 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
       limit=copy_ennemis->info.limit;
     else
       limit=0;
-    if (copy_ennemis->info.position.y==player.position.y && time.previous_time_ennemi_hit<=time.current-1200 && copy_ennemis->info.life>0){
+    if (copy_ennemis->info.position.y==player.position.y && player.life>0 &&  time.previous_time_ennemi_hit<=time.current-1200 && copy_ennemis->info.life>0){
       time_p->previous_time_ennemi_hit=time_p->current;
       bullet.life=1;
       bullet.rcSrc.y = 0;
@@ -441,37 +441,6 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
   return army_shots;
 }
 
-list_ptr ennemis_death(list_ptr ennemis)
-{
-  list_ptr copy_ennemis=ennemis;
-  int a =0;
-  while (copy_ennemis!=NULL)
-    {
-      if (copy_ennemis->info.life==0){
-	copy_ennemis->info.rcSrc.y=75;
-	if (copy_ennemis->info.dying==0){
-	  if (copy_ennemis->info.state==0){
-	    copy_ennemis->info.rcSrc.x=3*75;
-	  }else{
-	    copy_ennemis->info.rcSrc.x=15*75;
-	  }
-	}
-	copy_ennemis->info.dying=1;
-	if (copy_ennemis->info.rcSrc.x<6*75 && copy_ennemis->info.state==0){
-	  copy_ennemis->info.rcSrc.x+=75;
-	}else{
-	  if (copy_ennemis->info.rcSrc.x<17*75 && copy_ennemis->info.state==1){
-	    copy_ennemis->info.rcSrc.x+=75;
-	  }else{
-	    copy_ennemis->info.life=-1;
-	  }
-	}	  
-      }      
-      copy_ennemis=copy_ennemis->next;
-    }
-
-  return ennemis;
-}
 
 list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
 {

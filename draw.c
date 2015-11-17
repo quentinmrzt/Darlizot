@@ -53,11 +53,14 @@ void draw_player(s_information player,s_surface sprite,s_time* time_p,int map)
   
   // tampon car BlitSurface remet a 0 si nega
   SDL_Rect position = player.position;
-  if (time_p->current-time_p->previous_time_hit<2500 && map!=0){
+  if(player.life>=0)
+    {
+  if (time_p->current-time_p->previous_time_hit<2500 && map!=0 && player.life>0){
     if (time_p->current%2==0)
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
   }else{
     SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+  }
   }
 }
 
@@ -127,6 +130,60 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,
 
 }
 
+s_information death(s_information player)
+{
+  if (player.life==0)
+    {
+      player.rcSrc.y=3*75;
+      if (player.dying==0){
+	if (player.state==0){
+	  player.rcSrc.x=0;
+	}else{
+	  player.rcSrc.x=11*75;
+	}
+	player.dying=1;
+      }
+      if ((player.state==0 && player.rcSrc.x<4*75) ||  (player.state==1 && player.rcSrc.x<15*75) ){
+	player.rcSrc.x+=75;
+      }else{
+	player.life=-1;
+      }
+        
+    }
+  return player;
+}
+
+list_ptr ennemis_death(list_ptr ennemis)
+{
+  list_ptr copy_ennemis=ennemis;
+  int a =0;
+  while (copy_ennemis!=NULL)
+    {
+      if (copy_ennemis->info.life==0){
+	copy_ennemis->info.rcSrc.y=75;
+	if (copy_ennemis->info.dying==0){
+	  if (copy_ennemis->info.state==0){
+	    copy_ennemis->info.rcSrc.x=3*75;
+	  }else{
+	    copy_ennemis->info.rcSrc.x=15*75;
+	  }
+	}
+	copy_ennemis->info.dying=1;
+	if (copy_ennemis->info.rcSrc.x<6*75 && copy_ennemis->info.state==0){
+	  copy_ennemis->info.rcSrc.x+=75;
+	}else{
+	  if (copy_ennemis->info.rcSrc.x<17*75 && copy_ennemis->info.state==1){
+	    copy_ennemis->info.rcSrc.x+=75;
+	  }else{
+	    copy_ennemis->info.life=-1;
+	  }
+	}	  
+      }      
+      copy_ennemis=copy_ennemis->next;
+    }
+
+  return ennemis;
+}
 
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
 {
@@ -166,9 +223,9 @@ void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite, s_information p
   }
 }
 
-void draw_ammo(s_surface sprite,int ammo, int map)
+void draw_ammo(s_surface sprite,int ammo, int map, s_information player)
 { 
-  if (map!=0){
+  if (map!=0 && player.life>0){
     SDL_Rect rcSrc_set,rcSrc;
     SDL_Rect position_set,position;
 
@@ -191,7 +248,7 @@ void draw_ammo(s_surface sprite,int ammo, int map)
 
 void draw_health(s_information player,s_surface sprite,int map)
 { 
-  if (map!=0){
+  if (map!=0 && player.life>0){
     SDL_Rect rcSrc;
     SDL_Rect position;
     rcSrc.w=200;

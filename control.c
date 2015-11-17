@@ -64,6 +64,7 @@ void control(int x_max,int y_max,int tab[y_max][x_max],int map,s_information *pl
 
 s_information control_manual(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
+  if (player.life>0){
   int automatic = 0;
   /* animation */
   player = anim_right(x_max,y_max,tab,player,automatic);  
@@ -75,7 +76,7 @@ s_information control_manual(int x_max, int y_max, int tab[y_max][x_max], s_info
   player = move_right(x_max,y_max,tab,player,automatic);
   player = move_left(x_max,y_max,tab,player,automatic);
   player = move_jump(x_max,y_max,tab,player);
-
+  }
   return player;
 }
 
@@ -126,7 +127,7 @@ list_ptr shooting(s_information player,list_ptr shots, int *ammo,int energy,s_ti
   Uint8 *keystate = SDL_GetKeyState(NULL);
   s_time time = *time_p; 
 
-  if (keystate[SDLK_SPACE] && *ammo<=60 && *ammo>0 && (time.previous_time >= time.current+200 || time.previous_time<=time.current-200)) {
+  if (keystate[SDLK_SPACE] && player.life>0 &&  *ammo<=60 && *ammo>0 && (time.previous_time >= time.current+200 || time.previous_time<=time.current-200)) {
     s_information bullet;
     time.previous_time=time.current;
     *ammo-=energy;
