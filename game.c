@@ -54,7 +54,6 @@ s_surface load_sprite(s_surface sprite)
 s_information ini_player(s_information player) 
 {
   player.id = 0;
-  player.life=5;
   player.rcSrc.x = 0;
   player.rcSrc.y = 0;
   player.rcSrc.w = 75;
@@ -63,6 +62,7 @@ s_information ini_player(s_information player)
   player.position.x = -75;
   player.position.y = 400-50-75;
   player.jump = 0;
+  player.dying=0;
   player.state = 0;
   player.movement = player.position.x+13;
 
@@ -173,7 +173,7 @@ list_ptr list_element_delete(list_ptr list)
   }
   list_ptr copy_list=list;
   list_ptr tmp= (list_ptr) malloc(sizeof(struct s_node));
-  if (copy_list->info.life==0 || copy_list->info.position.y>450){
+  if (copy_list->info.life==-1 || copy_list->info.position.y>450){
     if (copy_list->next==NULL){
       tmp=copy_list;
       return NULL;
@@ -184,7 +184,7 @@ list_ptr list_element_delete(list_ptr list)
   }else{
     while (copy_list!=NULL && copy_list->next!=NULL)
       {
-	if (copy_list->next->info.life==0 || copy_list->next->info.position.y>450)
+	if (copy_list->next->info.life==-1 || copy_list->next->info.position.y>450)
 	  {	  
 	    tmp=copy_list->next;
 	    copy_list->next=copy_list->next->next;
@@ -281,29 +281,31 @@ void ennemies_moves(list_ptr ennemi, s_information player,int x_max,int y_max,in
   list_ptr copy_ennemi=ennemi;
 
   while (copy_ennemi!=NULL){
-    if (player.position.y==copy_ennemi->info.position.y)
+    if (copy_ennemi->info.life>0){
+      if (player.position.y==copy_ennemi->info.position.y)
 	limit=copy_ennemi->info.limit;
       else
 	limit=0;
-    copy_ennemi->info.rcSrc.y=0;
-    if (tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+10)/50]==1 || tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+40)/50]==1){
-      if (copy_ennemi->info.state==0){
-	copy_ennemi->info.movement+=5;
-	copy_ennemi->info.state=0;
-      } else{
-	copy_ennemi->info.movement-=5;
-	copy_ennemi->info.state=1;
-      }
-    }else{
-      if (player.movement>=copy_ennemi->info.movement){
-	copy_ennemi->info.state=0;
-	if (player.movement-limit>copy_ennemi->info.movement)
+      copy_ennemi->info.rcSrc.y=0;
+      if (tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+10)/50]==1 || tab[(copy_ennemi->info.position.y+80)/50][(copy_ennemi->info.movement+40)/50]==1){
+	if (copy_ennemi->info.state==0){
 	  copy_ennemi->info.movement+=5;
-      }else{
-	if (player.movement<=copy_ennemi->info.movement){
+	  copy_ennemi->info.state=0;
+	} else{
+	  copy_ennemi->info.movement-=5;
 	  copy_ennemi->info.state=1;
-	  if (player.movement+limit<copy_ennemi->info.movement)
-	    copy_ennemi->info.movement-=5;
+	}
+      }else{
+	if (player.movement>=copy_ennemi->info.movement){
+	  copy_ennemi->info.state=0;
+	  if (player.movement-limit>copy_ennemi->info.movement)
+	    copy_ennemi->info.movement+=5;
+	}else{
+	  if (player.movement<=copy_ennemi->info.movement){
+	    copy_ennemi->info.state=1;
+	    if (player.movement+limit<copy_ennemi->info.movement)
+	      copy_ennemi->info.movement-=5;
+	  }
 	}
       }
     }
@@ -364,7 +366,7 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
       limit=copy_ennemis->info.limit;
     else
       limit=0;
-    if (copy_ennemis->info.position.y==player.position.y && time.previous_time_ennemi_hit<=time.current-1200){
+    if (copy_ennemis->info.position.y==player.position.y && time.previous_time_ennemi_hit<=time.current-1200 && copy_ennemis->info.life>0){
       time_p->previous_time_ennemi_hit=time_p->current;
       bullet.life=1;
       bullet.rcSrc.y = 0;
@@ -380,7 +382,6 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
 	bullet.state=0;
 	army_shots=list_cons(army_shots,bullet);
       }
-    
       if (copy_ennemis->info.movement - distance_wall_left(x_max,y_max,tab,ennemis->info)<player.movement +2
 	  && player.movement+limit>=copy_ennemis->info.movement
 	  && copy_ennemis->info.state==1){
@@ -396,12 +397,44 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
   return army_shots;
 }
 
+list_ptr ennemis_death(list_ptr ennemis)
+{
+  list_ptr copy_ennemis=ennemis;
+  int a =0;
+  while (copy_ennemis!=NULL)
+    {
+      if (copy_ennemis->info.life==0){
+	copy_ennemis->info.rcSrc.y=75;
+	if (copy_ennemis->info.dying==0){
+	  if (copy_ennemis->info.state==0){
+	    copy_ennemis->info.rcSrc.x=3*75;
+	  }else{
+	    copy_ennemis->info.rcSrc.x=15*75;
+	  }
+	}
+	copy_ennemis->info.dying=1;
+	if (copy_ennemis->info.rcSrc.x<6*75 && copy_ennemis->info.state==0){
+	  copy_ennemis->info.rcSrc.x+=75;
+	}else{
+	  if (copy_ennemis->info.rcSrc.x<17*75 && copy_ennemis->info.state==1){
+	    copy_ennemis->info.rcSrc.x+=75;
+	  }else{
+	    copy_ennemis->info.life=-1;
+	  }
+	}	  
+      }      
+      copy_ennemis=copy_ennemis->next;
+    }
+
+  return ennemis;
+}
+
 list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
 {
   list_ptr shots_list=shots;
   while(shots_list!=NULL){
     if(tab[shots_list->info.position.y/50][(shots_list->info.movement+25)/50]==-1 || tab[shots_list->info.position.y/50][(shots_list->info.movement-25)/50]==-1){
-	shots_list->info.life=0;
+	shots_list->info.life=-1;
       }
     shots_list=shots_list->next;
   }

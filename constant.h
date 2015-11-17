@@ -25,6 +25,7 @@ struct s_information
   int state;
   int jump;
   int movement;
+  int dying;
 };
 typedef struct s_information s_information;
 

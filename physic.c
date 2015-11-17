@@ -148,15 +148,15 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi,int *score,int le
     while (copy_copy_ennemi != NULL) {
       if (collision_AABB(copy_copy_shots->info,copy_copy_ennemi->info)){
 	*score=scoring(*score,level);
-	if (copy_copy_ennemi->info.life != 0 && copy_copy_shots->info.life != 0) {
+	if (copy_copy_ennemi->info.life > 0 && copy_copy_shots->info.life != -1) {
 	  copy_copy_ennemi->info.life = 0;
-	  copy_copy_shots->info.life = 0;
+	  copy_copy_shots->info.life = -1;
 	}
       }
       copy_copy_ennemi = copy_copy_ennemi->next;
     }
     if (copy_copy_shots->info.position.x>800 || copy_copy_shots->info.position.x<=0){
-      copy_copy_shots->info.life=0;
+      copy_copy_shots->info.life=-1;
     }
     copy_copy_shots = copy_copy_shots->next;   
   }
@@ -178,7 +178,7 @@ list_ptr collision_bullet_player(list_ptr army_shots, s_information * player, s_
     while (copy_shots != NULL){
       if(collision_AABB(copy_shots->info,*player)){
 	player->life=(player->life)-1;
-	copy_shots->info.life=0;
+	copy_shots->info.life=-1;
 	time_p->previous_time_hit=time_p->current;
       }
       copy_shots=copy_shots->next;

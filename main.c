@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
     army_shots = collision_bullet_player(army_shots,&player,&time);
 
     army_shots = ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
-
+    ennemi=ennemis_death(ennemi);
 
     /****************************************************************************************************/
     /* DRAW */

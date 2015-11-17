@@ -80,36 +80,38 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,
 {
   list_ptr copy_ennemi=ennemis;
   if (copy_ennemi!=NULL)
-  while (copy_ennemi!=NULL){
-    int limit;
-    copy_ennemi->info.rcSrc.y=0;
-    if (player.position.y==copy_ennemi->info.position.y)
-      limit=copy_ennemi->info.limit;
-    else
-      limit=0;
-    if (copy_ennemi->info.state==0){
-      if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
-	copy_ennemi->info.rcSrc.x+=75;
-      else
-	copy_ennemi->info.rcSrc.x=2*75;
-    }else{
-      if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
-	copy_ennemi->info.rcSrc.x+=75;
-      else
-	copy_ennemi->info.rcSrc.x=12*75;
+    while (copy_ennemi!=NULL){
+      int limit;
+      copy_ennemi->info.rcSrc.y=0;
+      if (copy_ennemi->info.life>0){
+	if (player.position.y==copy_ennemi->info.position.y)
+	  limit=copy_ennemi->info.limit;
+	else
+	  limit=0;
+	if (copy_ennemi->info.state==0){
+	  if (copy_ennemi->info.rcSrc.x>=2*75 && copy_ennemi->info.rcSrc.x<10*75 )
+	    copy_ennemi->info.rcSrc.x+=75;
+	  else
+	    copy_ennemi->info.rcSrc.x=2*75;
+	}else{
+	  if (copy_ennemi->info.rcSrc.x>=12*75 && copy_ennemi->info.rcSrc.x<20*75 )
+	    copy_ennemi->info.rcSrc.x+=75;
+	  else
+	    copy_ennemi->info.rcSrc.x=12*75;
+	}
+	if (player.movement>=copy_ennemi->info.movement &&  player.movement-limit<=copy_ennemi->info.movement ){
+	  copy_ennemi->info.rcSrc.x=0;
+	  if (player.position.y==copy_ennemi->info.position.y)
+	    copy_ennemi->info.rcSrc.y=75;
+	}
+	if (player.movement<=copy_ennemi->info.movement &&  player.movement+limit>=copy_ennemi->info.movement){
+	  copy_ennemi->info.rcSrc.x=11*75;
+	  if (player.position.y==copy_ennemi->info.position.y)
+	    copy_ennemi->info.rcSrc.y=75;
+	}
+      }
+      copy_ennemi=copy_ennemi->next;
     }
-    if (player.movement>=copy_ennemi->info.movement &&  player.movement-limit<=copy_ennemi->info.movement ){
-      copy_ennemi->info.rcSrc.x=0;
-      if (player.position.y==copy_ennemi->info.position.y)
-	copy_ennemi->info.rcSrc.y=75;
-    }
-    if (player.movement<=copy_ennemi->info.movement &&  player.movement+limit>=copy_ennemi->info.movement){
-      copy_ennemi->info.rcSrc.x=11*75;
-      if (player.position.y==copy_ennemi->info.position.y)
-	copy_ennemi->info.rcSrc.y=75;
-    }
-    copy_ennemi=copy_ennemi->next;
-  }
   return ennemis;
 
 }
