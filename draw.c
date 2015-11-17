@@ -246,11 +246,11 @@ void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map)
 /****************************************************************************************************/
 /* ANIM */
 
-s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
+s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
-  if (keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) {
+  if ((keystate[SDLK_RIGHT] && !keystate[SDLK_LEFT]) || automatic) {
     /* AU SOL */
     if (distance_of_floor(x_max,y_max,tab,player) == 0) {
       player.rcSrc.y=0;
@@ -274,11 +274,11 @@ s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
   return player;
 }
 
-s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player) 
+s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic) 
 {
   Uint8 *keystate = SDL_GetKeyState(NULL);
 
-  if (keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]){
+  if ((keystate[SDLK_LEFT] && !keystate[SDLK_RIGHT]) || automatic){
     /* AU SOL */
     if (distance_of_floor(x_max,y_max,tab,player) == 0) {
       /* direction droite ou au bout des sprites */

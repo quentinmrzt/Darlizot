@@ -29,8 +29,8 @@ void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map);
 /****************************************************************************************************/
 /* ANIM */
 
-s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player);
-s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player);
+s_information anim_right(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic);
+s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_information player, int automatic);
 s_information anim_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 s_information anim_shoot(int x_max, int y_max, int tab[y_max][x_max], s_information player);
 

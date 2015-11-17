@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map;
+  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map, choice, pos_choice;
   s_information player;
   s_surface sprite;
   s_time time;
@@ -59,14 +59,31 @@ int main(int argc, char* argv[])
   close = 0;
   level = 0;
   nb_ennemi_spawn=0;
-
+  choice = 1;
   while (!close) {
     time.current = SDL_GetTicks();
 
     /****************************************************************************************************/
     /* KEYBOARD AND MOUSE */
     close = quit(close);
-    player = control(x_max,y_max,tab,player);
+
+    if (map == 0 && player.movement < x_max*50/2 && choice == 0) {
+      player = control_auto(x_max,y_max,tab,player,x_max*50/2);
+    } else if (map == 0 && choice == 1) {
+      // 1: on commence le jeu
+      player = control_auto(x_max,y_max,tab,player,x_max*50);
+    } else if (map != 0 && player.movement < 50) {
+      player = control_auto(x_max,y_max,tab,player,50);
+    } else if (map != 0 && player.movement >= (x_max-1)*50) {
+      player = control_auto(x_max,y_max,tab,player,x_max*50);
+    } else {
+      player = control(x_max,y_max,tab,player);
+    }
+
+    if (map == 0 && choice == 0) {
+      //pos_choice = control_menu();
+    }
+
     shots = shooting(player,shots,&ammo,energy,&time);
     a_and_z(x_max,y_max,tab,player);
     ennemi = killing(ennemi);
