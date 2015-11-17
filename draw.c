@@ -313,7 +313,7 @@ void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_time time, int map)
   }
 }
 
-void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map) 
+void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map, int score) 
 {
   char sentence[20] = "";
   SDL_Rect position;
@@ -321,7 +321,7 @@ void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map)
   SDL_Surface *text;
 
   if (map >= 2) { 
-    sprintf(sentence, "Level: %d",level);
+    sprintf(sentence, "Level: %d    Score: %d",level,score);
   
     text = TTF_RenderText_Blended(font, sentence, black_color);
     position.x = 400-text->w/2;

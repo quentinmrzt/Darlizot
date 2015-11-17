@@ -24,7 +24,7 @@ void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite,s_information pl
 void draw_health(s_information player,s_surface sprite, int map);
 void draw_ammo(s_surface sprite,int ammo, int map,s_information player);
 void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_time chrono, int map);
-void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map);
+void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map, int score);
 void draw_menu(s_surface sprite, s_time time);
 void draw_outline(s_surface sprite, int choice);
 

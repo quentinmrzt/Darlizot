@@ -101,7 +101,7 @@ int main(int argc, char* argv[])
     draw_ammo(sprite,ammo,map,player);
     draw_health(player,sprite,map);
     draw_chrono(sprite.screen,font,time,map);
-    draw_level(sprite.screen,font,level,map);
+    draw_level(sprite.screen,font,level,map,score);
     ennemies_moves(ennemi,player,x_max,y_max,tab);
     anim_ennemis(ennemi,player,x_max,y_max,tab);
 
