@@ -95,12 +95,14 @@ s_time ini_time(s_time time)
   return time;
 }
 
-s_time duration_chrono(s_information player,s_time time ,int x_max,int y_max,int tab[y_max][x_max]) 
+s_time duration_chrono(s_information player,s_time time ,int x_max,int y_max,int tab[y_max][x_max],int map) 
 {  
   // DEBUT DU CHRONO
   if (player.movement/50 == x_max-2 && time.level == 0) {
     time.level = time.current;
-    tab[y_max-2][x_max-2]=3;
+    if (map!=0 && map!=1){
+      tab[y_max-2][x_max-2]=3;
+    }
   }
   // DEFILER DU CHRONO
   if (time.level != 0 && time.chrono >= 0) {
