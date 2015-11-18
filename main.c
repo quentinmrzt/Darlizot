@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map, choice, action, score=0;
+  int close, x_max, y_max, level, ammo=60, energy=10, load=0, nb_ennemi_spawn, map, previous_map, choice, action, score=0;
   s_information player;
   s_surface sprite;
   s_time time;
