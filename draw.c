@@ -385,6 +385,67 @@ void draw_outline(s_surface sprite, int choice)
   SDL_BlitSurface(sprite.outline, &pos_sprite, sprite.screen, &pos_screen);
 }
 
+void draw_dead(s_surface sprite, int tab_end[400/50][800/50]) 
+{
+  SDL_Rect pos_sprite, pos_screen;
+  int x,y,good;
+  good = 0;
+
+  pos_sprite.x = 0;
+  pos_sprite.y = 0;
+  pos_sprite.w = 50;
+  pos_sprite.h = 50;
+
+  pos_screen.x = 0;
+  pos_screen.y = 0;
+
+  for (y=0 ; y<400/50 ; y++) {
+    for (x=0 ; x<800/50 ; x++) {
+      pos_screen.x = x*50;
+      pos_screen.y = y*50;
+      if (tab_end[y][x] == 0) {
+	SDL_BlitSurface(sprite.black, &pos_sprite, sprite.screen, &pos_screen);
+      }
+    }
+  }
+}
+
+void draw_result(s_surface sprite, int score, s_time time)
+{
+  SDL_Color white_color = {255,255,255,0};
+  SDL_Surface *text;
+  TTF_Font *font = TTF_OpenFont("pixelmix.ttf", 30);
+  SDL_Rect pos_screen;
+  char sentence[40] = "";
+  int level = 0;
+
+  text = TTF_RenderText_Blended(font, "Resultat", white_color);
+  pos_screen.x = 800/2 - text->w/2;
+  pos_screen.y = 400/5-35 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
+
+  TTF_CloseFont(font);
+
+  font = TTF_OpenFont("pixelmix.ttf", 20);
+
+  sprintf(sentence, "Niveau atteint: %d   Score: %d",level,score); 
+  text = TTF_RenderText_Blended(font, sentence, white_color);
+  pos_screen.x = 800/2 - text->w/2;
+  pos_screen.y = 400/5*2-35 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
+
+
+  sprintf(sentence, "Temps: %d",time.current); 
+  text = TTF_RenderText_Blended(font, sentence, white_color);
+  pos_screen.x = 800/2 - text->w/2;
+  pos_screen.y = 400/5*3-35 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
+
+
+  TTF_CloseFont(font);
+  SDL_FreeSurface(text);
+} 
+
 /****************************************************************************************************/
 /* ANIM */
 

@@ -50,7 +50,9 @@ int nb_map(void);
 void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map);
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time, int map);
 void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time, int map);
-
+int nb_zero(int tab_end[400/50][800/50]);
+void put_zero(int tab_end[400/50][800/50],int nb);
+void all_one(int tab_end[400/50][800/50]);
 
 /****************************************************************************************************/
 /* SCORING */

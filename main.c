@@ -88,7 +88,8 @@ int main(int argc, char* argv[])
     army_shots = collision_bullet_player(army_shots,&player,&time);
     army_shots = ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
     ennemi=ennemis_death(ennemi);
-    player=death(player);
+    player = death(player);
+    printf("%d\n",player.dying);
 
     /****************************************************************************************************/
     /* DRAW */
@@ -125,9 +126,30 @@ int main(int argc, char* argv[])
       change_lvl(&player, &time, &shots, &ennemi, &army_shots, &load, &level, &x_max, &y_max, map, tab);
     }
 
+    if (player.life <= 0) {
+      close = 1;
+    }
+
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     /* ~ 12,5 fps */
     SDL_Delay(60);
+  }
+
+
+  /***** MORT *****/
+  int tab_end[400/50][800/50];
+  all_one(tab_end);
+
+  int end = 0;
+  while (end != 1) {
+    end = quit(end);
+    put_zero(tab_end,3);
+    draw_dead(sprite,tab_end);
+    if (nb_zero(tab_end) == (800/50)*(400/50)) {
+      draw_result(sprite,score,time);
+    }  
+    SDL_UpdateRect(sprite.screen,0,0,0,0);
+    SDL_Delay(60);    
   }
 
   /****************************************************************************************************/

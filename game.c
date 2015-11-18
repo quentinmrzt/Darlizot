@@ -50,15 +50,14 @@ s_surface load_sprite(s_surface sprite)
   name[14] = '1';
   name[15] = '0';
   sprite.outline = load(sprite.outline, name, sprite.screen);
-  name[14] = '1';
   name[15] = '1';
   sprite.locked = load(sprite.locked, name, sprite.screen);
-  name[14] = '1';
   name[15] = '2';
   sprite.download = load(sprite.download, name, sprite.screen);
-  name[14] = '1';
   name[15] = '3';
   sprite.unlocked = load(sprite.unlocked, name, sprite.screen);
+  name[15] = '4';
+  sprite.black = load(sprite.black, name, sprite.screen);
   return sprite;
 }
 
@@ -628,6 +627,47 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
   if (map == 0 && player.movement <= 50) {
     tab[5][0] = 0;
     tab[6][0] = 0;
+  }
+}
+
+int nb_zero(int tab_end[400/50][800/50])
+{
+  int x,y,zero;
+
+  zero = 0;
+  for (y=0 ; y<400/50 ; y++) {
+    for (x=0 ; x<800/50 ; x++) {
+      if (tab_end[y][x] == 0) {
+	zero++;
+      }
+    }
+  }
+  return zero;
+}
+
+void put_zero(int tab_end[400/50][800/50],int nb)
+{
+  int zero = 0;
+  int x,y;
+
+  while (zero <= nb && nb_zero(tab_end) != (800/50)*(400/50)) {
+    x = rand()%(800/50);
+    y = rand()%(400/50);
+
+    if (tab_end[y][x] != 0) {
+      tab_end[y][x] = 0;
+      zero++; ;
+    }
+  }
+}
+
+void all_one(int tab_end[400/50][800/50])
+{
+  int x,y;
+  for (y=0 ; y<400/50 ; y++) {
+    for (x=0 ; x<800/50 ; x++) {
+      tab_end[y][x] = 1;
+    }
   }
 }
 

@@ -52,6 +52,7 @@ struct s_surface
   SDL_Surface *locked;
   SDL_Surface *download;
   SDL_Surface *unlocked;
+  SDL_Surface *black;
 };
 typedef struct s_surface s_surface;
 
@@ -66,6 +67,8 @@ struct s_time
   int chrono;
   int time_max;
   int menu;
+  int birth;
+  int dead;
 };
 typedef struct s_time s_time;
 
