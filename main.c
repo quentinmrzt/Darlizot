@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
     end = quit(end);
     put_zero(tab_end,3);
     draw_dead(sprite,tab_end);
-    if (nb_zero(tab_end) == (800/50)*(400/50) /*&& player.life <= 0*/) {
+    if (nb_zero(tab_end) == (800/50)*(400/50) && player.life <= 0) {
       draw_result(sprite,score,time,level);
     }  
     SDL_UpdateRect(sprite.screen,0,0,0,0);
