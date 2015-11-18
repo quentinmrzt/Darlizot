@@ -59,7 +59,7 @@ void control(int x_max,int y_max,int tab[y_max][x_max],int map,s_information *pl
       // control normal
       player = control_manual(x_max,y_max,tab,player);
     }
-    shots = shooting(player,shots,ammo_ptr,energy,time_ptr);
+    shots = shooting(player,shots,ammo_ptr,energy,&time);
   }
 
   *player_ptr = player;
