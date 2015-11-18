@@ -472,7 +472,6 @@ void draw_ranking(s_surface sprite)
 
   text = TTF_RenderText_Blended(font, "Classement", white_color);
   position.x = 800/2 - text->w/2;
-  printf("%d %d\n",text->w,position.x);
   position.y = 400/5-35 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
   SDL_FreeSurface(text);
