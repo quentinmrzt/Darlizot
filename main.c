@@ -146,6 +146,10 @@ int main(int argc, char* argv[])
 
   /****************************************************************************************************/
   /* CLEAN */
+  
+  free_list(&shots);
+  free_list(&ennemi);
+  free_list(&army_shots);
 
   free_all_sprite(sprite);
   TTF_CloseFont(font);
