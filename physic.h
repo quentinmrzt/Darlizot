@@ -18,4 +18,5 @@ void ennemi_gravity(int x_max, int y_max, int tab[y_max][x_max], list_ptr ennemi
 int collision_AABB (s_information obj1, s_information obj2);
 void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi,int *score, int level);
 list_ptr collision_bullet_player(list_ptr army_shots, s_information * player, s_time * time_p);
+list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max]);
 #endif

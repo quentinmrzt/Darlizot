@@ -26,7 +26,6 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
   modulo = 0;
 
   if (player.movement > 800/2 && player.movement < x_max*50 - 800/2) {
-    // camera bouge: début d'affichage selon la pos du player
     map_x = player.movement/50-(800/50)/2;
     modulo = player.movement%50;
   } else if (player.movement <= 800/2) {
@@ -50,7 +49,6 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
 
 void draw_player(s_information player,s_surface sprite,s_time* time_p,int map)
 {
-  // tampon car BlitSurface remet a 0 si nega
   SDL_Rect position = player.position;
   if(player.life>=0) {
     if (time_p->current-time_p->previous_time_hit<2500 && map!=0 && player.life>0){
@@ -68,19 +66,15 @@ void draw_element(int x_max, int y_max, int tab[y_max][x_max], int x, int y, s_s
   if (tab[y][x] == 0) {
     SDL_BlitSurface(sprite.background, &pos_sprite, sprite.screen, &pos_screen);
   }
-  
   if (tab[y][x] == -1) {
     SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
   } 
-
   if (tab[y][x] == 1) {
     SDL_BlitSurface(sprite.platform, &pos_sprite, sprite.screen, &pos_screen);
   } 
-
   if (tab[y][x] == 2) {
     SDL_BlitSurface(sprite.locked, &pos_sprite, sprite.screen, &pos_screen);
   } 
-
   if (tab[y][x] == 3) {
     SDL_BlitSurface(sprite.download, &pos_sprite, sprite.screen, &pos_screen);
   } 
@@ -208,7 +202,6 @@ void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite, s_information p
     }else{
       copy_shots->info.movement-=24;
     }
-    
     if (copy_shots->info.movement<=0 || copy_shots->info.movement>x_max*50)
       copy_shots->info.life=-1;
     pos.y=copy_shots->info.position.y;
@@ -297,9 +290,7 @@ void draw_chrono(SDL_Surface *screen, TTF_Font *font, s_time time, int map)
     if (time.chrono < 0) {
       time.chrono = 0;
     }
-    
     sprintf(sentence, "Time: %d.%d",time.chrono/1000,(time.chrono%1000)/10);
-    
     text = TTF_RenderText_Blended(font, sentence, black_color);
     position.x = 400-text->w/2;
     position.y = 35;
@@ -314,10 +305,8 @@ void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map, int sco
   SDL_Rect position;
   SDL_Color black_color = {0,0,0,0};
   SDL_Surface *text;
-
   if (map >= 2) { 
     sprintf(sentence, "Level: %d    Score: %d",level,score);
-  
     text = TTF_RenderText_Blended(font, sentence, black_color);
     position.x = 400-text->w/2;
     position.y = 10;
@@ -556,11 +545,7 @@ s_information anim_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 s_information anim_jump(int x_max, int y_max, int tab[y_max][x_max], s_information player)
 {
   Uint8 *keystate= SDL_GetKeyState(NULL);
-  /* JUMP */ 
-  /* si EN SAUT  */
   if (player.jump > 0) {
-    //deuxieme ligne de sprite 
-    
     if (!keystate[SDLK_SPACE]){
       player.rcSrc.y=75;
       if (player.state==0) {
@@ -570,7 +555,6 @@ s_information anim_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
       }
     }
   }
-  /* si PAS DE SAUT mais PAS AU SOL */
   if (player.jump == 0 && distance_of_floor(x_max,y_max,tab,player) != 0) {
     if (!keystate[SDLK_SPACE]){
       player.rcSrc.y = 75;

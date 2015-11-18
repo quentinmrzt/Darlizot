@@ -28,7 +28,6 @@ SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen)
 
 s_surface load_sprite(s_surface sprite) 
 {
-  /* load sprite */
   char name[] = "sprite/sprite_01.bmp";
   sprite.player = load(sprite.player, name, sprite.screen);
   name[15] = '2';
@@ -106,14 +105,12 @@ s_time ini_time(s_time time, int map)
 
 s_time duration_chrono(s_information player,s_time time ,int x_max,int y_max,int tab[y_max][x_max],int map) 
 {  
-  // DEBUT DU CHRONO
   if (player.movement/50 == x_max-2 && time.level == 0) {
     time.level = time.current;
     if (map!=0 && map!=1){
       tab[y_max-2][x_max-2]=3;
     }
   }
-  // DEFILER DU CHRONO
   if (time.level != 0 && time.chrono >= 0) {
     time.chrono = time.time_max - time.current + time.level;
   }
@@ -125,8 +122,6 @@ void change_map(int *map_ptr, int *previous_map_ptr)
 {
   int map = *map_ptr;
   int previous_map = *previous_map_ptr;
-
-  /* choix de la map */
   if (previous_map == 0 && map == 0) {
     map = 2;
   } else if (map == 1) {
@@ -157,7 +152,6 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
   free_list(army_shots_ptr);
     
   *load_ptr = 0;
-  /* lvl up */
   if (map > 1) {
     *level = *level+1;
   }
@@ -176,7 +170,6 @@ void set_menu(int map,int *action_ptr,int *choice_ptr,s_information *player_ptr,
 
   if (map == 0) {
     if (*action_ptr == 0 || *action_ptr == 2) {
-      // LANCEMENT
       if (player.movement < x_max*50/2-10) {
 	player = control_auto(x_max,y_max,tab,player,(x_max*50)/2-(x_max*50/2)%2);
       } else {
@@ -184,13 +177,8 @@ void set_menu(int map,int *action_ptr,int *choice_ptr,s_information *player_ptr,
 	time = control_menu(x_max,choice_ptr,action_ptr,time);
       }
     } else if (*action_ptr == 1) {
-      // JOUER
       player = control_auto(x_max,y_max,tab,player,x_max*50);
-    } else if (*action_ptr == 2) {
-      // RIEN
-      //*action_ptr = 0;
     } else {
-      // QUITTER
       player = control_auto(x_max,y_max,tab,player,0);
     }
   }
@@ -205,11 +193,8 @@ void set_menu(int map,int *action_ptr,int *choice_ptr,s_information *player_ptr,
 list_ptr list_cons(list_ptr list, s_information information) 
 {
   list_ptr new = NULL;
-  /* dynamic allocation */
   new = (list_ptr) malloc(sizeof(struct s_node));
-
   new->info = information;
-
   new->next = list;
   return new;
 }
@@ -304,12 +289,11 @@ list_ptr respawn(list_ptr ennemi,int *level, s_information player,s_time *time_p
 	  return new_ennemi;
 	}else{
 	  *load=0;
-	  //*level=*level+1;
 	  *nb_ennemi_spawn=0;
 	}
       }
     }else{
-      if(ennemi==NULL /*&& time.chrono > 0*/) {
+      if(ennemi==NULL) {
 	*load=1;
       }
     }
@@ -387,8 +371,6 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
   if (ennemi.jump > 0) {
     ennemi.jump -= 1;
   }
-
-  /* si SAUT et AU SOL */
   if (player.movement>ennemi.movement){
     if (distance_wall_right(x_max,y_max,tab,ennemi)<=10 && distance_down == 0 && player.movement!=ennemi.movement) { 
       ennemi.jump = 7;
@@ -398,7 +380,6 @@ s_information jump(int x_max,int y_max,int tab[y_max][x_max],s_information ennem
       ennemi.jump = 7;
     } 
   }
-
   return ennemi;
 }
 
@@ -445,28 +426,13 @@ list_ptr ennemis_shots(list_ptr ennemis,list_ptr army_shots, s_information playe
   return army_shots;
 }
 
-
-list_ptr wall_bang(list_ptr shots,int x_max,int y_max,int tab[y_max][x_max])
-{
-  list_ptr shots_list=shots;
-  while(shots_list!=NULL){
-    if(tab[shots_list->info.position.y/50][(shots_list->info.movement+25)/50]==-1 || tab[shots_list->info.position.y/50][(shots_list->info.movement-25)/50]==-1){
-	shots_list->info.life=-1;
-      }
-    shots_list=shots_list->next;
-  }
-  return shots;
-}
-
 list_ptr kill_all(list_ptr ennemis)
 {
   list_ptr copy_ennemis=ennemis;
-
   while (copy_ennemis!=NULL) {
     free(ennemis);
     copy_ennemis = copy_ennemis->next;
   }
-
   return ennemis;
 }
 
@@ -492,19 +458,14 @@ void size_tab(int *x_ptr, int *y_ptr, int map)
   /* mode read */
   recuperation = fopen(name, "r");
 
-  if (recuperation != NULL) {
-
-    // on se met au début 
+  if (recuperation != NULL) { 
     rewind(recuperation);
 
     while (number != 148) {
       fscanf(recuperation, "%d",&number);
-
-      // pour les y 
       if (number == 147) {
 	*y_ptr = *y_ptr+1;
       }
-      // pour les x
       if (number == 147) {
 	if (x > *x_ptr) {
 	  *x_ptr = x;
@@ -534,7 +495,6 @@ int nb_map(void)
       fin = 1;
     }
   }
-
   return compteur;
 }
 
@@ -556,15 +516,12 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map)
 
   if (recuperation != NULL) {
 
-    /* on se met au début */
     rewind(recuperation);
 
     y = 0;
     while (y < y_max && number != 148) {
       x = 0;
       number = 0;
-
-      /* x < taille du tableau ET pas retour */
       while (x < x_max && number != 147) {
 	fscanf(recuperation, "%d", &number);
 	if (number != 147 && number != 148) {
@@ -576,8 +533,6 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map)
       if (x < x_max) {
 	printf("on rentre\n");
       }
-
-      /* tab < map: on va jusqu'à la fin de la ligne */
       while (number != 147 && number != 148) {
 	fscanf(recuperation, "%d", &number);
       }
@@ -590,13 +545,11 @@ void recup_map(int x_max, int y_max, int tab[y_max][x_max], int map)
 void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information player, int load, s_time time, int map)
 {
   if ((load == 0 && time.previous_time_ennemi+1000 <= time.current && player.movement >=49) || map <= 1) {
-    // pas de chargement: on ferme la porte
     tab[1][0] = -1;
     tab[1][x_max-1] = -1;
     tab[2][0] = -1;
     tab[2][x_max-1] = -1;
   } else {
-    // chargement: on ouvre la porte
     tab[1][0] = 0;
     tab[1][x_max-1] = 0;
     tab[2][0] = 0;
@@ -606,8 +559,6 @@ void door_ennemy(int x_max, int y_max, int tab[y_max][x_max], s_information play
 
 void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information player, s_time time, int map)
 {
-  // le joueur s'écarte: on ferme la porte de gauche
-
   if (player.movement >= 50) {
     tab[5][0] = -1;
     tab[6][0] = -1;
@@ -615,8 +566,6 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
     tab[5][0] = 0;
     tab[6][0] = 0;
   }
-  
-  // fin du chrono: on ouvre la porte de droite
   if (time.chrono <= 0) {
     tab[5][x_max-1] = 0;
     tab[6][x_max-1] = 0;
@@ -627,8 +576,6 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
     tab[5][x_max-1] = -1;
     tab[6][x_max-1] = -1;
   }
-
-  // cas pour le menu
   if (map == 0 && player.movement <= 50) {
     tab[5][0] = 0;
     tab[6][0] = 0;
@@ -727,9 +674,6 @@ void free_list(list_ptr *list)
 }
 
 /********************************************************************************************************************/
-
-
-
 void recuperation(int ranking[]) 
 {
   FILE* recuperation;

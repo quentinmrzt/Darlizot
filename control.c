@@ -215,13 +215,11 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 
       modulo = 20-player.movement%20;
       distance = distance_wall_right(x_max,y_max,tab,player);
-      // gere le decalage de 10px pour map impair 
       if (x_max%2 != 0 && player.movement == x_max*50-800/2-10) {
 	player.position.x += 10;
 	player.movement += 20;
       } else {
 	if (player.movement >= 800/2 && player.movement < (x_max*50)-(800/2)) {
-	  // on avance dans la map
 	  if (distance >= 20 && modulo == 0) {   
 	    player.movement += 20;
 	  } else if (distance > modulo && modulo != 0) {
@@ -230,7 +228,6 @@ s_information move_right(int x_max, int y_max, int tab[y_max][x_max], s_informat
 	    player.movement += distance;
 	  }
 	} else {
-	  // on avance dans la map + l'écran
 	  if ((distance >= 20 && modulo == 0) || player.movement < 0 || player.movement >= x_max*50-75+13*2) {   
 	    player.position.x += 20;
 	    player.movement += 20;
@@ -262,13 +259,11 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 
       modulo = player.movement%20;
       distance = distance_wall_left(x_max,y_max,tab,player);
-      // gere le decalage de 10px pour map impair 
       if (x_max%2 != 0 && player.movement == x_max*50-800/2+10) {
 	player.position.x -= 10;
 	player.movement -= 20;
       } else {
 	if (player.movement > 800/2 && player.movement <= (x_max*50)-(800/2)) {
-	  // on avance dans la map + l'écran
 	  if (distance >= 20 && modulo == 0) {   
 	    player.movement -= 20;
 	  } else if (distance > modulo && modulo != 0) {
@@ -277,7 +272,6 @@ s_information move_left(int x_max, int y_max, int tab[y_max][x_max], s_informati
 	    player.movement -= distance;
 	  }
 	} else {
-	  // on avance dans la map + l'écran
 	  if ((distance >= 20 && modulo == 0)) {   
 	    player.position.x -= 20;
 	    player.movement -= 20;
@@ -307,30 +301,21 @@ s_information move_jump(int x_max, int y_max, int tab[y_max][x_max], s_informati
   if (distance_up < 15) {
     player.jump = 0;
   }
-
   if (player.jump > 2) {
     player.position.y -= 15;
   }
-
   if (player.jump > 0) {
     player.jump -= 1;
   }
-
-  /* si SAUT et AU SOL */
   if (keystate[SDLK_UP] && distance_down == 0) { 
     player.jump = 7;
   } 
-
-  /* pour couper en vol */
   if (!keystate[SDLK_UP] && distance_down >= 65) {
     player.jump = 0;
   }
-
-
   if (keystate[SDLK_DOWN]) {
     player.position.y += 1;
   }
-
   return player;
 }
 
