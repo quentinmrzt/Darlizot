@@ -420,7 +420,6 @@ void draw_result(s_surface sprite, int score, s_time time, int level)
   pos_screen.x = 800/2 - text->w/2;
   pos_screen.y = 400/8*2 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
-
   pos_sprite.x = 0;
   pos_sprite.y = 48;
   pos_sprite.w = 350;
@@ -429,7 +428,7 @@ void draw_result(s_surface sprite, int score, s_time time, int level)
   pos_screen.x = pos_screen.x+(text->w/2) - pos_sprite.w/2;
   pos_screen.y = pos_screen.y - 7 + pos_sprite.h;
   SDL_BlitSurface(sprite.outline, &pos_sprite, sprite.screen, &pos_screen);
-
+  SDL_FreeSurface(text);
   TTF_CloseFont(font);
 
   font = TTF_OpenFont("pixelmix.ttf", 20);
@@ -454,9 +453,8 @@ void draw_result(s_surface sprite, int score, s_time time, int level)
   pos_screen.y = 400/7*5 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
 
-
-  TTF_CloseFont(font);
   SDL_FreeSurface(text);
+  TTF_CloseFont(font);
 } 
 
 void draw_ranking(s_surface sprite)
