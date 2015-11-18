@@ -43,15 +43,9 @@ int main(int argc, char* argv[])
   /* initialize variable */
   sprite = load_sprite(sprite);
   player = ini_player(player);
-  time = ini_time(time);
-
-  /* table */
   map = 0;
-  if (map <= 1) {
-    time.time_max = 0;
-    time.chrono = 0;
-  }
   previous_map = 0;
+  time = ini_time(time,map);
   size_tab(&x_max,&y_max,map);
   int tab[8][100];
   recup_map(x_max,y_max,tab,map);
@@ -124,8 +118,7 @@ int main(int argc, char* argv[])
     if (player.life <= 0 && time.dead == 0) {
       time.dead = time.current;
     }
-    if ((map == 0 && player.movement <= 0 && action == 3) || (time.dead+1000 < time.current && player.life<=0)) {
-      printf("test\n");
+    if ((map == 0 && player.movement <= 0 && action == 3) || (time.dead+700 < time.current && player.life<=0)) {
       close = 1;
     }
 
@@ -144,7 +137,7 @@ int main(int argc, char* argv[])
     end = quit(end);
     put_zero(tab_end,3);
     draw_dead(sprite,tab_end);
-    if (nb_zero(tab_end) == (800/50)*(400/50)) {
+    if (nb_zero(tab_end) == (800/50)*(400/50) /*&& player.life <= 0*/) {
       draw_result(sprite,score,time,level);
     }  
     SDL_UpdateRect(sprite.screen,0,0,0,0);

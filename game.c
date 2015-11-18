@@ -79,7 +79,7 @@ s_information ini_player(s_information player)
   return player;
 }
 
-s_time ini_time(s_time time)
+s_time ini_time(s_time time, int map)
 {
   time.current = 0; 
   time.previous_time = 0;
@@ -87,11 +87,19 @@ s_time ini_time(s_time time)
   time.previous_time_ennemi_hit=0;
   time.previous_time_ennemi = -1000;
   time.level = 0;
-  time.time_max = 2000;
+  time.time_max = 10000;
   time.chrono = time.time_max;
   time.menu = 0;
-  time.birth = 0;
   time.dead = 0;
+
+  if (map==0 || map==1) {
+    time.time_max = 0;
+    time.chrono = 0;
+  }
+
+  if (map == 0) {
+    time.birth = 0;
+  }
 
   return time;
 }
@@ -143,7 +151,6 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
   s_time time = *time_ptr;
 
   player = ini_player(player);
-  time = ini_time(time);
 
   free_list(ennemi_ptr);
   free_list(shots_ptr);
@@ -154,13 +161,9 @@ void change_lvl(s_information *player_ptr, s_time *time_ptr, list_ptr *shots_ptr
   if (map > 1) {
     *level = *level+1;
   }
-  /* pas de temps pour map 0/1 */
-  if (map <= 1) {
-    time.time_max = 0;
-    time.chrono = 0;
-  }
   size_tab(x_max,y_max,map);
   recup_map(*x_max,*y_max,tab,map);
+  time = ini_time(time,map);
 
   *player_ptr = player;
   *time_ptr = time;

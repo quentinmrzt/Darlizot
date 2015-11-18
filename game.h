@@ -15,7 +15,7 @@
 SDL_Surface* load(SDL_Surface *surface, char name[], SDL_Surface *screen);
 s_surface load_sprite(s_surface sprite);
 s_information ini_player(s_information player);
-s_time ini_time(s_time time);
+s_time ini_time(s_time time, int map);
 list_ptr ennemi_spawn(s_information player,list_ptr ennemi,int nb_ennemi,int x_max, int y_max,int tab[y_max][x_max]);
 s_time duration_chrono(s_information player,s_time time ,int x_max,int y_max,int tab[y_max][x_max],int map) ;
 void change_map(int *map_ptr, int *previous_map_ptr);

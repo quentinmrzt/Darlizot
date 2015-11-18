@@ -415,13 +415,22 @@ void draw_result(s_surface sprite, int score, s_time time, int level)
   SDL_Color white_color = {255,255,255,0};
   SDL_Surface *text;
   TTF_Font *font = TTF_OpenFont("pixelmix.ttf", 30);
-  SDL_Rect pos_screen;
+  SDL_Rect pos_screen,pos_sprite;
   char sentence[40] = "";
 
   text = TTF_RenderText_Blended(font, "Resultat", white_color);
   pos_screen.x = 800/2 - text->w/2;
   pos_screen.y = 400/5-35 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
+
+  pos_sprite.x = 0;
+  pos_sprite.y = 0;
+  pos_sprite.w = 350;
+  pos_sprite.h = 50;
+
+  pos_screen.x = pos_screen.x+(text->w/2) - pos_sprite.w/2;
+  pos_screen.y = pos_screen.y - 7;
+  SDL_BlitSurface(sprite.outline, &pos_sprite, sprite.screen, &pos_screen);
 
   TTF_CloseFont(font);
 
@@ -434,7 +443,7 @@ void draw_result(s_surface sprite, int score, s_time time, int level)
   SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
 
 
-  sprintf(sentence, "Temps: %d.%d",(time.dead-time.birth)/1000,(time.dead-time.birth)%1000/100); 
+  sprintf(sentence, "Temps: %d.%d sec",(time.dead-time.birth)/1000,(time.dead-time.birth)%1000/100); 
   text = TTF_RenderText_Blended(font, sentence, white_color);
   pos_screen.x = 800/2 - text->w/2;
   pos_screen.y = 400/5*3-35 - text->h/2;
