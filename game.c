@@ -87,7 +87,7 @@ s_time ini_time(s_time time, int map)
   time.previous_time_ennemi_hit=0;
   time.previous_time_ennemi = -1000;
   time.level = 0;
-  time.time_max = 10000;
+  time.time_max = 15000;
   time.chrono = time.time_max;
   time.menu = 0;
   time.dead = 0;

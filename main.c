@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
       time.dead = time.current;
       save(score);
     }
-    if ((map == 0 && player.movement <= 0 && action == 3) || (time.dead+2000 < time.current && player.life<=0)) {
+    if ((map == 0 && player.movement <= 0 && action == 3) || (time.dead+500 < time.current && player.life<=0)) {
       close = 1;
     }
 
