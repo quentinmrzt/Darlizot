@@ -175,7 +175,7 @@ void set_menu(int map,int *action_ptr,int *choice_ptr,s_information *player_ptr,
   s_time time = *time_ptr;
 
   if (map == 0) {
-    if (*action_ptr == 0) {
+    if (*action_ptr == 0 || *action_ptr == 2) {
       // LANCEMENT
       if (player.movement < x_max*50/2-10) {
 	player = control_auto(x_max,y_max,tab,player,(x_max*50)/2-(x_max*50/2)%2);
@@ -188,7 +188,7 @@ void set_menu(int map,int *action_ptr,int *choice_ptr,s_information *player_ptr,
       player = control_auto(x_max,y_max,tab,player,x_max*50);
     } else if (*action_ptr == 2) {
       // RIEN
-      *action_ptr = 0;
+      //*action_ptr = 0;
     } else {
       // QUITTER
       player = control_auto(x_max,y_max,tab,player,0);
@@ -635,33 +635,33 @@ void door_player(int x_max, int y_max, int tab[y_max][x_max], s_information play
   }
 }
 
-int nb_zero(int tab_end[400/50][800/50])
+int nb_one(int tab_end[400/50][800/50])
 {
-  int x,y,zero;
+  int x,y,one;
 
-  zero = 0;
+  one = 0;
   for (y=0 ; y<400/50 ; y++) {
     for (x=0 ; x<800/50 ; x++) {
-      if (tab_end[y][x] == 0) {
-	zero++;
+      if (tab_end[y][x] == 1) {
+	one++;
       }
     }
   }
-  return zero;
+  return one;
 }
 
 void put_zero(int tab_end[400/50][800/50],int nb)
 {
-  int zero = 0;
+  int one = 0;
   int x,y;
 
-  while (zero <= nb && nb_zero(tab_end) != (800/50)*(400/50)) {
+  while (one <= nb && nb_one(tab_end) != 0) {
     x = rand()%(800/50);
     y = rand()%(400/50);
 
     if (tab_end[y][x] != 0) {
       tab_end[y][x] = 0;
-      zero++; ;
+      one++; ;
     }
   }
 }
@@ -705,7 +705,7 @@ void free_all_sprite(s_surface sprite)
   SDL_FreeSurface(sprite.download);
   SDL_FreeSurface(sprite.unlocked);
   SDL_FreeSurface(sprite.outline);
-
+  SDL_FreeSurface(sprite.black);
 }
 
 list_ptr list_tail(list_ptr list) 
@@ -724,4 +724,90 @@ void free_list(list_ptr *list)
     *list= list_tail(*list);
     free(tmp);
   }
+}
+
+/********************************************************************************************************************/
+
+
+
+void recuperation(int ranking[]) 
+{
+  FILE* recuperation;
+  int i = 0;
+  recuperation = NULL;
+  /* mode read */
+  recuperation = fopen("data/ranking.txt", "r");
+  /* if file does not exist */
+  if (recuperation == NULL) {
+    create_ranking();
+    recuperation = fopen("data/ranking.txt", "r+");
+  }
+
+  if (recuperation != NULL) {
+    /* travel result */
+    rewind(recuperation);
+    while (i < 10) {
+      fscanf(recuperation, "%d", &ranking[i]);
+      i++;
+    }
+    fclose(recuperation);	
+  }
+}
+
+void save(int score)
+{
+  int i, over, j;
+  FILE* saving;
+  int ranking[10] = {0};
+  saving = NULL;
+  /* mode read/write */
+  saving = fopen("data/ranking.txt", "r+");
+  /* if file does not exist */
+  if (saving == NULL) {
+    create_ranking();
+    saving = fopen("data/ranking.txt", "r+");
+  }
+
+  if (saving != NULL) {
+    i = 0;
+    j = 9;
+    over = 0; 
+    /* recovery scores */
+    recuperation(ranking);
+    /* sort.. */
+    i = 0;
+    while(i < 10 && !over) {
+      if (ranking[i] < score) {
+	while (j > i) {
+	  ranking[j] = ranking[j-1];
+	  j--;
+	}
+	ranking[i] = score;
+	over = 1;
+      }
+      i++;
+    }
+    /* ..and prints */
+    if (over) {
+      i = 0;
+      rewind(saving);
+      while(i < 10) {
+	fprintf(saving,"%d\n",ranking[i]);
+	i++;
+      }
+    }
+    fclose(saving);
+  }
+}
+
+void create_ranking(void)
+{
+  FILE* ranking;
+  ranking = fopen("data/ranking.txt", "w");
+  int i = 0;
+  while(i < 10) {
+    fprintf(ranking,"0\n");
+    i++;
+  }
+  rewind(ranking);
 }

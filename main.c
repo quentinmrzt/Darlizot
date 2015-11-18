@@ -14,7 +14,7 @@
 
 int main(int argc, char* argv[])
 {
-    int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map, choice, action, score=0;
+  int close, x_max, y_max, level, ammo=60, energy=1, load=0, nb_ennemi_spawn, map, previous_map, choice, action, score=0;
   s_information player;
   s_surface sprite;
   s_time time;
@@ -64,7 +64,6 @@ int main(int argc, char* argv[])
     close = quit(close);
     set_menu(map,&action,&choice,&player,x_max,y_max,tab,&time);
     control(x_max,y_max,tab,map,&player,&shots,&time,&ammo,energy);
-    shots = shooting(player,shots,&ammo,energy,&time);
     a_and_z(x_max,y_max,tab,player);
 
     /****************************************************************************************************/
@@ -81,7 +80,7 @@ int main(int argc, char* argv[])
     door_player(x_max,y_max,tab,player,time,map);
     army_shots = collision_bullet_player(army_shots,&player,&time);
     army_shots = ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
-    ennemi=ennemis_death(ennemi);
+    ennemi = ennemis_death(ennemi);
     player = death(player);
 
     /****************************************************************************************************/
@@ -102,6 +101,8 @@ int main(int argc, char* argv[])
     if (map == 0 && action == 0 && player.movement > x_max*50/2) {
       draw_menu(sprite,time);
       draw_outline(sprite,choice);
+    } else if (map == 0 && action == 2 && player.movement > x_max*50/2) {
+      draw_ranking(sprite);
     }
 
     /****************************************************************************************************/
@@ -117,27 +118,26 @@ int main(int argc, char* argv[])
 
     if (player.life <= 0 && time.dead == 0) {
       time.dead = time.current;
+      save(score);
     }
-    if ((map == 0 && player.movement <= 0 && action == 3) || (time.dead+700 < time.current && player.life<=0)) {
+    if ((map == 0 && player.movement <= 0 && action == 3) || (time.dead+2000 < time.current && player.life<=0)) {
       close = 1;
     }
 
     SDL_UpdateRect(sprite.screen,0,0,0,0);
-    /* ~ 12,5 fps */
+    /* ~ 16,6 fps */
     SDL_Delay(60);
-  }
+  }      
 
-
-  /***** MORT *****/
   int tab_end[400/50][800/50];
   all_one(tab_end);
 
   int end = 0;
   while (end != 1) {
     end = quit(end);
-    put_zero(tab_end,3);
+    put_zero(tab_end,4);
     draw_dead(sprite,tab_end);
-    if (nb_zero(tab_end) == (800/50)*(400/50) && player.life <= 0) {
+    if (nb_one(tab_end) == 0 && player.life <= 0) {
       draw_result(sprite,score,time,level);
     }  
     SDL_UpdateRect(sprite.screen,0,0,0,0);

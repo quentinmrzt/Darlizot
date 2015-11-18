@@ -120,8 +120,11 @@ s_time control_menu(int x_max,int *choice_ptr, int *action_ptr, s_time time)
       time.menu = time.current;
     }
   }
+
   if (keystate[SDLK_RETURN]) {
     *action_ptr = *choice_ptr+1;
+  } else {
+    *action_ptr = 0;
   }
   
   return time;

@@ -50,17 +50,16 @@ void draw(int x_max, int y_max, int tab[y_max][x_max], s_surface sprite, s_infor
 
 void draw_player(s_information player,s_surface sprite,s_time* time_p,int map)
 {
-  
   // tampon car BlitSurface remet a 0 si nega
   SDL_Rect position = player.position;
-  if(player.life>=0)
-    {
-  if (time_p->current-time_p->previous_time_hit<2500 && map!=0 && player.life>0){
-    if (time_p->current%2==0)
+  if(player.life>=0) {
+    if (time_p->current-time_p->previous_time_hit<2500 && map!=0 && player.life>0){
+      if (time_p->current%2==0) {
+	SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
+      }
+    } else {
       SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
-  }else{
-    SDL_BlitSurface(sprite.player, &player.rcSrc, sprite.screen, &position);
-  }
+    }
   }
 }
 
@@ -132,24 +131,22 @@ list_ptr anim_ennemis(list_ptr ennemis,s_information player,int x_max,int y_max,
 
 s_information death(s_information player)
 {
-  if (player.life==0)
-    {
-      player.rcSrc.y=3*75;
-      if (player.dying==0){
-	if (player.state==0){
-	  player.rcSrc.x=0;
-	}else{
-	  player.rcSrc.x=11*75;
-	}
-	player.dying=1;
+  if (player.life<=0) {
+    player.rcSrc.y=3*75;
+    if (player.dying==0) {
+      if (player.state==0) {
+	player.rcSrc.x=0;
+      } else {
+	player.rcSrc.x=11*75;
       }
-      if ((player.state==0 && player.rcSrc.x<4*75) ||  (player.state==1 && player.rcSrc.x<15*75) ){
-	player.rcSrc.x+=75;
-      }else{
-	player.life=-1;
-      }
-        
+      player.dying=1;
     }
+    if ((player.state==0 && player.rcSrc.x<4*75) ||  (player.state==1 && player.rcSrc.x<15*75) ) {
+      player.rcSrc.x+=75;
+    } else {
+      player.life=-1;
+    }
+  }
   return player;
 }
 
@@ -157,30 +154,29 @@ list_ptr ennemis_death(list_ptr ennemis)
 {
   list_ptr copy_ennemis=ennemis;
   int a =0;
-  while (copy_ennemis!=NULL)
-    {
-      if (copy_ennemis->info.life==0){
-	copy_ennemis->info.rcSrc.y=75;
-	if (copy_ennemis->info.dying==0){
-	  if (copy_ennemis->info.state==0){
-	    copy_ennemis->info.rcSrc.x=3*75;
-	  }else{
-	    copy_ennemis->info.rcSrc.x=15*75;
-	  }
+  while (copy_ennemis!=NULL) {
+    if (copy_ennemis->info.life==0){
+      copy_ennemis->info.rcSrc.y=75;
+      if (copy_ennemis->info.dying==0){
+	if (copy_ennemis->info.state==0){
+	  copy_ennemis->info.rcSrc.x=3*75;
+	}else{
+	  copy_ennemis->info.rcSrc.x=15*75;
 	}
-	copy_ennemis->info.dying=1;
-	if (copy_ennemis->info.rcSrc.x<6*75 && copy_ennemis->info.state==0){
+      }
+      copy_ennemis->info.dying=1;
+      if (copy_ennemis->info.rcSrc.x<6*75 && copy_ennemis->info.state==0){
+	copy_ennemis->info.rcSrc.x+=75;
+      }else{
+	if (copy_ennemis->info.rcSrc.x<17*75 && copy_ennemis->info.state==1){
 	  copy_ennemis->info.rcSrc.x+=75;
 	}else{
-	  if (copy_ennemis->info.rcSrc.x<17*75 && copy_ennemis->info.state==1){
-	    copy_ennemis->info.rcSrc.x+=75;
-	  }else{
-	    copy_ennemis->info.life=-1;
-	  }
-	}	  
-      }      
-      copy_ennemis=copy_ennemis->next;
-    }
+	  copy_ennemis->info.life=-1;
+	}
+      }	  
+    }      
+    copy_ennemis=copy_ennemis->next;
+  }
 
   return ennemis;
 }
@@ -188,19 +184,18 @@ list_ptr ennemis_death(list_ptr ennemis)
 void draw_shooting(s_information player, list_ptr shots, s_surface sprite)
 {
   list_ptr shots_copy=shots;
-  while (shots_copy!=NULL)
-    {
-      if (shots_copy->info.state==0){
-	shots_copy->info.position.x+=24;
-	shots_copy->info.movement+=24;
+  while (shots_copy!=NULL) {
+    if (shots_copy->info.state==0){
+      shots_copy->info.position.x+=24;
+      shots_copy->info.movement+=24;
       
-      } else{ 
-	shots_copy->info.position.x-=24;
-	shots_copy->info.movement-=24;
-      }
-      SDL_BlitSurface(sprite.bullet,&shots_copy->info.rcSrc,sprite.screen,&shots_copy->info.position);
-      shots_copy=shots_copy->next;
+    } else{ 
+      shots_copy->info.position.x-=24;
+      shots_copy->info.movement-=24;
     }
+    SDL_BlitSurface(sprite.bullet,&shots_copy->info.rcSrc,sprite.screen,&shots_copy->info.position);
+    shots_copy=shots_copy->next;
+  }
 }
 
 void draw_ennemis_shooting(list_ptr army_shots,s_surface sprite, s_information player,int x_max )
@@ -335,7 +330,7 @@ void draw_menu(s_surface sprite, s_time time)
 {
   SDL_Color black_color = {255,255,255,0};
   SDL_Surface *text;
-  TTF_Font *test = TTF_OpenFont("pixelmix.ttf", 46);
+  TTF_Font *font = TTF_OpenFont("pixelmix.ttf", 46);
   SDL_Rect position, pos_sprite, pos_screen;
   int i, j;
 
@@ -344,30 +339,30 @@ void draw_menu(s_surface sprite, s_time time)
   pos_sprite.w = 50;
   pos_sprite.h = 50;
 
-  text = TTF_RenderText_Blended(test, "Accueil", black_color);
+  text = TTF_RenderText_Blended(font, "Accueil", black_color);
   position.x = 800/2 - text->w/2;
   position.y = 400/5-35 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
   SDL_FreeSurface(text);
 
-  text = TTF_RenderText_Blended(test, "Jouer", black_color);
+  text = TTF_RenderText_Blended(font, "Jouer", black_color);
   position.x = 800/2 - text->w/2;
   position.y = 400/5+400/5*1-10 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
   SDL_FreeSurface(text);
 
-  text = TTF_RenderText_Blended(test, "Classement", black_color);
+  text = TTF_RenderText_Blended(font, "Classement", black_color);
   position.x = 800/2 - text->w/2;
   position.y = 400/5+400/5*2-10 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
   SDL_FreeSurface(text);
 
-  text = TTF_RenderText_Blended(test, "Quitter", black_color);
+  text = TTF_RenderText_Blended(font, "Quitter", black_color);
   position.x = 800/2 - text->w/2;
   position.y = 400/5+400/5*3-10 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &position);
 
-  TTF_CloseFont(test);
+  TTF_CloseFont(font);
   SDL_FreeSurface(text);
 }
 
@@ -406,6 +401,9 @@ void draw_dead(s_surface sprite, int tab_end[400/50][800/50])
       if (tab_end[y][x] == 0) {
 	SDL_BlitSurface(sprite.black, &pos_sprite, sprite.screen, &pos_screen);
       }
+      if (tab_end[y][x] == -1) {
+	SDL_BlitSurface(sprite.block, &pos_sprite, sprite.screen, &pos_screen);
+      }
     }
   }
 }
@@ -420,39 +418,83 @@ void draw_result(s_surface sprite, int score, s_time time, int level)
 
   text = TTF_RenderText_Blended(font, "Resultat", white_color);
   pos_screen.x = 800/2 - text->w/2;
-  pos_screen.y = 400/5-35 - text->h/2;
+  pos_screen.y = 400/8*2 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
 
   pos_sprite.x = 0;
-  pos_sprite.y = 0;
+  pos_sprite.y = 48;
   pos_sprite.w = 350;
   pos_sprite.h = 50;
 
   pos_screen.x = pos_screen.x+(text->w/2) - pos_sprite.w/2;
-  pos_screen.y = pos_screen.y - 7;
+  pos_screen.y = pos_screen.y - 7 + pos_sprite.h;
   SDL_BlitSurface(sprite.outline, &pos_sprite, sprite.screen, &pos_screen);
 
   TTF_CloseFont(font);
 
   font = TTF_OpenFont("pixelmix.ttf", 20);
 
-  sprintf(sentence, "Niveau atteint: %d   Score: %d",level,score); 
+  sprintf(sentence, "Niveau atteint: %d",level); 
   text = TTF_RenderText_Blended(font, sentence, white_color);
-  pos_screen.x = 800/2 - text->w/2;
-  pos_screen.y = 400/5*2-35 - text->h/2;
+  pos_screen.x = 800/3;
+  pos_screen.y = 400/7*3- text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
+  SDL_FreeSurface(text);
 
+  sprintf(sentence, "Score: %d",score); 
+  text = TTF_RenderText_Blended(font, sentence, white_color);
+  pos_screen.x = 800/3;
+  pos_screen.y = 400/7*4 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
+  SDL_FreeSurface(text);
 
   sprintf(sentence, "Temps: %d.%d sec",(time.dead-time.birth)/1000,(time.dead-time.birth)%1000/100); 
   text = TTF_RenderText_Blended(font, sentence, white_color);
-  pos_screen.x = 800/2 - text->w/2;
-  pos_screen.y = 400/5*3-35 - text->h/2;
+  pos_screen.x = 800/3;
+  pos_screen.y = 400/7*5 - text->h/2;
   SDL_BlitSurface(text, NULL, sprite.screen, &pos_screen);
 
 
   TTF_CloseFont(font);
   SDL_FreeSurface(text);
 } 
+
+void draw_ranking(s_surface sprite)
+{
+  int ranking[10] = {0};
+  char sentence[20] = "";
+  SDL_Rect position;
+  SDL_Color white_color = {255,255,255,0};
+  SDL_Surface *text;
+  TTF_Font *font = TTF_OpenFont("pixelmix.ttf", 30);
+
+  recuperation(ranking);
+
+  text = TTF_RenderText_Blended(font, "Classement", white_color);
+  position.x = 800/2 - text->w/2;
+  printf("%d %d\n",text->w,position.x);
+  position.y = 400/5-35 - text->h/2;
+  SDL_BlitSurface(text, NULL, sprite.screen, &position);
+  SDL_FreeSurface(text);
+
+  int i = 1;
+  while (i <= 10) { 
+    sprintf(sentence, "%d - %d", i, ranking[i-1]);
+    text = TTF_RenderText_Solid(font, sentence, white_color);
+    if (i <= 5) {
+      position.x = (800/3) - text->w/2;
+      position.y = ((400/8)*i) - text->h/2 + 60;
+    } else {
+      position.x = (800/3)*2 - text->w/2;
+      position.y = ((400/8)*(i-5)) - text->h/2 + 60;
+    }
+    SDL_BlitSurface(text, NULL, sprite.screen, &position);
+    i++;
+  } 
+
+  TTF_CloseFont(font);
+  SDL_FreeSurface(text);
+}
 
 /****************************************************************************************************/
 /* ANIM */

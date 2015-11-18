@@ -2,7 +2,7 @@
 /* physic.c                                                       */
 /* Victor DARMOIS Loic MOLINA Quentin MORIZOT                     */
 /* Creation: 20/09/15                                             */
-/* Last modification: 15/11/15                                    */
+/* Last modification: 18/11/15                                    */
 /******************************************************************/
 
 #include "constant.h"
@@ -173,13 +173,18 @@ void collision_bullet_ennemi(list_ptr *shots, list_ptr *ennemi,int *score,int le
 list_ptr collision_bullet_player(list_ptr army_shots, s_information * player, s_time * time_p)
 {
   list_ptr copy_shots= army_shots;
-  if(time_p->current-time_p->previous_time_hit>2500){
-    
-    while (copy_shots != NULL){
+  int touch = 0;
+
+  if(time_p->current-time_p->previous_time_hit>2500){  
+    while (copy_shots != NULL && !touch){
       if(collision_AABB(copy_shots->info,*player)){
 	player->life=(player->life)-1;
+	if (player->life < 0) {
+	  player->life = 0;
+	}
 	copy_shots->info.life=-1;
 	time_p->previous_time_hit=time_p->current;
+	touch = 1;
       }
       copy_shots=copy_shots->next;
     }
