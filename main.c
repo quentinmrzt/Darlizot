@@ -89,7 +89,6 @@ int main(int argc, char* argv[])
     army_shots = ennemis_shots(ennemi,army_shots,player,x_max,y_max,tab,&time);
     ennemi=ennemis_death(ennemi);
     player = death(player);
-    printf("%d\n",player.dying);
 
     /****************************************************************************************************/
     /* DRAW */
@@ -113,10 +112,6 @@ int main(int argc, char* argv[])
 
     /****************************************************************************************************/
     /* OTHER */
-    if (map == 0 && player.movement <= 0 && action == 3) {
-      close = 1;
-    }
-
     if (player.position.y > 400) {
       player = ini_player(player);
     }
@@ -126,7 +121,11 @@ int main(int argc, char* argv[])
       change_lvl(&player, &time, &shots, &ennemi, &army_shots, &load, &level, &x_max, &y_max, map, tab);
     }
 
-    if (player.life <= 0) {
+    if (player.life <= 0 && time.dead == 0) {
+      time.dead = time.current;
+    }
+    if ((map == 0 && player.movement <= 0 && action == 3) || (time.dead+1000 < time.current && player.life<=0)) {
+      printf("test\n");
       close = 1;
     }
 
@@ -146,7 +145,7 @@ int main(int argc, char* argv[])
     put_zero(tab_end,3);
     draw_dead(sprite,tab_end);
     if (nb_zero(tab_end) == (800/50)*(400/50)) {
-      draw_result(sprite,score,time);
+      draw_result(sprite,score,time,level);
     }  
     SDL_UpdateRect(sprite.screen,0,0,0,0);
     SDL_Delay(60);    

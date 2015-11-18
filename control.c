@@ -43,8 +43,12 @@ void control(int x_max,int y_max,int tab[y_max][x_max],int map,s_information *pl
 
   s_information player = *player_ptr;
   list_ptr shots = *shots_ptr;
+  s_time time = *time_ptr;
 
   if (map != 0) {
+    if (time.birth == 0) {
+      time.birth = time.current;
+    }
     if (player.movement < 50) {
       // sortie entrée
       player = control_auto(x_max,y_max,tab,player,50);
@@ -60,6 +64,7 @@ void control(int x_max,int y_max,int tab[y_max][x_max],int map,s_information *pl
 
   *player_ptr = player;
   *shots_ptr = shots;
+  *time_ptr = time;
 }
 
 s_information control_manual(int x_max, int y_max, int tab[y_max][x_max], s_information player)

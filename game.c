@@ -90,6 +90,8 @@ s_time ini_time(s_time time)
   time.time_max = 2000;
   time.chrono = time.time_max;
   time.menu = 0;
+  time.birth = 0;
+  time.dead = 0;
 
   return time;
 }

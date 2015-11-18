@@ -28,7 +28,7 @@ void draw_level(SDL_Surface *screen, TTF_Font *font, int level, int map, int sco
 void draw_menu(s_surface sprite, s_time time);
 void draw_outline(s_surface sprite, int choice);
 void draw_dead(s_surface sprite, int tab_end[400/50][800/50]);
-void draw_result(s_surface sprite, int score, s_time time);
+void draw_result(s_surface sprite, int score, s_time time, int level);
 
 /****************************************************************************************************/
 /* ANIM */
